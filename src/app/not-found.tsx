@@ -1,23 +1,20 @@
-import { ButtonLink } from "@/components/button-link";
-import { Container } from "@/components/container";
+import Link from "next/link";
 
 export default function NotFound() {
   return (
-    <section className="py-32">
-      <Container className="text-center">
-        <p className="mb-3 text-sm font-medium uppercase tracking-[0.2em] text-accent">
-          404
-        </p>
-        <h1 className="font-display text-4xl font-bold tracking-tight">
+    <main className="flex min-h-screen flex-col items-center justify-center gap-10 p-10">
+      <div className="text-center">
+        <h2 className="text-lg font-normal tracking-[8px] text-neutral-400 uppercase">
           Page not found
-        </h1>
-        <p className="mt-4 text-muted">
-          The page you are looking for does not exist or has been moved.
-        </p>
-        <div className="mt-8">
-          <ButtonLink href="/">Back to home</ButtonLink>
-        </div>
-      </Container>
-    </section>
+        </h2>
+        <h1 className="text-4xl font-medium text-neutral-900">404</h1>
+      </div>
+      <Link
+        href="/"
+        className="rounded-xl border-2 border-gray-800 p-3 py-2 text-lg text-neutral-900 transition hover:bg-gray-800 hover:text-white"
+      >
+        Go Home
+      </Link>
+    </main>
   );
 }

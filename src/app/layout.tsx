@@ -1,46 +1,50 @@
+import { config } from "@fortawesome/fontawesome-svg-core";
+import "@fortawesome/fontawesome-svg-core/styles.css";
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans, Space_Grotesk } from "next/font/google";
-import { Footer } from "@/components/footer";
+import { Jost, Poppins } from "next/font/google";
 import { Navbar } from "@/components/navbar";
 import { site } from "@/data/site";
 import "./globals.css";
 
-const jakarta = Plus_Jakarta_Sans({
-  variable: "--font-jakarta",
+// The Font Awesome stylesheet is imported above, so it does not need to be
+// injected again at runtime.
+config.autoAddCss = false;
+
+const poppins = Poppins({
+  variable: "--font-poppins",
   subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+  style: ["normal", "italic"],
 });
 
-const grotesk = Space_Grotesk({
-  variable: "--font-grotesk",
+const jost = Jost({
+  variable: "--font-jost",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
-    default: `${site.fullName} | ${site.role}`,
+    default: `${site.fullName} | Portfolio`,
     template: `%s | ${site.name}`,
   },
   description: site.description,
   openGraph: {
     type: "website",
     url: site.url,
-    siteName: site.fullName,
-    title: `${site.fullName} | ${site.role}`,
+    siteName: `${site.fullName} | Portfolio`,
+    title: `${site.fullName} | Portfolio`,
     description: site.description,
   },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html
-      lang="en"
-      className={`${jakarta.variable} ${grotesk.variable} h-full antialiased`}
-    >
-      <body className="flex min-h-full flex-col font-sans">
+    <html lang="en" className={`${poppins.variable} ${jost.variable}`}>
+      <body className="font-sans antialiased">
         <Navbar />
-        <main className="flex-1">{children}</main>
-        <Footer />
+        {children}
       </body>
     </html>
   );

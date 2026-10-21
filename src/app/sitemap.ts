@@ -3,7 +3,7 @@ import { projects } from "@/data/projects";
 import { site } from "@/data/site";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const pages = ["", "/about", "/projects"].map((path) => ({
+  const pages = ["", "/about", "/projects", "/projects/archive"].map((path) => ({
     url: `${site.url}${path}`,
   }));
 

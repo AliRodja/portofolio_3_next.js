@@ -1,5 +1,6 @@
 export const projectCategories = {
   web: "Web Development",
+  ai: "AI & Machine Learning",
   mobile: "Mobile",
   other: "Other",
 } as const;
@@ -14,7 +15,8 @@ export type Project = {
   year: number;
   tech: string[];
   categories: ProjectCategory[];
-  featured?: boolean;
+  // Shown in the "Highlight" section of the projects page. Mark only one.
+  highlight?: boolean;
   // Paths inside public/, e.g. "/images/projects/my-project/cover.png".
   thumbnail?: string;
   images?: string[];
@@ -27,15 +29,15 @@ export const projects: Project[] = [
     slug: "portfolio-website",
     title: "Portfolio Website",
     summary:
-      "This website. A personal portfolio built with the Next.js App Router, TypeScript, and Tailwind CSS.",
+      "This website. A personal portfolio built with the Next.js App Router, TypeScript, Tailwind CSS, and Motion.",
     description: [
       "A statically generated portfolio where every page and project is driven by typed data files, so adding a project only means adding an entry to src/data/projects.ts.",
-      "Built with Next.js 16, React 19, TypeScript, and Tailwind CSS 4.",
+      "Built with Next.js 16, React 19, TypeScript, Tailwind CSS 4, and Motion for animations.",
     ],
     year: 2026,
-    tech: ["Next.js", "TypeScript", "Tailwind CSS"],
+    tech: ["Next.js", "TypeScript", "Tailwind CSS", "Motion"],
     categories: ["web"],
-    featured: true,
+    highlight: true,
     sourceUrl: "https://github.com/your-username/Ali-porto-3-nextJs",
   },
   {
@@ -50,7 +52,16 @@ export const projects: Project[] = [
     year: 2025,
     tech: ["React", "Node.js", "PostgreSQL"],
     categories: ["web"],
-    featured: true,
+  },
+  {
+    slug: "example-ai-project",
+    title: "Example AI Project",
+    summary:
+      "Placeholder project to show the category filter. Replace or delete it.",
+    description: ["Describe the project here."],
+    year: 2025,
+    tech: ["Python", "TensorFlow"],
+    categories: ["ai"],
   },
   {
     slug: "example-mobile-app",
@@ -64,7 +75,7 @@ export const projects: Project[] = [
   },
 ];
 
-export const featuredProjects = projects.filter((project) => project.featured);
+export const highlightProject = projects.find((project) => project.highlight);
 
 export function getProject(slug: string) {
   return projects.find((project) => project.slug === slug);
