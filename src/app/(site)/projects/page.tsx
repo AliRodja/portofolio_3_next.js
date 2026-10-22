@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import { BackButton } from "@/components/layout/back-button";
+import { PageTransition } from "@/components/motion/page-transition";
 import { Reveal } from "@/components/motion/reveal";
 import { PageHero } from "@/components/sections/page-hero";
 import { SectionTitle } from "@/components/sections/section-title";
 import { ButtonLink } from "@/components/ui/button";
-import { Photo } from "@/components/ui/photo";
+import { monoPhotoClass, Photo } from "@/components/ui/photo";
 import { getProfile } from "@/db/queries/profile";
 import { getProjects } from "@/db/queries/projects";
 import { ProjectGrid } from "./_components/project-grid";
@@ -27,87 +28,91 @@ export default async function ProjectsPage() {
   const otherProjects = projects.filter((project) => !project.highlight);
 
   return (
-    <main className="overflow-hidden">
-      <BackButton href="/#projects" />
-      <PageHero
-        title="My Projects"
-        description="List of projects that I have done and am currently working on."
-        photo={profile.projectsPhoto}
-        photoAlt="Projects"
-        scrollTargetId="content"
-      />
+    <PageTransition>
+      <main className="overflow-hidden">
+        <BackButton href="/#projects" />
+        <PageHero
+          title="My Projects"
+          description="List of projects that I have done and am currently working on."
+          photo={profile.projectsPhoto}
+          photoAlt="Projects"
+          scrollTargetId="content"
+        />
 
-      <div id="content">
-        {highlight && (
-          <section>
-            <SectionTitle title="Highlight" />
-            <div className="container mx-auto mb-10 grid grid-cols-1 gap-4 px-10 md:grid-cols-2">
-              <div className="relative aspect-square w-full">
-                {collage.map((item, index) => (
-                  <Reveal
-                    key={item.position}
-                    from={item.from}
-                    delay={item.delay}
-                    className={`absolute aspect-video transition duration-300 hover:scale-150 ${item.position}`}
-                  >
-                    <div className="relative h-full w-full overflow-hidden shadow-lg grayscale transition duration-300 hover:grayscale-0">
-                      <Photo
-                        src={
-                          highlight.images[index] ??
-                          (index === 0 ? highlight.thumbnail : null)
-                        }
-                        alt={highlight.title}
-                        sizes="40vw"
-                      />
-                    </div>
-                  </Reveal>
-                ))}
-              </div>
-
-              <Reveal
-                from="right"
-                distance={200}
-                delay={0.5}
-                className="mb-5 flex flex-col justify-center md:px-10"
-              >
-                <h3 className="mb-3 text-2xl font-bold tracking-wider">
-                  {highlight.title}
-                </h3>
-                <p className="text-justify font-display text-lg text-white/70">
-                  {highlight.description[0]}
-                </p>
-                <div className="mt-3 flex flex-wrap gap-3">
-                  <ButtonLink
-                    href={`/projects/${highlight.slug}`}
-                    variant="glassDark"
-                  >
-                    More
-                  </ButtonLink>
-                  {highlight.previewUrl && (
-                    <ButtonLink
-                      href={highlight.previewUrl}
-                      variant="glass"
-                      target="_blank"
-                      rel="noopener noreferrer"
+        <div id="content">
+          {highlight && (
+            <section>
+              <SectionTitle title="Highlight" />
+              <div className="container mx-auto mb-10 grid grid-cols-1 gap-4 px-10 md:grid-cols-2">
+                <div className="relative aspect-square w-full">
+                  {collage.map((item, index) => (
+                    <Reveal
+                      key={item.position}
+                      from={item.from}
+                      delay={item.delay}
+                      // The hovered screenshot comes to the front of the stack.
+                      className={`group absolute aspect-video transition-[scale] duration-300 hover:z-20 hover:scale-110 ${item.position}`}
                     >
-                      Preview
-                    </ButtonLink>
-                  )}
+                      <div className="relative h-full w-full overflow-hidden shadow-lg">
+                        <Photo
+                          src={
+                            highlight.images[index] ??
+                            (index === 0 ? highlight.thumbnail : null)
+                          }
+                          alt={highlight.title}
+                          sizes="40vw"
+                          className={monoPhotoClass}
+                        />
+                      </div>
+                    </Reveal>
+                  ))}
                 </div>
-              </Reveal>
-            </div>
-          </section>
-        )}
 
-        <SectionTitle title="Other Noteworthy Projects" />
-        <ProjectGrid projects={otherProjects} />
+                <Reveal
+                  from="right"
+                  distance={200}
+                  delay={0.5}
+                  className="mb-5 flex flex-col justify-center md:px-10"
+                >
+                  <h3 className="mb-3 text-2xl font-bold tracking-wider">
+                    {highlight.title}
+                  </h3>
+                  <p className="text-justify font-display text-lg text-white/70">
+                    {highlight.description[0]}
+                  </p>
+                  <div className="mt-3 flex flex-wrap gap-3">
+                    <ButtonLink
+                      href={`/projects/${highlight.slug}`}
+                      variant="glassSolid"
+                    >
+                      More
+                    </ButtonLink>
+                    {highlight.previewUrl && (
+                      <ButtonLink
+                        href={highlight.previewUrl}
+                        variant="glass"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Preview
+                      </ButtonLink>
+                    )}
+                  </div>
+                </Reveal>
+              </div>
+            </section>
+          )}
 
-        <Reveal from="none" className="my-5 flex justify-center">
-          <ButtonLink href="/projects/archive" variant="glassDark">
-            View In Archive
-          </ButtonLink>
-        </Reveal>
-      </div>
-    </main>
+          <SectionTitle title="Other Noteworthy Projects" />
+          <ProjectGrid projects={otherProjects} />
+
+          <Reveal from="none" className="my-5 flex justify-center">
+            <ButtonLink href="/projects/archive" variant="glassSolid">
+              View In Archive
+            </ButtonLink>
+          </Reveal>
+        </div>
+      </main>
+    </PageTransition>
   );
 }

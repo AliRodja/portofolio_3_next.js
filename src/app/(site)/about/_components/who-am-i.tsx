@@ -1,6 +1,6 @@
 import { Reveal } from "@/components/motion/reveal";
 import { SectionTitle } from "@/components/sections/section-title";
-import { Photo } from "@/components/ui/photo";
+import { monoPhotoClass, Photo } from "@/components/ui/photo";
 import { RichText } from "@/components/ui/rich-text";
 import { getProfile } from "@/db/queries/profile";
 
@@ -24,13 +24,15 @@ export async function WhoAmI() {
               key={item.position}
               from={item.from}
               delay={item.delay}
-              className={`absolute aspect-square ${item.position}`}
+              // The hovered photo comes to the front of the stack.
+              className={`group absolute aspect-square transition-[scale] duration-300 hover:z-20 hover:scale-105 ${item.position}`}
             >
-              <div className="relative h-full w-full overflow-hidden grayscale transition duration-300 hover:grayscale-0">
+              <div className="relative h-full w-full overflow-hidden shadow-lg">
                 <Photo
                   src={profile.collagePhotos[index]}
                   alt={profile.fullName}
                   sizes="(max-width: 768px) 80vw, 40vw"
+                  className={monoPhotoClass}
                 />
               </div>
             </Reveal>

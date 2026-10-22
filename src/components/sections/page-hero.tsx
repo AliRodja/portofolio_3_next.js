@@ -3,7 +3,7 @@
 import { motion } from "motion/react";
 import { DoubleBar } from "@/components/motion/double-bar";
 import { buttonClass } from "@/components/ui/button";
-import { Photo } from "@/components/ui/photo";
+import { monoPhotoClass, Photo } from "@/components/ui/photo";
 
 // Full-screen header for the About and Projects pages: a photo that zooms in
 // on load, a large title, and a button that scrolls to the content below.
@@ -23,18 +23,29 @@ export function PageHero({
   return (
     <div className="relative mb-10 flex h-screen flex-col items-center justify-center gap-4 overflow-hidden p-10">
       <div className="z-0 mb-48 md:absolute md:top-1/4 md:right-[10%] md:mb-0 md:-translate-y-16">
+        {/* The frame grows into place on load, as it always has, but ends at
+            its own size so it never runs past the screen. The photo inside
+            settles at the same time. */}
         <motion.div
-          initial={{ scale: 1 }}
-          animate={{ scale: 1.6 }}
-          transition={{ ease: "circOut", duration: 1 }}
-          className="relative h-[400px] w-[80vw] overflow-hidden rounded-2xl bg-white/5 ring-1 ring-white/20 grayscale transition hover:grayscale-0 md:h-[600px] md:w-[30vw]"
+          initial={{ scale: 0.625 }}
+          animate={{ scale: 1 }}
+          transition={{ ease: "circOut", duration: 1.2 }}
+          className="group relative h-[400px] w-[80vw] overflow-hidden rounded-2xl bg-white/5 ring-1 ring-white/20 md:h-[600px] md:w-[30vw]"
         >
-          <Photo
-            src={photo}
-            alt={photoAlt}
-            sizes="(max-width: 768px) 80vw, 30vw"
-            priority
-          />
+          <motion.div
+            className="absolute inset-0"
+            initial={{ scale: 1.3 }}
+            animate={{ scale: 1 }}
+            transition={{ ease: "circOut", duration: 1.6 }}
+          >
+            <Photo
+              src={photo}
+              alt={photoAlt}
+              sizes="(max-width: 768px) 80vw, 30vw"
+              priority
+              className={monoPhotoClass}
+            />
+          </motion.div>
         </motion.div>
       </div>
 
@@ -54,7 +65,7 @@ export function PageHero({
               .getElementById(scrollTargetId)
               ?.scrollIntoView({ behavior: "smooth" })
           }
-          className={`mb-3 ${buttonClass("glassDark")}`}
+          className={`mb-3 ${buttonClass("glassSolid")}`}
         >
           Scroll Down
         </motion.button>

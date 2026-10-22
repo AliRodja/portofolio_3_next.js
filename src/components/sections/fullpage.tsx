@@ -185,7 +185,7 @@ function SectionIsland({
             lastPointer.current = event.pointerType;
           }}
           style={{ borderRadius: 9999 }}
-          className={`flex items-center bg-black shadow-[0_12px_32px_-12px_rgb(0_0_0/0.6)] ring-1 ring-white/10 ${
+          className={`flex items-center bg-black shadow-[inset_0_1px_0_rgb(255_255_255/0.2),0_12px_32px_-12px_rgb(0_0_0/0.9)] ring-1 ring-white/25 ${
             isOpen ? "gap-1 p-1.5" : "gap-0 p-1"
           }`}
         >

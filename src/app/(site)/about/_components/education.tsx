@@ -8,7 +8,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
-import { Photo } from "@/components/ui/photo";
+import { monoPhotoClass, Photo } from "@/components/ui/photo";
 import { RichText } from "@/components/ui/rich-text";
 import {
   achievements,
@@ -75,7 +75,7 @@ export function Education() {
                   src={education.photos[index]}
                   alt={education.school}
                   sizes="(max-width: 768px) 33vw, 20vw"
-                  className="grayscale transition duration-300 group-hover:grayscale-0"
+                  className={monoPhotoClass}
                 />
               </div>
             ))}

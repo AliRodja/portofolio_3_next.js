@@ -117,7 +117,7 @@ export function Skills() {
                   }`}
                 >
                   {language.highlight && (
-                    <span className="animate-pulse text-[10px] text-amber-500">
+                    <span className="animate-pulse text-[10px] text-gray-400">
                       ✦
                     </span>
                   )}

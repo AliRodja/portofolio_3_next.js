@@ -106,8 +106,8 @@ export function Navbar({ name }: { name: string }) {
         <Link
           href="/"
           onClick={(event) => handleLinkClick(event, "/")}
-          className={`pointer-events-auto flex h-11 items-center rounded-full px-5 font-display text-xl transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] ${
-            isOpen ? "glass-dark glass-dark-hover text-white" : "glass glass-hover text-gray-900 on-dark:text-white"
+          className={`glass glass-hover pointer-events-auto flex h-11 items-center rounded-full px-5 font-display text-xl transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] ${
+            isOpen ? "text-white" : "text-gray-900 on-dark:text-white"
           }`}
         >
           {name}
@@ -118,9 +118,7 @@ export function Navbar({ name }: { name: string }) {
           aria-label={isOpen ? "Close menu" : "Open menu"}
           aria-expanded={isOpen}
           onClick={toggle}
-          className={`pointer-events-auto flex h-11 w-11 flex-col items-center justify-center gap-1.5 rounded-full transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] active:scale-95 ${
-            isOpen ? "glass-dark glass-dark-hover" : "glass glass-hover"
-          }`}
+          className="glass glass-hover pointer-events-auto flex h-11 w-11 flex-col items-center justify-center gap-1.5 rounded-full transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] active:scale-95"
         >
           <span
             className={`h-0.5 w-5 rounded-full transition-all duration-300 ${
@@ -136,7 +134,7 @@ export function Navbar({ name }: { name: string }) {
       </nav>
 
       <motion.div
-        className="fixed inset-0 z-45 flex items-center justify-center bg-[#0a0f4a]/75 backdrop-blur-2xl"
+        className="fixed inset-0 z-45 flex items-center justify-center bg-black/80 backdrop-blur-2xl"
         style={{ clipPath }}
         aria-hidden={!isOpen}
       >

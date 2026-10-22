@@ -11,7 +11,8 @@ Website portfolio pribadi yang dibangun dengan Next.js (App Router), TypeScript,
 - Halaman About: skill per kategori, timeline pengalaman, pendidikan dan prestasi, serta quote dengan efek blur per kata
 - Halaman Projects: highlight proyek, filter kategori, halaman detail, dan arsip
 - SEO: metadata per halaman, `sitemap.xml`, dan `robots.txt`
-- **Dashboard** di `/admin` untuk mengelola profil dan proyek tanpa mengubah kode
+- **Dashboard** di `/admin` untuk mengelola profil, proyek, dan pengalaman kerja tanpa mengubah kode
+- **Liquid glass dengan WebGL**: latar dan permukaan kaca digambar di satu canvas WebGL, dengan refraksi di tepi kaca. Shader-nya diadaptasi dari [liquid-glass-js](https://github.com/dashersw/liquid-glass-js) (MIT). Tanpa WebGL, atau saat pengguna memilih "kurangi transparansi", otomatis kembali ke kaca CSS.
 
 ## Tech Stack
 
@@ -34,7 +35,7 @@ Prasyarat: Node.js 20+, pnpm (`corepack enable pnpm`), dan Postgres.
 pnpm install
 cp .env.example .env.local   # lalu isi nilainya, lihat di bawah
 pnpm db:migrate              # buat tabel
-pnpm db:seed                 # isi profil dan proyek contoh (aman dijalankan ulang)
+pnpm db:seed                 # isi profil, proyek, dan pengalaman contoh (aman dijalankan ulang)
 pnpm dev
 ```
 
@@ -107,7 +108,8 @@ src/
 │   │       ├── page.tsx        # Overview
 │   │       ├── _components/    # Sidebar, form, upload gambar/file
 │   │       ├── profile/        # Edit profil + Server Action
-│   │       └── projects/       # Daftar, tambah, edit proyek + Server Actions
+│   │       ├── projects/       # Daftar, tambah, edit proyek + Server Actions
+│   │       └── experience/     # Daftar, tambah, edit pengalaman + Server Actions
 │   ├── api/
 │   │   ├── auth/[...all]/      # Endpoint Better Auth
 │   │   └── admin/upload/       # Token upload Vercel Blob
@@ -115,6 +117,7 @@ src/
 │   ├── sitemap.ts              # /sitemap.xml
 │   └── robots.ts               # /robots.txt
 ├── components/                 # Komponen yang dipakai di banyak halaman
+│   ├── glass/                  # Liquid glass WebGL: shader, renderer, GlassStage
 │   ├── layout/                 # Navbar, Footer, BackButton
 │   ├── ui/                     # Button, Photo, RichText
 │   ├── motion/                 # Reveal, DoubleBar
@@ -129,13 +132,13 @@ src/
 │   ├── default-profile.ts      # Profil awal sebelum disimpan dari dashboard
 │   ├── site-config.ts          # URL website dan menu navbar
 │   ├── social-icons.ts         # Platform sosial media yang didukung
-│   └── project-categories.ts   # Daftar kategori proyek
+│   ├── project-categories.ts   # Daftar kategori proyek
+│   └── experience.ts           # Jenis pekerjaan dan format bulan
 └── data/                       # Konten yang belum pindah ke dashboard
-    ├── experience.ts           # Pengalaman kerja
     ├── skills.ts               # Skill per kategori
     └── education.ts            # Pendidikan dan prestasi
 drizzle/                        # File migration SQL
-scripts/seed.ts                 # Data profil dan proyek awal
+scripts/seed.ts                 # Data profil, proyek, dan pengalaman awal
 ```
 
 ## Mengubah Konten
@@ -143,4 +146,5 @@ scripts/seed.ts                 # Data profil dan proyek awal
 - **Proyek:** kelola dari dashboard di `/admin/projects`. Perubahan langsung tampil di website tanpa deploy ulang. Hanya satu proyek yang bisa di-highlight. Saat proyek lain ditandai, highlight lama otomatis dilepas.
 - **Profil:** kelola dari dashboard di `/admin/profile`: nama, role, intro, about, foto, sosial media, quote, dan CV. Teks about bisa diberi **tebal** dengan `**dua bintang**`.
 - **Foto:** upload dari dashboard, atau simpan di `public/images/` lalu isi path-nya, misalnya `/images/me/hero.jpg`. Selama belum diisi, tampil kotak "Add photo". Foto pendidikan masih diisi di `education.ts` (`photos`).
-- **Pengalaman, skill, pendidikan:** masih diubah lewat file di `src/data/`. Akan dipindah ke dashboard di tahap berikutnya.
+- **Pengalaman kerja:** kelola dari dashboard di `/admin/experience`. Urutannya otomatis: posisi yang masih berjalan ("Present") di atas, lalu berdasarkan bulan mulai. Selama belum ada data, section Professional Experience di halaman About disembunyikan.
+- **Skill, pendidikan:** masih diubah lewat file di `src/data/`. Akan dipindah ke dashboard di tahap berikutnya.

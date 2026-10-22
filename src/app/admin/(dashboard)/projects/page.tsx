@@ -5,9 +5,10 @@ import Link from "next/link";
 import { getProjects } from "@/db/queries/projects";
 import { projectCategories } from "@/lib/project-categories";
 import { requireAdmin } from "@/lib/session";
+import { DeleteButton } from "../_components/delete-button";
 import { primaryButtonClass } from "../_components/form";
 import { PageHeader } from "../_components/page-header";
-import { DeleteProjectButton } from "./_components/delete-project-button";
+import { deleteProject } from "./actions";
 
 export const metadata: Metadata = {
   title: "Projects",
@@ -90,7 +91,10 @@ export default async function AdminProjectsPage() {
                 >
                   Edit
                 </Link>
-                <DeleteProjectButton id={project.id} title={project.title} />
+                <DeleteButton
+                  action={deleteProject.bind(null, project.id)}
+                  title={project.title}
+                />
               </div>
             </li>
           ))}

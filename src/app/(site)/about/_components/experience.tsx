@@ -5,13 +5,17 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { motion } from "motion/react";
 import { useState } from "react";
 import { SectionTitle } from "@/components/sections/section-title";
-import { experiences } from "@/data/experience";
+import type { Experience as ExperienceItem } from "@/db/schema";
+import { formatMonth } from "@/lib/experience";
 
 const INITIAL_COUNT = 3;
 
-export function Experience() {
+export function Experience({ experiences }: { experiences: ExperienceItem[] }) {
   const [showAll, setShowAll] = useState(false);
   const visible = showAll ? experiences : experiences.slice(0, INITIAL_COUNT);
+
+  // Nothing to put on the timeline yet.
+  if (experiences.length === 0) return null;
 
   return (
     <section>
@@ -26,10 +30,10 @@ export function Experience() {
               const isRight = index % 2 === 1;
               return (
                 <li
-                  key={`${item.company}-${item.start}`}
+                  key={item.id}
                   className="relative md:grid md:grid-cols-2 md:items-start md:gap-12"
                 >
-                  <span className="absolute top-5 left-0 z-10 h-6 w-6 -translate-x-1/2 rounded-full border-4 border-white/90 bg-[#2b3cc2] shadow-lg md:top-4 md:left-1/2" />
+                  <span className="absolute top-5 left-0 z-10 h-6 w-6 -translate-x-1/2 rounded-full border-4 border-white/90 bg-black shadow-lg md:top-4 md:left-1/2" />
 
                   <motion.div
                     initial={{ opacity: 0, y: -20 }}
@@ -41,14 +45,14 @@ export function Experience() {
                         : "md:col-start-2 md:justify-start"
                     }`}
                   >
-                    <div className="glass-dark flex items-center gap-6 rounded-xl px-8 py-3 text-white">
+                    <div className="glass flex items-center gap-6 rounded-xl px-8 py-3 text-white">
                       <div className="text-center">
-                        <div className="text-sm font-bold">{item.start}</div>
+                        <div className="text-sm font-bold">{formatMonth(item.startDate)}</div>
                         <div className="text-xs text-white/60">Start</div>
                       </div>
                       <div className="h-8 w-px bg-white/20" />
                       <div className="text-center">
-                        <div className="text-sm font-bold">{item.end}</div>
+                        <div className="text-sm font-bold">{formatMonth(item.endDate)}</div>
                         <div className="text-xs text-white/60">End</div>
                       </div>
                       <div className="h-8 w-px bg-white/20" />
@@ -79,9 +83,14 @@ export function Experience() {
                           • {item.type}
                         </span>
                       </p>
-                      <p className="mb-4 text-justify leading-relaxed text-white/70">
-                        {item.description}
-                      </p>
+                      {item.description.map((paragraph, i) => (
+                        <p
+                          key={i}
+                          className="mb-4 text-justify leading-relaxed text-white/70"
+                        >
+                          {paragraph}
+                        </p>
+                      ))}
                       <ul className="flex flex-wrap gap-2">
                         {item.skills.map((skill) => (
                           <li
@@ -104,7 +113,7 @@ export function Experience() {
               <button
                 type="button"
                 onClick={() => setShowAll(!showAll)}
-                className="glass-dark glass-dark-hover flex items-center gap-2 rounded-full px-8 py-3 font-medium text-white transition duration-300 hover:scale-105"
+                className="glass-solid glass-solid-hover flex items-center gap-2 rounded-full px-8 py-3 font-medium text-gray-950 transition duration-300 hover:scale-105"
               >
                 {showAll ? "Show Less" : "View More Experience"}
                 <FontAwesomeIcon

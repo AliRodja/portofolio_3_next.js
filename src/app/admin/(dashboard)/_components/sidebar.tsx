@@ -39,7 +39,7 @@ const groups: { title: string; links: NavLink[] }[] = [
     title: "Content",
     links: [
       { label: "Projects", href: "/admin/projects", icon: faFolderOpen },
-      { label: "Experience", href: "/admin/experience", icon: faBriefcase, soon: true },
+      { label: "Experience", href: "/admin/experience", icon: faBriefcase },
       { label: "Skills", href: "/admin/skills", icon: faLayerGroup, soon: true },
       { label: "Education", href: "/admin/education", icon: faGraduationCap, soon: true },
     ],

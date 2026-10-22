@@ -1,4 +1,4 @@
-import { GlassBackdrop } from "@/components/layout/glass-backdrop";
+import { GlassStage } from "@/components/glass/glass-stage";
 import { Navbar } from "@/components/layout/navbar";
 import { getProfile } from "@/db/queries/profile";
 
@@ -8,7 +8,7 @@ export default async function SiteLayout({ children }: LayoutProps<"/">) {
   // data-tone="dark" switches shared pieces like the navbar to light text.
   return (
     <div data-tone="dark" className="text-white">
-      <GlassBackdrop />
+      <GlassStage />
       <Navbar name={profile.name} />
       {children}
     </div>

@@ -2,6 +2,7 @@ import { sql } from "drizzle-orm";
 import {
   boolean,
   check,
+  date,
   integer,
   jsonb,
   pgTable,
@@ -9,6 +10,7 @@ import {
   text,
   timestamp,
 } from "drizzle-orm/pg-core";
+import type { EmploymentType } from "@/lib/experience";
 import type { ProjectCategory } from "@/lib/project-categories";
 import type { SocialLink } from "@/lib/social-icons";
 
@@ -79,6 +81,30 @@ export const projects = pgTable("projects", {
 
 export type Project = typeof projects.$inferSelect;
 export type NewProject = typeof projects.$inferInsert;
+
+export const experiences = pgTable("experiences", {
+  id: serial("id").primaryKey(),
+  role: text("role").notNull(),
+  company: text("company").notNull(),
+  // One of employmentTypes, e.g. "Full-time".
+  type: text("type").$type<EmploymentType>().notNull(),
+  location: text("location").notNull(),
+  // The first of the month, as YYYY-MM-DD. Only the month and year are shown.
+  startDate: date("start_date").notNull(),
+  // Empty while it is the current position ("Present").
+  endDate: date("end_date"),
+  // One entry per paragraph.
+  description: text("description").array().notNull().default([]),
+  skills: text("skills").array().notNull().default([]),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at")
+    .notNull()
+    .defaultNow()
+    .$onUpdate(() => new Date()),
+});
+
+export type Experience = typeof experiences.$inferSelect;
+export type NewExperience = typeof experiences.$inferInsert;
 
 // Better Auth. Table and column names follow its defaults.
 

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { ComponentProps } from "react";
 
-type Variant = "primary" | "secondary" | "glass" | "glassDark";
+type Variant = "primary" | "secondary" | "glass" | "glassSolid";
 
 const variants: Record<Variant, string> = {
   primary:
@@ -10,8 +10,8 @@ const variants: Record<Variant, string> = {
     "rounded-2xl border-2 border-gray-700 text-gray-700 shadow-md hover:bg-gray-700 hover:text-gray-100",
   glass:
     "glass glass-hover rounded-full text-white hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97]",
-  glassDark:
-    "glass-dark glass-dark-hover rounded-full text-white hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97]",
+  glassSolid:
+    "glass-solid glass-solid-hover rounded-full text-gray-950 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97]",
 };
 
 export function buttonClass(variant: Variant = "primary") {

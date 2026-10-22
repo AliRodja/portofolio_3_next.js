@@ -1,5 +1,11 @@
 import { db } from "@/db";
-import { type NewProject, profile, projects } from "@/db/schema";
+import {
+  experiences,
+  type NewExperience,
+  type NewProject,
+  profile,
+  projects,
+} from "@/db/schema";
 import { defaultProfile } from "@/lib/default-profile";
 
 // Starter content for an empty database. Safe to run again: existing slugs are
@@ -55,6 +61,23 @@ const seedProjects: NewProject[] = [
   },
 ];
 
+// Only added while the table is empty, since experiences have no natural key
+// to skip duplicates by.
+const seedExperiences: NewExperience[] = [
+  {
+    role: "Software Engineer",
+    company: "Company Name",
+    type: "Full-time",
+    location: "Indonesia",
+    startDate: "2025-01-01",
+    endDate: null,
+    description: [
+      "Placeholder. Describe what you built, the impact it had, and the technologies you used.",
+    ],
+    skills: ["Next.js", "TypeScript"],
+  },
+];
+
 async function main() {
   const [seededProfile] = await db
     .insert(profile)
@@ -70,6 +93,14 @@ async function main() {
     .returning({ slug: projects.slug });
 
   console.log(`Seeded ${inserted.length} of ${seedProjects.length} projects.`);
+
+  const existing = await db.$count(experiences);
+  if (existing === 0) {
+    await db.insert(experiences).values(seedExperiences);
+    console.log(`Seeded ${seedExperiences.length} experiences.`);
+  } else {
+    console.log("Experiences already exist.");
+  }
   await db.$client.end();
 }
 

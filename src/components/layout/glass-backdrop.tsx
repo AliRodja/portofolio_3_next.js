@@ -1,17 +1,19 @@
-// A vivid violet-to-navy backdrop with glowing blobs and fine grain, shared by
-// every public page. Glass only reads as glass when there is color and
-// something sharp behind it; on a flat surface the effect disappears.
+// A near-black backdrop lit like a studio: a soft key light from the top
+// left, a faint fill from the bottom right, slow gray glows, and fine grain.
+// Glass needs tonal variation behind it to read as glass; on flat black the
+// effect disappears.
 export function GlassBackdrop() {
   return (
     <div
       aria-hidden
-      className="pointer-events-none fixed inset-0 -z-10 overflow-hidden bg-[linear-gradient(160deg,#6d5ce2_0%,#4c50d8_30%,#2b3cc2_55%,#131f88_80%,#0a1458_100%)]"
+      className="glass-backdrop-css pointer-events-none fixed inset-0 -z-10 overflow-hidden bg-[#050505]"
     >
-      <div className="glass-blob top-[-25%] left-[-10%] size-[max(55vw,26rem)] bg-[#a07dff]" />
-      <div className="glass-blob top-[15%] right-[-18%] size-[max(45vw,22rem)] bg-[#3f8cff] [animation-delay:-8s]" />
-      <div className="glass-blob bottom-[-35%] left-[10%] size-[max(60vw,28rem)] bg-[#2a1fa8] [animation-delay:-16s]" />
-      <div className="grain absolute inset-0 opacity-[0.12]" />
-      <div className="absolute inset-0 bg-[radial-gradient(120%_90%_at_50%_35%,transparent_55%,rgb(4_6_36/0.55))]" />
+      <div className="absolute inset-0 bg-[radial-gradient(60%_55%_at_12%_8%,rgb(255_255_255/0.16),transparent_70%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(45%_40%_at_92%_96%,rgb(255_255_255/0.07),transparent_70%)]" />
+      <div className="glass-blob top-[10%] right-[-15%] size-[max(40vw,20rem)] bg-[#3b3e44]" />
+      <div className="glass-blob bottom-[-30%] left-[15%] size-[max(50vw,24rem)] bg-[#2a2c30] [animation-delay:-12s]" />
+      <div className="grain absolute inset-0 opacity-[0.08]" />
+      <div className="absolute inset-0 bg-[radial-gradient(120%_90%_at_50%_40%,transparent_55%,rgb(0_0_0/0.7))]" />
     </div>
   );
 }
@@ -25,13 +27,13 @@ const streakSets = {
     {
       position:
         "[--sa:12deg] [--sx:50vw] [--sy:81.8vh] md:[--sa:18deg] md:[--sx:20.8vw] md:[--sy:62.8vh]",
-      opacity: 1,
+      opacity: 0.55,
       delay: "0s",
     },
     {
       position:
         "[--sa:-50deg] [--sx:67vw] [--sy:16.8vh] md:[--sa:-60deg] md:[--sx:85vw] md:[--sy:26vh]",
-      opacity: 0.6,
+      opacity: 0.3,
       delay: "-7s",
     },
   ],
@@ -41,12 +43,12 @@ const streakSets = {
   page: [
     {
       position: "max-md:hidden [--sa:-72deg] [--sx:96vw] [--sy:45vh]",
-      opacity: 0.45,
+      opacity: 0.25,
       delay: "0s",
     },
     {
       position: "max-md:hidden [--sa:-72deg] [--sx:3vw] [--sy:80vh]",
-      opacity: 0.3,
+      opacity: 0.15,
       delay: "-9s",
     },
   ],
@@ -56,7 +58,7 @@ export function LightStreaks({ variant }: { variant: keyof typeof streakSets }) 
   return (
     <div
       aria-hidden
-      className="pointer-events-none fixed inset-0 -z-10 overflow-hidden"
+      className="light-streak-layer pointer-events-none fixed inset-0 -z-10 overflow-hidden"
     >
       {streakSets[variant].map((streak) => (
         <div

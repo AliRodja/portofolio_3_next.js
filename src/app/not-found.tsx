@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { GlassBackdrop } from "@/components/layout/glass-backdrop";
+import { GlassStage } from "@/components/glass/glass-stage";
 import { Navbar } from "@/components/layout/navbar";
 import { buttonClass } from "@/components/ui/button";
 import { getProfile } from "@/db/queries/profile";
@@ -10,7 +10,7 @@ export default async function NotFound() {
   return (
     // Outside the (site) group, so it sets up the dark backdrop itself.
     <div data-tone="dark" className="text-white">
-      <GlassBackdrop />
+      <GlassStage />
       <Navbar name={profile.name} />
       <main className="flex min-h-screen flex-col items-center justify-center gap-10 p-10">
         <div className="text-center">
@@ -19,7 +19,7 @@ export default async function NotFound() {
           </h2>
           <h1 className="text-4xl font-medium text-white">404</h1>
         </div>
-        <Link href="/" className={buttonClass("glassDark")}>
+        <Link href="/" className={buttonClass("glassSolid")}>
           Go Home
         </Link>
       </main>

@@ -12,6 +12,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { getExperiences } from "@/db/queries/experience";
 import { getProfile } from "@/db/queries/profile";
 import { getProjects } from "@/db/queries/projects";
 import { requireAdmin } from "@/lib/session";
@@ -26,15 +27,19 @@ export const metadata: Metadata = {
 export const instant = false;
 
 const upcoming = [
-  { title: "Experience", icon: faBriefcase },
   { title: "Skills", icon: faLayerGroup },
   { title: "Education & achievements", icon: faGraduationCap },
 ];
 
 export default async function OverviewPage() {
   const admin = await requireAdmin();
-  const [profile, projects] = await Promise.all([getProfile(), getProjects()]);
+  const [profile, projects, experiences] = await Promise.all([
+    getProfile(),
+    getProjects(),
+    getExperiences(),
+  ]);
   const highlight = projects.find((project) => project.highlight);
+  const latestExperience = experiences[0];
   const firstName = admin.name.split(" ")[0];
 
   return (
@@ -56,7 +61,7 @@ export default async function OverviewPage() {
         }
       />
 
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         <SectionCard
           href="/admin/profile"
           icon={faUser}
@@ -74,6 +79,17 @@ export default async function OverviewPage() {
           title="Projects"
           value={`${projects.length} ${projects.length === 1 ? "project" : "projects"}`}
           detail={highlight ? `Highlight: ${highlight.title}` : "No highlighted project"}
+        />
+        <SectionCard
+          href="/admin/experience"
+          icon={faBriefcase}
+          title="Experience"
+          value={`${experiences.length} ${experiences.length === 1 ? "position" : "positions"}`}
+          detail={
+            latestExperience
+              ? `Latest: ${latestExperience.role} at ${latestExperience.company}`
+              : "Hidden on the About page until you add one"
+          }
         />
       </div>
 
