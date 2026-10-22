@@ -2,7 +2,6 @@ import { config } from "@fortawesome/fontawesome-svg-core";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 import type { Metadata } from "next";
 import { Jost, Poppins } from "next/font/google";
-import { Navbar } from "@/components/navbar";
 import { site } from "@/data/site";
 import "./globals.css";
 
@@ -43,7 +42,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={`${poppins.variable} ${jost.variable}`}>
       <body className="font-sans antialiased">
-        <Navbar />
         {children}
       </body>
     </html>
