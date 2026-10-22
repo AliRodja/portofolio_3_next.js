@@ -27,7 +27,7 @@ export function PageHero({
           initial={{ scale: 1 }}
           animate={{ scale: 1.6 }}
           transition={{ ease: "circOut", duration: 1 }}
-          className="relative h-[400px] w-[80vw] overflow-hidden rounded-sm bg-slate-300 grayscale transition hover:grayscale-0 md:h-[600px] md:w-[30vw]"
+          className="relative h-[400px] w-[80vw] overflow-hidden rounded-2xl bg-white/5 ring-1 ring-white/20 grayscale transition hover:grayscale-0 md:h-[600px] md:w-[30vw]"
         >
           <Photo
             src={photo}
@@ -38,10 +38,10 @@ export function PageHero({
         </motion.div>
       </div>
 
-      <div className="absolute top-[60%] z-10 flex w-full flex-col items-start bg-gray-100/50 px-10 pt-4 backdrop-blur-sm md:top-1/3 md:left-[10%] md:w-auto md:bg-transparent md:pt-0 md:backdrop-blur-none">
-        <h1 className="text-5xl font-bold text-black md:text-8xl">{title}</h1>
+      <div className="absolute top-[60%] z-10 flex w-full flex-col items-start bg-black/20 px-10 pt-4 backdrop-blur-sm md:top-1/3 md:left-[10%] md:w-auto md:bg-transparent md:pt-0 md:backdrop-blur-none">
+        <h1 className="text-5xl font-bold text-white md:text-8xl">{title}</h1>
         <DoubleBar />
-        <p className="mt-4 mb-5 font-display text-xl leading-[1.7rem] tracking-wider text-gray-900">
+        <p className="mt-4 mb-5 font-display text-xl leading-[1.7rem] tracking-wider text-white/80">
           {description}
         </p>
         <motion.button
@@ -54,7 +54,7 @@ export function PageHero({
               .getElementById(scrollTargetId)
               ?.scrollIntoView({ behavior: "smooth" })
           }
-          className={`mb-3 ${buttonClass("primary")}`}
+          className={`mb-3 ${buttonClass("glassDark")}`}
         >
           Scroll Down
         </motion.button>

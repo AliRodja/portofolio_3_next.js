@@ -10,6 +10,9 @@ export const metadata: Metadata = {
   title: "Edit project",
 };
 
+// Reads the session on every request (see the dashboard layout).
+export const instant = false;
+
 export default async function EditProjectPage({
   params,
 }: PageProps<"/admin/projects/[id]/edit">) {

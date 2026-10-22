@@ -13,13 +13,220 @@
   }
 }
 
+/* Pages with a dark backdrop (the home page) mark themselves with
+   data-tone="dark", so shared pieces like the navbar can switch to light
+   text there without knowing which page they are on. */
+@custom-variant on-dark (&:where(body:has([data-tone="dark"]) *));
+
+/* ---------------------------------------------------------------------------
+   Liquid Glass
+   ---------------------------------------------------------------------------
+   A clear surface: light blur so what is behind stays recognisable, a faint
+   top-to-bottom fill, a glowing rim that is brightest at the top-left and
+   bottom-right (drawn by ::before), and a soft inner glow along the bottom.
+
+   Write backdrop-filter and mask unprefixed only. The CSS minifier
+   (Lightning CSS) treats prefixed and unprefixed versions as one property
+   and keeps only the last one written, so adding a -webkit- line by hand
+   drops the unprefixed one that Chrome and Firefox need. The minifier adds
+   the Safari prefixes itself.
+   --------------------------------------------------------------------------- */
+
+@utility glass {
+  position: relative;
+  isolation: isolate;
+  background: linear-gradient(
+    180deg,
+    rgb(255 255 255 / 0.16),
+    rgb(255 255 255 / 0.05)
+  );
+  backdrop-filter: blur(8px) saturate(170%);
+  box-shadow:
+    inset 0 1px 1px rgb(255 255 255 / 0.3),
+    inset 0 -8px 16px -8px rgb(255 255 255 / 0.22),
+    inset 0 0 24px rgb(255 255 255 / 0.05),
+    0 12px 32px -12px rgb(10 12 60 / 0.5);
+
+  /* The rim: a 1px gradient ring cut out of a full gradient with a mask. */
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    padding: 1px;
+    border-radius: inherit;
+    background: linear-gradient(
+      135deg,
+      rgb(255 255 255 / 0.75),
+      rgb(255 255 255 / 0.12) 35%,
+      rgb(255 255 255 / 0.06) 60%,
+      rgb(255 255 255 / 0.5)
+    );
+    mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+}
+
+/* A darker, tinted glass for the selected or primary item, like the
+   "Command" pill in Apple's examples. */
+@utility glass-dark {
+  position: relative;
+  isolation: isolate;
+  background: linear-gradient(
+    180deg,
+    rgb(18 16 48 / 0.38),
+    rgb(18 16 48 / 0.24)
+  );
+  backdrop-filter: blur(8px) saturate(160%);
+  box-shadow:
+    inset 0 1px 1px rgb(255 255 255 / 0.22),
+    inset 0 -8px 16px -8px rgb(255 255 255 / 0.12),
+    inset 0 0 24px rgb(0 0 0 / 0.12),
+    0 12px 32px -12px rgb(6 8 40 / 0.6);
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    padding: 1px;
+    border-radius: inherit;
+    background: linear-gradient(
+      135deg,
+      rgb(255 255 255 / 0.5),
+      rgb(255 255 255 / 0.08) 35%,
+      rgb(255 255 255 / 0.04) 60%,
+      rgb(255 255 255 / 0.32)
+    );
+    mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+}
+
+/* Hover: the fill brightens a little, like light catching the glass. */
+@utility glass-hover {
+  &:hover {
+    background: linear-gradient(
+      180deg,
+      rgb(255 255 255 / 0.24),
+      rgb(255 255 255 / 0.09)
+    );
+  }
+}
+
+@utility glass-dark-hover {
+  &:hover {
+    background: linear-gradient(
+      180deg,
+      rgb(18 16 48 / 0.48),
+      rgb(18 16 48 / 0.32)
+    );
+  }
+}
+
+/* A large blurred color blob for the home page backdrop. */
+@utility glass-blob {
+  position: absolute;
+  border-radius: 9999px;
+  opacity: 0.45;
+  filter: blur(90px);
+  animation: blob-drift 28s ease-in-out infinite alternate;
+}
+
+@keyframes blob-drift {
+  from {
+    transform: translate(0, 0) scale(1);
+  }
+  to {
+    transform: translate(6vw, 4vh) scale(1.12);
+  }
+}
+
+/* A thin glowing line of light, like the one bending through the glass in
+   Apple's examples. Glass reads best when something sharp passes behind it. */
+@utility light-streak {
+  position: absolute;
+  height: 3px;
+  border-radius: 9999px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgb(140 185 255 / 0.85) 25%,
+    rgb(205 228 255) 50%,
+    rgb(140 185 255 / 0.85) 75%,
+    transparent
+  );
+  box-shadow:
+    0 0 10px 2px rgb(110 160 255 / 0.55),
+    0 0 40px 8px rgb(90 130 255 / 0.22);
+  animation: streak-drift 20s ease-in-out infinite alternate;
+}
+
+@keyframes streak-drift {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(2vh);
+  }
+}
+
+/* Fine film grain so large gradients do not look flat or band. */
+@utility grain {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  mix-blend-mode: overlay;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glass-blob,
+  .light-streak {
+    animation: none;
+  }
+}
+
+/* Accessibility: fall back to solid surfaces when transparency is reduced. */
+@media (prefers-reduced-transparency: reduce) {
+  .glass {
+    background: rgb(240 242 245) !important;
+    backdrop-filter: none !important;
+  }
+
+  .glass-dark {
+    background: rgb(32 32 36) !important;
+    backdrop-filter: none !important;
+  }
+
+  /* On the dark home page, keep light text readable. */
+  body:has([data-tone="dark"]) .glass {
+    background: rgb(62 60 128) !important;
+  }
+}
+
 /* Scale the whole layout smoothly with the viewport width. */
 html {
   font-size: clamp(13px, 0.89vw, 17px);
 }
 
+/* The dashboard is a work tool: fixed, readable sizes and a light page,
+   independent of the public site's scaling and dark backdrop. */
+html:has([data-admin]) {
+  font-size: 16px;
+}
+
+html:has([data-admin]) body {
+  background-color: #f9fafb;
+}
+
+/* Matches the public pages' backdrop, so overscroll and the moment before
+   it paints never flash a light color. The dashboard sets its own. */
 body {
-  background-color: rgb(230 230 230);
+  background-color: #1b2190;
   color: black;
 }
 
@@ -33,6 +240,6 @@ h6 {
 }
 
 ::selection {
-  background: #333333;
+  background: #2a2d35;
   color: #ffffff;
 }

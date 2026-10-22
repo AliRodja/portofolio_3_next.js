@@ -8,6 +8,9 @@ export const metadata: Metadata = {
   title: "New project",
 };
 
+// Reads the session on every request (see the dashboard layout).
+export const instant = false;
+
 export default async function NewProjectPage() {
   await requireAdmin();
 

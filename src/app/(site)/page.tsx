@@ -7,7 +7,7 @@ import {
 import { Reveal } from "@/components/motion/reveal";
 import { FullPage, FullPageSection } from "@/components/sections/fullpage";
 import { SocialLinks } from "@/components/sections/social-links";
-import { ButtonLink } from "@/components/ui/button";
+import { ButtonLink, buttonClass } from "@/components/ui/button";
 import { Photo } from "@/components/ui/photo";
 import { getProfile } from "@/db/queries/profile";
 import { FeatureSection } from "./_components/feature-section";
@@ -28,7 +28,7 @@ export default async function HomePage() {
         <div className="mx-auto grid w-[82%] max-w-screen-2xl grid-cols-1 gap-4 p-10 md:grid-cols-3">
           <div className="col-span-2 flex flex-col items-center justify-center text-center md:items-start md:text-start">
             <Reveal className="mx-auto my-10 md:hidden">
-              <div className="relative h-60 w-60 overflow-hidden rounded-full bg-slate-500 grayscale transition duration-300 hover:grayscale-0">
+              <div className="relative h-60 w-60 overflow-hidden rounded-full bg-white/5 ring-1 ring-white/20 grayscale transition duration-300 hover:grayscale-0">
                 <Photo
                   src={profile.heroPhoto}
                   alt={profile.fullName}
@@ -38,34 +38,38 @@ export default async function HomePage() {
               </div>
             </Reveal>
             <Reveal delay={0.2}>
-              <p className="mb-3 font-display text-xl tracking-[.5rem] text-gray-500 uppercase">
+              <p className="mb-3 font-display text-xl tracking-[.5rem] text-white/60 uppercase">
                 {profile.fullName}
               </p>
             </Reveal>
             <Reveal delay={0.3}>
-              <h1 className="my-2 text-4xl font-bold text-black md:my-5 md:text-6xl 2xl:text-8xl">
+              <h1 className="my-2 text-4xl font-bold text-white md:my-5 md:text-6xl 2xl:text-8xl">
                 {profile.role}
               </h1>
             </Reveal>
             <Reveal delay={0.4}>
-              <p className="mt-4 font-display text-base leading-[1.7rem] tracking-wider text-gray-500 2xl:text-xl">
+              <p className="mt-4 font-display text-base leading-[1.7rem] tracking-wider text-white/70 2xl:text-xl">
                 {profile.intro}
               </p>
             </Reveal>
             <Reveal delay={0.5} className="mt-10 flex flex-wrap justify-center gap-4">
               {profile.cvUrl ? (
-                <ButtonLink
+                // A plain link, so Next.js does not treat the PDF as a route.
+                <a
                   href={profile.cvUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   download
+                  className={buttonClass("glassDark")}
                 >
                   Download CV
-                </ButtonLink>
+                </a>
               ) : (
-                <ButtonLink href="/projects">View Projects</ButtonLink>
+                <ButtonLink href="/projects" variant="glassDark">
+                  View Projects
+                </ButtonLink>
               )}
-              <ButtonLink href="/#contact" variant="secondary">
+              <ButtonLink href="/#contact" variant="glass">
                 Contact Me
               </ButtonLink>
             </Reveal>
@@ -76,7 +80,7 @@ export default async function HomePage() {
             delay={0.7}
             className="col-span-1 hidden items-center justify-center md:flex"
           >
-            <div className="relative aspect-[8/11] w-full max-w-[26vw] overflow-hidden rounded-full bg-slate-500 grayscale transition duration-300 hover:grayscale-0">
+            <div className="relative aspect-8/11 w-full max-w-[26vw] overflow-hidden rounded-full bg-white/5 ring-1 ring-white/20 grayscale transition duration-300 hover:grayscale-0">
               <Photo
                 src={profile.heroPhoto}
                 alt={profile.fullName}
@@ -95,7 +99,9 @@ export default async function HomePage() {
         photo={profile.aboutPhoto}
         photoAlt={profile.fullName}
       >
-        <ButtonLink href="/about">Learn More</ButtonLink>
+        <ButtonLink href="/about" variant="glassDark">
+          Learn More
+        </ButtonLink>
       </FeatureSection>
 
       <FeatureSection
@@ -105,7 +111,9 @@ export default async function HomePage() {
         photo={profile.projectsPhoto}
         photoAlt="Projects"
       >
-        <ButtonLink href="/projects">Learn More</ButtonLink>
+        <ButtonLink href="/projects" variant="glassDark">
+          Learn More
+        </ButtonLink>
       </FeatureSection>
 
       <FeatureSection
@@ -117,7 +125,7 @@ export default async function HomePage() {
             say hi.
             <a
               href={`mailto:${profile.email}`}
-              className="mt-4 block text-gray-500 hover:text-black"
+              className="mt-4 block text-white/70 hover:text-white"
             >
               {profile.email}
             </a>

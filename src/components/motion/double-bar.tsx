@@ -5,7 +5,7 @@ import { motion } from "motion/react";
 // Two short bars that slide in from opposite sides, used under headings.
 export function DoubleBar({ variant = "short" }: { variant?: "short" | "long" }) {
   const isLong = variant === "long";
-  const bar = `h-1 rounded-full bg-gray-700 ${isLong ? "w-28" : "w-20"}`;
+  const bar = `h-1 rounded-full bg-gray-700 on-dark:bg-white/70 ${isLong ? "w-28" : "w-20"}`;
 
   return (
     <div

@@ -7,9 +7,11 @@ export function BackButton({ href }: { href: string }) {
     <Link
       href={href}
       aria-label="Go back"
-      className="fixed top-2 -left-2 z-50 flex items-center justify-center rounded-full p-4 md:left-10"
+      // Below the navbar on mobile, beside the logo pill on desktop. z-40
+      // keeps it under the menu overlay (z-45).
+      className="glass glass-hover fixed top-[4.5rem] left-4 z-40 flex h-11 w-11 items-center justify-center rounded-full transition-all duration-300 ease-[cubic-bezier(0.25,1,0.5,1)] active:scale-95 md:top-2.5 md:left-10"
     >
-      <FontAwesomeIcon icon={faChevronLeft} className="text-black" />
+      <FontAwesomeIcon icon={faChevronLeft} className="text-white" />
     </Link>
   );
 }

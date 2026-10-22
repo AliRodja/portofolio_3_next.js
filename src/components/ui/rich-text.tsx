@@ -4,7 +4,7 @@ export function RichText({ text }: { text: string }) {
     <>
       {text.split(/(\*\*[^*]+\*\*)/g).map((part, index) =>
         part.startsWith("**") && part.endsWith("**") ? (
-          <span key={index} className="font-medium text-black">
+          <span key={index} className="font-medium text-white">
             {part.slice(2, -2)}
           </span>
         ) : (

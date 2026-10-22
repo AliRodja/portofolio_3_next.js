@@ -20,7 +20,7 @@ export function Photo({
   if (!src) {
     return (
       <div
-        className={`absolute inset-0 flex flex-col items-center justify-center gap-2 bg-slate-400 text-slate-600 ${className}`}
+        className={`absolute inset-0 flex flex-col items-center justify-center gap-2 bg-slate-400 text-slate-600 on-dark:bg-white/5 on-dark:text-white/50 ${className}`}
       >
         <FontAwesomeIcon icon={faImage} className="text-3xl" />
         <span className="text-xs uppercase tracking-widest">Add photo</span>

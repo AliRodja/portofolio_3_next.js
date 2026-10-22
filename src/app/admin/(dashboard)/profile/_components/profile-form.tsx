@@ -31,7 +31,7 @@ export function ProfileForm({ profile }: { profile: ProfileData }) {
         const formData = new FormData(event.currentTarget);
         startTransition(() => formAction(formData));
       }}
-      className="space-y-6"
+      className="space-y-8"
     >
       <FormSection
         title="Basic info"
@@ -141,38 +141,47 @@ export function ProfileForm({ profile }: { profile: ProfileData }) {
         title="Photos"
         description="Shown in black and white, in color on hover. Empty slots show a placeholder."
       >
-        <div className="grid gap-6 md:grid-cols-2">
+        <div className="grid grid-cols-2 gap-x-4 gap-y-6 xl:grid-cols-4">
           <MediaField
             name="heroPhoto"
+            aspect="portrait"
             label="Home"
             hint="Portrait next to your name."
+            alignHint
             folder="profile"
             defaultValue={photoValue(profile.heroPhoto)}
           />
           <MediaField
             name="aboutPhoto"
+            aspect="portrait"
             label="About section"
-            hint="Home page section and the about page header."
+            hint="Home section and about page header."
+            alignHint
             folder="profile"
             defaultValue={photoValue(profile.aboutPhoto)}
           />
           <MediaField
             name="projectsPhoto"
+            aspect="portrait"
             label="Projects section"
-            hint="Home page section and the projects page header."
+            hint="Home section and projects page header."
+            alignHint
             folder="profile"
             defaultValue={photoValue(profile.projectsPhoto)}
           />
           <MediaField
             name="contactPhoto"
+            aspect="portrait"
             label="Contact section"
-            hint="Next to the contact details on the home page."
+            hint="Beside the contact details on the home page."
+            alignHint
             folder="profile"
             defaultValue={photoValue(profile.contactPhoto)}
           />
         </div>
         <MediaField
           name="collagePhotos"
+          aspect="square"
           label="About collage"
           hint="Up to three photos beside “Who Am I?” on the about page."
           folder="profile"

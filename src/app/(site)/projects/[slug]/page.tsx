@@ -37,10 +37,10 @@ export async function generateMetadata({
 function Detail({ label, children }: { label: string; children: ReactNode }) {
   return (
     <div>
-      <h2 className="text-lg font-normal tracking-[8px] text-neutral-400 uppercase">
+      <h2 className="text-lg font-normal tracking-[8px] text-white/50 uppercase">
         {label}
       </h2>
-      <div className="text-2xl font-normal text-neutral-900">{children}</div>
+      <div className="text-2xl font-normal text-white">{children}</div>
     </div>
   );
 }
@@ -61,13 +61,13 @@ export default async function ProjectPage({
       <ScrollToggle />
 
       <div className="flex min-h-screen items-center justify-center">
-        <div className="mx-auto mt-10 grid grid-cols-1 gap-10 md:mt-0 md:grid-cols-2">
+        <div className="mx-auto mt-10 grid w-full max-w-6xl grid-cols-1 gap-10 md:mt-0 md:grid-cols-2">
           <Reveal className="mx-auto flex flex-col justify-center space-y-10">
             <div>
-              <h2 className="text-lg font-normal tracking-[8px] text-neutral-400 uppercase">
+              <h2 className="text-lg font-normal tracking-[8px] text-white/50 uppercase">
                 Project
               </h2>
-              <h1 className="text-4xl font-medium text-neutral-900">
+              <h1 className="text-4xl font-medium text-white">
                 {project.title}
               </h1>
             </div>
@@ -105,13 +105,13 @@ export default async function ProjectPage({
           </Reveal>
 
           <Reveal from="right" delay={0.2} className="flex flex-col justify-center">
-            <h2 className="text-lg font-normal tracking-[8px] text-neutral-400 uppercase">
+            <h2 className="text-lg font-normal tracking-[8px] text-white/50 uppercase">
               Description
             </h2>
             {project.description.map((paragraph) => (
               <p
                 key={paragraph}
-                className="mb-5 text-justify text-xl tracking-wide text-gray-500"
+                className="mb-5 text-justify text-xl tracking-wide text-white/70"
               >
                 {paragraph}
               </p>

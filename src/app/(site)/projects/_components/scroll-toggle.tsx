@@ -34,11 +34,11 @@ export function ScrollToggle() {
       onClick={handleClick}
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.9 }}
-      className="fixed bottom-10 left-1/2 z-40 flex h-10 w-10 -translate-x-1/2 items-center justify-center rounded-full bg-neutral-900"
+      className="glass-dark glass-dark-hover fixed! bottom-10 left-1/2 z-40 flex h-11 w-11 -translate-x-1/2 items-center justify-center rounded-full"
     >
       <FontAwesomeIcon
         icon={isAtBottom ? faChevronUp : faChevronDown}
-        className="text-2xl text-white"
+        className="text-lg text-white"
       />
     </motion.button>
   );

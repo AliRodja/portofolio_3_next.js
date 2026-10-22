@@ -46,7 +46,7 @@ export function Education() {
         <h2 className="text-3xl font-bold tracking-tighter md:text-4xl">
           Education
         </h2>
-        <p className="mx-auto max-w-[800px] text-gray-600">
+        <p className="mx-auto max-w-[800px] text-white/70">
           Get to know more about my educational background.
         </p>
       </div>
@@ -81,7 +81,7 @@ export function Education() {
             ))}
           </div>
 
-          <div className="space-y-4 text-justify font-display text-lg text-gray-600">
+          <div className="space-y-4 text-justify font-display text-lg text-white/70">
             {education.description.map((paragraph) => (
               <p key={paragraph}>
                 <RichText text={paragraph} />
@@ -92,7 +92,7 @@ export function Education() {
             {education.badges.map((badge) => (
               <span
                 key={badge}
-                className="rounded-2xl bg-gray-300 px-2 py-1 text-black"
+                className="rounded-2xl border border-white/20 bg-white/10 px-3 py-1 text-white"
               >
                 {badge}
               </span>
@@ -107,7 +107,7 @@ export function Education() {
           transition={{ duration: 0.8, delay: 0.4 }}
         >
           <h3 className="mt-7 text-xl font-semibold">Achievements</h3>
-          <p className="mb-3 md:mb-6">Some of my achievements during my study.</p>
+          <p className="mb-3 text-white/70 md:mb-6">Some of my achievements during my study.</p>
 
           <ul className="space-y-4">
             <AnimatePresence>
@@ -125,15 +125,15 @@ export function Education() {
                   >
                     {isFirstOfYear && (
                       <div className="mt-2 mb-3 flex items-center gap-3">
-                        <span className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-200 text-xs font-bold text-gray-600">
+                        <span className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-white/10 text-xs font-bold text-white/80">
                           {achievement.year}
                         </span>
-                        <span className="h-px flex-1 bg-linear-to-r from-gray-300 to-transparent" />
+                        <span className="h-px flex-1 bg-linear-to-r from-white/30 to-transparent" />
                       </div>
                     )}
-                    <div className="flex items-center gap-4 rounded-2xl border border-white/30 bg-white/20 p-4 shadow-lg grayscale backdrop-blur-md transition duration-300 hover:bg-white/30 hover:shadow-xl hover:grayscale-0">
+                    <div className="glass glass-hover group flex items-center gap-4 rounded-2xl p-4 transition duration-300">
                       <span
-                        className={`flex aspect-square w-10 items-center justify-center rounded-full bg-linear-to-r ${style.color}`}
+                        className={`flex aspect-square w-10 items-center justify-center rounded-full bg-linear-to-r grayscale transition duration-300 group-hover:grayscale-0 ${style.color}`}
                       >
                         <FontAwesomeIcon
                           icon={style.icon}
@@ -143,7 +143,7 @@ export function Education() {
                       <div>
                         <p className="font-medium">{achievement.title}</p>
                         <p className="text-sm">{achievement.event}</p>
-                        <p className="mt-1 text-xs text-gray-500">
+                        <p className="mt-1 text-xs text-white/50">
                           {achievement.date}
                         </p>
                       </div>
@@ -159,7 +159,7 @@ export function Education() {
               <button
                 type="button"
                 onClick={() => setIsExpanded(!isExpanded)}
-                className="flex items-center gap-2 rounded-full border border-white/40 bg-white/30 px-6 py-3 text-sm font-medium shadow-lg backdrop-blur-md transition duration-300 hover:bg-white/40 hover:shadow-xl"
+                className="glass glass-hover flex items-center gap-2 rounded-full px-6 py-3 text-sm font-medium transition duration-300"
               >
                 {isExpanded ? "Show Less" : `Show ${hiddenCount} More`}
                 <FontAwesomeIcon

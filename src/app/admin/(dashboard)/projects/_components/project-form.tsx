@@ -34,7 +34,7 @@ export function ProjectForm({
         const formData = new FormData(event.currentTarget);
         startTransition(() => formAction(formData));
       }}
-      className="space-y-6"
+      className="space-y-8"
     >
       <FormSection title="Details" description="What the project is and does.">
         <div className="grid gap-5 md:grid-cols-2">

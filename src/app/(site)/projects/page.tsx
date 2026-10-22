@@ -73,17 +73,20 @@ export default async function ProjectsPage() {
                 <h3 className="mb-3 text-2xl font-bold tracking-wider">
                   {highlight.title}
                 </h3>
-                <p className="text-justify font-display text-lg text-gray-600">
+                <p className="text-justify font-display text-lg text-white/70">
                   {highlight.description[0]}
                 </p>
                 <div className="mt-3 flex flex-wrap gap-3">
-                  <ButtonLink href={`/projects/${highlight.slug}`}>
+                  <ButtonLink
+                    href={`/projects/${highlight.slug}`}
+                    variant="glassDark"
+                  >
                     More
                   </ButtonLink>
                   {highlight.previewUrl && (
                     <ButtonLink
                       href={highlight.previewUrl}
-                      variant="secondary"
+                      variant="glass"
                       target="_blank"
                       rel="noopener noreferrer"
                     >
@@ -100,7 +103,9 @@ export default async function ProjectsPage() {
         <ProjectGrid projects={otherProjects} />
 
         <Reveal from="none" className="my-5 flex justify-center">
-          <ButtonLink href="/projects/archive">View In Archive</ButtonLink>
+          <ButtonLink href="/projects/archive" variant="glassDark">
+            View In Archive
+          </ButtonLink>
         </Reveal>
       </div>
     </main>

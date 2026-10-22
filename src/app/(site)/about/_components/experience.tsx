@@ -19,7 +19,7 @@ export function Experience() {
       <div className="container mx-auto px-6 py-10">
         <div className="relative mx-auto w-full max-w-6xl">
           {/* Timeline line: on the left on mobile, centered on desktop. */}
-          <div className="absolute left-0 h-full w-1 bg-linear-to-b from-black via-gray-400 to-transparent md:left-1/2 md:-translate-x-1/2" />
+          <div className="absolute left-0 h-full w-1 bg-linear-to-b from-white/80 via-white/30 to-transparent md:left-1/2 md:-translate-x-1/2" />
 
           <ol className="relative space-y-12 md:space-y-16">
             {visible.map((item, index) => {
@@ -29,7 +29,7 @@ export function Experience() {
                   key={`${item.company}-${item.start}`}
                   className="relative md:grid md:grid-cols-2 md:items-start md:gap-12"
                 >
-                  <span className="absolute top-5 left-0 z-10 h-6 w-6 -translate-x-1/2 rounded-full border-4 border-white bg-black shadow-lg md:top-4 md:left-1/2" />
+                  <span className="absolute top-5 left-0 z-10 h-6 w-6 -translate-x-1/2 rounded-full border-4 border-white/90 bg-[#2b3cc2] shadow-lg md:top-4 md:left-1/2" />
 
                   <motion.div
                     initial={{ opacity: 0, y: -20 }}
@@ -41,22 +41,22 @@ export function Experience() {
                         : "md:col-start-2 md:justify-start"
                     }`}
                   >
-                    <div className="flex items-center gap-6 rounded-xl border border-gray-600 bg-linear-to-r from-black to-gray-800 px-8 py-3 text-white shadow-lg">
+                    <div className="glass-dark flex items-center gap-6 rounded-xl px-8 py-3 text-white">
                       <div className="text-center">
                         <div className="text-sm font-bold">{item.start}</div>
-                        <div className="text-xs text-gray-300">Start</div>
+                        <div className="text-xs text-white/60">Start</div>
                       </div>
-                      <div className="h-8 w-px bg-gray-500" />
+                      <div className="h-8 w-px bg-white/20" />
                       <div className="text-center">
                         <div className="text-sm font-bold">{item.end}</div>
-                        <div className="text-xs text-gray-300">End</div>
+                        <div className="text-xs text-white/60">End</div>
                       </div>
-                      <div className="h-8 w-px bg-gray-500" />
+                      <div className="h-8 w-px bg-white/20" />
                       <div className="text-center">
-                        <div className="text-sm font-medium text-gray-400">
+                        <div className="text-sm font-medium text-white/80">
                           {item.location}
                         </div>
-                        <div className="text-xs text-gray-300">Location</div>
+                        <div className="text-xs text-white/60">Location</div>
                       </div>
                     </div>
                   </motion.div>
@@ -69,24 +69,24 @@ export function Experience() {
                       isRight ? "md:col-start-2" : "md:col-start-1"
                     }`}
                   >
-                    <div className="rounded-2xl border border-gray-300/30 bg-white/20 p-6 shadow-lg backdrop-blur-sm transition duration-300 hover:bg-white/30 hover:shadow-xl">
-                      <h3 className="mb-1 text-xl font-bold text-black">
+                    <div className="glass glass-hover rounded-2xl p-6 transition duration-300">
+                      <h3 className="mb-1 text-xl font-bold text-white">
                         {item.company}
                       </h3>
-                      <p className="mb-4 font-display text-lg font-medium text-gray-700">
+                      <p className="mb-4 font-display text-lg font-medium text-white/85">
                         {item.role}
-                        <span className="ml-2 text-sm font-normal text-gray-500">
+                        <span className="ml-2 text-sm font-normal text-white/50">
                           • {item.type}
                         </span>
                       </p>
-                      <p className="mb-4 text-justify leading-relaxed text-gray-600">
+                      <p className="mb-4 text-justify leading-relaxed text-white/70">
                         {item.description}
                       </p>
                       <ul className="flex flex-wrap gap-2">
                         {item.skills.map((skill) => (
                           <li
                             key={skill}
-                            className="rounded-full border border-gray-400/40 bg-gray-200/60 px-3 py-1 text-sm font-medium text-black transition duration-300 hover:scale-105"
+                            className="rounded-full border border-white/20 bg-white/10 px-3 py-1 text-sm font-medium text-white transition duration-300 hover:scale-105"
                           >
                             {skill}
                           </li>
@@ -104,7 +104,7 @@ export function Experience() {
               <button
                 type="button"
                 onClick={() => setShowAll(!showAll)}
-                className="flex items-center gap-2 rounded-full bg-black px-8 py-3 font-medium text-white shadow-lg transition duration-300 hover:scale-105 hover:bg-gray-800"
+                className="glass-dark glass-dark-hover flex items-center gap-2 rounded-full px-8 py-3 font-medium text-white transition duration-300 hover:scale-105"
               >
                 {showAll ? "Show Less" : "View More Experience"}
                 <FontAwesomeIcon

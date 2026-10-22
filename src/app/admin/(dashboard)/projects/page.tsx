@@ -13,6 +13,9 @@ export const metadata: Metadata = {
   title: "Projects",
 };
 
+// Reads the session on every request (see the dashboard layout).
+export const instant = false;
+
 export default async function AdminProjectsPage() {
   await requireAdmin();
   const projects = await getProjects();

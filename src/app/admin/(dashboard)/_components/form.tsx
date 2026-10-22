@@ -16,7 +16,8 @@ export type FormState = {
   errors?: Partial<Record<string, string[]>>;
 };
 
-// A card grouping related fields under a heading.
+// A settings-style section: the heading and explanation sit in a column on
+// the left on wide screens, with the fields in a card on the right.
 export function FormSection({
   title,
   description,
@@ -27,14 +28,16 @@ export function FormSection({
   children: ReactNode;
 }) {
   return (
-    <section className="rounded-xl border border-gray-200 bg-white">
-      <div className="border-b border-gray-100 px-5 py-4 md:px-6">
+    <section className="grid gap-4 border-b border-gray-200 pb-8 last-of-type:border-b-0 lg:grid-cols-[15rem_minmax(0,1fr)] lg:gap-10">
+      <div>
         <h2 className="font-semibold">{title}</h2>
         {description && (
-          <p className="mt-0.5 text-sm text-gray-500">{description}</p>
+          <p className="mt-1 text-sm text-gray-500">{description}</p>
         )}
       </div>
-      <div className="space-y-5 p-5 md:p-6">{children}</div>
+      <div className="space-y-5 rounded-xl border border-gray-200 bg-white p-5 shadow-xs md:p-6">
+        {children}
+      </div>
     </section>
   );
 }
@@ -65,7 +68,8 @@ export function FieldError({ error }: { error?: string[] }) {
   return <span className="mt-1.5 block text-sm text-red-600">{error[0]}</span>;
 }
 
-// Stays at the bottom of the screen so saving is always one click away.
+// Floats at the bottom of the content column so saving is always one click
+// away, without covering the sidebar.
 export function SaveBar({
   state,
   isPending,
@@ -78,7 +82,7 @@ export function SaveBar({
   cancelHref?: string;
 }) {
   return (
-    <div className="sticky bottom-0 z-10 -mx-5 flex flex-wrap items-center justify-end gap-3 border-t border-gray-200 bg-white/90 px-5 py-4 backdrop-blur md:-mx-10 md:px-10">
+    <div className="sticky bottom-4 z-10 mt-2 flex flex-wrap items-center justify-end gap-3 rounded-xl border border-gray-200 bg-white/90 px-4 py-3 shadow-lg backdrop-blur">
       {state.message && !isPending && (
         <p
           role="status"

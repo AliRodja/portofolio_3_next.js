@@ -61,7 +61,7 @@ Semua variabel ada di `.env.example`.
 | `BETTER_AUTH_URL` | URL website, misalnya `http://localhost:3000`. Juga dipakai untuk metadata, sitemap, dan robots.txt. |
 | `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET` | Dari GitHub OAuth App (lihat di bawah). |
 | `ADMIN_EMAILS` | Email yang boleh masuk dashboard, pisahkan dengan koma. Harus sama dengan email utama akun GitHub. |
-| `BLOB_READ_WRITE_TOKEN` | Token Vercel Blob untuk upload gambar. Tanpa ini, gambar tetap bisa diisi dengan path atau URL. |
+| `BLOB_READ_WRITE_TOKEN` | Token Vercel Blob untuk upload gambar dan CV. Saat development tanpa token, file disimpan ke `public/uploads/` (diabaikan git). Di production, token ini wajib untuk upload. Gambar juga selalu bisa diisi dengan path atau URL. |
 
 ### Login GitHub
 

@@ -45,12 +45,12 @@ export function SocialLinks({
           aria-label={link.label}
           target={link.href.startsWith("mailto:") ? undefined : "_blank"}
           rel="noopener noreferrer"
-          className="flex h-14 w-14 items-center justify-center rounded-full bg-gray-700 text-gray-100 transition-colors duration-300 hover:bg-gray-400"
+          className="glass glass-hover flex h-14 w-14 items-center justify-center rounded-full text-white transition-all duration-300 ease-[cubic-bezier(0.25,1,0.5,1)] hover:-translate-y-0.5 active:scale-95"
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 * (index + 1) }}
         >
-          <FontAwesomeIcon icon={link.icon} className="text-3xl" />
+          <FontAwesomeIcon icon={link.icon} className="text-2xl" />
         </motion.a>
       ))}
     </div>

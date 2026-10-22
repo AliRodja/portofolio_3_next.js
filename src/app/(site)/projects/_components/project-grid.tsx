@@ -48,10 +48,10 @@ export function ProjectGrid({ projects }: { projects: Project[] }) {
             type="button"
             onClick={() => setFilter(value)}
             aria-pressed={filter === value}
-            className={`rounded-lg px-2 py-2 transition duration-300 md:px-4 ${
+            className={`rounded-full px-4 py-2 text-sm font-medium transition duration-300 md:px-5 ${
               filter === value
-                ? "bg-gray-300 text-black ring-2 ring-slate-500"
-                : "bg-gray-700 text-white hover:bg-gray-300 hover:text-black"
+                ? "bg-white text-gray-900 shadow-md"
+                : "glass glass-hover text-white"
             }`}
           >
             {label}
@@ -76,7 +76,7 @@ function ProjectCard({ project }: { project: Project }) {
         initial={{ opacity: 0, x: -200 }}
         whileInView={{ opacity: 1, x: 0 }}
         transition={{ type: "spring" }}
-        className="group relative mb-5 flex aspect-video w-full flex-col items-center justify-center overflow-hidden bg-gray-400 px-5 py-20 md:px-10 md:py-2"
+        className="glass glass-hover group mb-5 flex aspect-video w-full flex-col items-center justify-center overflow-hidden rounded-2xl px-5 py-20 md:px-10 md:py-2"
       >
         {project.thumbnail && (
           <Image
@@ -87,7 +87,7 @@ function ProjectCard({ project }: { project: Project }) {
             className="object-cover opacity-10 transition duration-500 group-hover:opacity-100"
           />
         )}
-        <span className="absolute top-0 left-0 bg-gray-600 px-4 py-2 font-display text-white">
+        <span className="absolute top-0 left-0 rounded-br-2xl bg-black/30 px-4 py-2 font-display text-white backdrop-blur-sm">
           {project.year}
         </span>
         <div
@@ -96,14 +96,17 @@ function ProjectCard({ project }: { project: Project }) {
           }`}
         >
           <h3 className="mb-3 text-3xl font-bold">{project.title}</h3>
-          <p>
+          <p className="text-white/75">
             {project.summary.length > 125
               ? `${project.summary.slice(0, 125)}...`
               : project.summary}
           </p>
           <div className="mt-5 flex flex-wrap justify-center">
             {project.tech.map((tech) => (
-              <span key={tech} className="m-1 bg-gray-600 px-4 py-2 text-white">
+              <span
+                key={tech}
+                className="m-1 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-sm text-white"
+              >
                 {tech}
               </span>
             ))}
