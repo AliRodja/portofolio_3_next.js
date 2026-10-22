@@ -11,7 +11,7 @@ Website portfolio pribadi yang dibangun dengan Next.js (App Router), TypeScript,
 - Halaman About: skill per kategori, timeline pengalaman, pendidikan dan prestasi, serta quote dengan efek blur per kata
 - Halaman Projects: highlight proyek, filter kategori, halaman detail, dan arsip
 - SEO: metadata per halaman, `sitemap.xml`, dan `robots.txt`
-- **Dashboard** di `/admin` untuk mengelola proyek tanpa mengubah kode
+- **Dashboard** di `/admin` untuk mengelola profil dan proyek tanpa mengubah kode
 
 ## Tech Stack
 
@@ -34,7 +34,7 @@ Prasyarat: Node.js 20+, pnpm (`corepack enable pnpm`), dan Postgres.
 pnpm install
 cp .env.example .env.local   # lalu isi nilainya, lihat di bawah
 pnpm db:migrate              # buat tabel
-pnpm db:seed                 # isi proyek contoh (aman dijalankan ulang)
+pnpm db:seed                 # isi profil dan proyek contoh (aman dijalankan ulang)
 pnpm dev
 ```
 
@@ -58,7 +58,7 @@ Semua variabel ada di `.env.example`.
 |---|---|
 | `DATABASE_URL` | Connection string Postgres. Lokal: Postgres sendiri. Production: Neon. |
 | `BETTER_AUTH_SECRET` | String acak, buat dengan `openssl rand -base64 32`. |
-| `BETTER_AUTH_URL` | URL website, misalnya `http://localhost:3000`. |
+| `BETTER_AUTH_URL` | URL website, misalnya `http://localhost:3000`. Juga dipakai untuk metadata, sitemap, dan robots.txt. |
 | `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET` | Dari GitHub OAuth App (lihat di bawah). |
 | `ADMIN_EMAILS` | Email yang boleh masuk dashboard, pisahkan dengan koma. Harus sama dengan email utama akun GitHub. |
 | `BLOB_READ_WRITE_TOKEN` | Token Vercel Blob untuk upload gambar. Tanpa ini, gambar tetap bisa diisi dengan path atau URL. |
@@ -103,7 +103,10 @@ src/
 │   ├── admin/                  # Dashboard
 │   │   ├── login/              # Halaman login GitHub
 │   │   └── (dashboard)/        # Halaman yang butuh login
-│   │       ├── layout.tsx      # Sidebar dan header
+│   │       ├── layout.tsx      # Sidebar
+│   │       ├── page.tsx        # Overview
+│   │       ├── _components/    # Sidebar, form, upload gambar/file
+│   │       ├── profile/        # Edit profil + Server Action
 │   │       └── projects/       # Daftar, tambah, edit proyek + Server Actions
 │   ├── api/
 │   │   ├── auth/[...all]/      # Endpoint Better Auth
@@ -123,20 +126,21 @@ src/
 ├── lib/
 │   ├── auth.ts                 # Konfigurasi Better Auth + allowlist email
 │   ├── session.ts              # getAdmin() dan requireAdmin()
+│   ├── default-profile.ts      # Profil awal sebelum disimpan dari dashboard
+│   ├── site-config.ts          # URL website dan menu navbar
+│   ├── social-icons.ts         # Platform sosial media yang didukung
 │   └── project-categories.ts   # Daftar kategori proyek
 └── data/                       # Konten yang belum pindah ke dashboard
-    ├── site.ts                 # Nama, intro, email, foto, sosial media, quote
     ├── experience.ts           # Pengalaman kerja
     ├── skills.ts               # Skill per kategori
     └── education.ts            # Pendidikan dan prestasi
 drizzle/                        # File migration SQL
-scripts/seed.ts                 # Data proyek awal
+scripts/seed.ts                 # Data profil dan proyek awal
 ```
 
 ## Mengubah Konten
 
 - **Proyek:** kelola dari dashboard di `/admin/projects`. Perubahan langsung tampil di website tanpa deploy ulang. Hanya satu proyek yang bisa di-highlight. Saat proyek lain ditandai, highlight lama otomatis dilepas.
-- **Profil dan kontak:** ubah `src/data/site.ts`, termasuk `url` sebelum deploy. Teks di `about` bisa diberi **tebal** dengan `**dua bintang**`.
-- **Foto:** simpan di `public/images/`, lalu isi path-nya di `site.ts` (`photos`) dan `education.ts` (`photos`), misalnya `"/images/me/hero.jpg"`. Selama belum diisi, tampil kotak "Add photo".
+- **Profil:** kelola dari dashboard di `/admin/profile`: nama, role, intro, about, foto, sosial media, quote, dan CV. Teks about bisa diberi **tebal** dengan `**dua bintang**`.
+- **Foto:** upload dari dashboard, atau simpan di `public/images/` lalu isi path-nya, misalnya `/images/me/hero.jpg`. Selama belum diisi, tampil kotak "Add photo". Foto pendidikan masih diisi di `education.ts` (`photos`).
 - **Pengalaman, skill, pendidikan:** masih diubah lewat file di `src/data/`. Akan dipindah ke dashboard di tahap berikutnya.
-- **CV:** simpan di `public/docs/cv.pdf`, lalu isi `cvUrl: "/docs/cv.pdf"` di `site.ts`. Tombol "Download CV" akan muncul di beranda.

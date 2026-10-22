@@ -1,5 +1,6 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { connection } from "next/server";
 import { cache } from "react";
 import { auth, isAdminEmail } from "@/lib/auth";
 
@@ -9,9 +10,12 @@ export type Admin = {
   image: string | null;
 };
 
-// Reads the session once per request. Reading headers makes the caller
-// dynamic, so it must render inside a <Suspense> boundary.
+// Reads the session once per request, so the caller must render inside a
+// <Suspense> boundary.
 export const getAdmin = cache(async (): Promise<Admin | null> => {
+  // Better Auth checks the session expiry against the current time, which
+  // Cache Components only allows after opting into request-time rendering.
+  await connection();
   const session = await auth.api.getSession({ headers: await headers() });
   // Re-check the allowlist so removing an email revokes access right away.
   if (!session || !isAdminEmail(session.user.email)) return null;

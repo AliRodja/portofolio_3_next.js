@@ -9,11 +9,7 @@ import { PROJECTS_TAG } from "@/db/queries/projects";
 import { type NewProject, projects } from "@/db/schema";
 import { projectCategoryKeys } from "@/lib/project-categories";
 import { requireAdmin } from "@/lib/session";
-
-export type ProjectFormState = {
-  message?: string;
-  errors?: Partial<Record<string, string[]>>;
-};
+import type { FormState } from "../_components/form";
 
 const optionalUrl = z.union([z.literal(""), z.url("Enter a full URL")]);
 
@@ -128,7 +124,7 @@ async function saveProject(values: NewProject, id?: number) {
 async function submitProject(
   formData: FormData,
   id?: number,
-): Promise<ProjectFormState> {
+): Promise<FormState> {
   await requireAdmin();
 
   const parsed = parseProject(formData);
@@ -154,7 +150,7 @@ async function submitProject(
 }
 
 export async function createProject(
-  _state: ProjectFormState,
+  _state: FormState,
   formData: FormData,
 ) {
   return submitProject(formData);
@@ -162,7 +158,7 @@ export async function createProject(
 
 export async function updateProject(
   id: number,
-  _state: ProjectFormState,
+  _state: FormState,
   formData: FormData,
 ) {
   return submitProject(formData, id);

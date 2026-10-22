@@ -5,8 +5,8 @@ import { PageHero } from "@/components/sections/page-hero";
 import { SectionTitle } from "@/components/sections/section-title";
 import { ButtonLink } from "@/components/ui/button";
 import { Photo } from "@/components/ui/photo";
+import { getProfile } from "@/db/queries/profile";
 import { getProjects } from "@/db/queries/projects";
-import { site } from "@/data/site";
 import { ProjectGrid } from "./_components/project-grid";
 
 export const metadata: Metadata = {
@@ -22,7 +22,7 @@ const collage = [
 ] as const;
 
 export default async function ProjectsPage() {
-  const projects = await getProjects();
+  const [projects, profile] = await Promise.all([getProjects(), getProfile()]);
   const highlight = projects.find((project) => project.highlight);
   const otherProjects = projects.filter((project) => !project.highlight);
 
@@ -32,7 +32,7 @@ export default async function ProjectsPage() {
       <PageHero
         title="My Projects"
         description="List of projects that I have done and am currently working on."
-        photo={site.photos.projects}
+        photo={profile.projectsPhoto}
         photoAlt="Projects"
         scrollTargetId="content"
       />

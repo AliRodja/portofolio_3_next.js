@@ -1,14 +1,53 @@
+import { sql } from "drizzle-orm";
 import {
   boolean,
+  check,
   integer,
+  jsonb,
   pgTable,
   serial,
   text,
   timestamp,
 } from "drizzle-orm/pg-core";
 import type { ProjectCategory } from "@/lib/project-categories";
+import type { SocialLink } from "@/lib/social-icons";
 
 // Content
+
+// A single row (id 1) holding the site owner's details.
+export const profile = pgTable(
+  "profile",
+  {
+    id: integer("id").primaryKey().default(1),
+    // Short name for the navbar and footer.
+    name: text("name").notNull(),
+    fullName: text("full_name").notNull(),
+    role: text("role").notNull(),
+    email: text("email").notNull(),
+    intro: text("intro").notNull(),
+    // One entry per paragraph. **Double asterisks** make text bold.
+    about: text("about").array().notNull().default([]),
+    // Meta description for search engines and link previews.
+    description: text("description").notNull(),
+    cvUrl: text("cv_url"),
+    heroPhoto: text("hero_photo"),
+    aboutPhoto: text("about_photo"),
+    projectsPhoto: text("projects_photo"),
+    contactPhoto: text("contact_photo"),
+    collagePhotos: text("collage_photos").array().notNull().default([]),
+    socials: jsonb("socials").$type<SocialLink[]>().notNull().default([]),
+    quoteLine1: text("quote_line_1").notNull().default(""),
+    quoteLine2: text("quote_line_2").notNull().default(""),
+    updatedAt: timestamp("updated_at")
+      .notNull()
+      .defaultNow()
+      .$onUpdate(() => new Date()),
+  },
+  (table) => [check("profile_singleton", sql`${table.id} = 1`)],
+);
+
+export type Profile = typeof profile.$inferSelect;
+export type ProfileData = Omit<Profile, "id" | "updatedAt">;
 
 export const projects = pgTable("projects", {
   id: serial("id").primaryKey(),

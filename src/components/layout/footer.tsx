@@ -2,7 +2,7 @@ import { faCircleArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import { Reveal } from "@/components/motion/reveal";
-import { site } from "@/data/site";
+import { getProfile } from "@/db/queries/profile";
 
 // Cache Components does not allow reading the current time during prerendering
 // unless the result is cached.
@@ -12,7 +12,7 @@ async function getCurrentYear() {
 }
 
 export async function Footer() {
-  const year = await getCurrentYear();
+  const [year, profile] = await Promise.all([getCurrentYear(), getProfile()]);
 
   return (
     <footer className="mt-5 flex flex-col items-center overflow-hidden">
@@ -32,7 +32,7 @@ export async function Footer() {
         </Link>
       </div>
       <p className="my-5 text-sm text-gray-800">
-        &copy; {year} - <span className="text-lg text-gray-700">{site.name}</span>
+        &copy; {year} - <span className="text-lg text-gray-700">{profile.name}</span>
       </p>
     </footer>
   );

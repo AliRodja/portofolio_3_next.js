@@ -2,7 +2,8 @@ import { config } from "@fortawesome/fontawesome-svg-core";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 import type { Metadata } from "next";
 import { Jost, Poppins } from "next/font/google";
-import { site } from "@/data/site";
+import { getProfile } from "@/db/queries/profile";
+import { siteUrl } from "@/lib/site-config";
 import "./globals.css";
 
 // The Font Awesome stylesheet is imported above, so it does not need to be
@@ -22,21 +23,26 @@ const jost = Jost({
   weight: ["400", "500", "600", "700"],
 });
 
-export const metadata: Metadata = {
-  metadataBase: new URL(site.url),
-  title: {
-    default: `${site.fullName} | Portfolio`,
-    template: `%s | ${site.name}`,
-  },
-  description: site.description,
-  openGraph: {
-    type: "website",
-    url: site.url,
-    siteName: `${site.fullName} | Portfolio`,
-    title: `${site.fullName} | Portfolio`,
-    description: site.description,
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const profile = await getProfile();
+  const title = `${profile.fullName} | Portfolio`;
+
+  return {
+    metadataBase: new URL(siteUrl),
+    title: {
+      default: title,
+      template: `%s | ${profile.name}`,
+    },
+    description: profile.description,
+    openGraph: {
+      type: "website",
+      url: siteUrl,
+      siteName: title,
+      title,
+      description: profile.description,
+    },
+  };
+}
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (

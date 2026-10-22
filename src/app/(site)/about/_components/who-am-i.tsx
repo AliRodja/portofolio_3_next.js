@@ -2,7 +2,7 @@ import { Reveal } from "@/components/motion/reveal";
 import { SectionTitle } from "@/components/sections/section-title";
 import { Photo } from "@/components/ui/photo";
 import { RichText } from "@/components/ui/rich-text";
-import { site } from "@/data/site";
+import { getProfile } from "@/db/queries/profile";
 
 // Three overlapping photos, positioned like a collage.
 const collage = [
@@ -11,7 +11,9 @@ const collage = [
   { position: "bottom-16 right-20 w-[40%]", from: "left", delay: 0.5 },
 ] as const;
 
-export function WhoAmI() {
+export async function WhoAmI() {
+  const profile = await getProfile();
+
   return (
     <section id="content">
       <SectionTitle title="Who Am I?" />
@@ -26,8 +28,8 @@ export function WhoAmI() {
             >
               <div className="relative h-full w-full overflow-hidden grayscale transition duration-300 hover:grayscale-0">
                 <Photo
-                  src={site.photos.collage[index]}
-                  alt={site.fullName}
+                  src={profile.collagePhotos[index]}
+                  alt={profile.fullName}
                   sizes="(max-width: 768px) 80vw, 40vw"
                 />
               </div>
@@ -42,10 +44,10 @@ export function WhoAmI() {
           className="mb-5 flex flex-col justify-center md:px-10"
         >
           <h3 className="mb-3 text-2xl font-bold tracking-wider">
-            {site.fullName}
+            {profile.fullName}
           </h3>
           <div className="space-y-5 text-justify font-display text-lg leading-relaxed text-gray-600">
-            {site.about.map((paragraph) => (
+            {profile.about.map((paragraph) => (
               <p key={paragraph}>
                 <RichText text={paragraph} />
               </p>

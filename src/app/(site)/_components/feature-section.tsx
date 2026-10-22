@@ -16,7 +16,7 @@ export function FeatureSection({
   id: string;
   title: string;
   description: ReactNode;
-  photo?: string;
+  photo?: string | null;
   photoAlt: string;
   children: ReactNode;
 }) {

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getProjectById } from "@/db/queries/projects";
 import { requireAdmin } from "@/lib/session";
+import { PageHeader } from "../../../_components/page-header";
 import { ProjectForm } from "../../_components/project-form";
 import { updateProject } from "../../actions";
 
@@ -22,7 +23,11 @@ export default async function EditProjectPage({
 
   return (
     <>
-      <h1 className="mb-8 text-3xl font-bold">Edit project</h1>
+      <PageHeader
+        title={project.title}
+        description="Edit project"
+        back={{ href: "/admin/projects", label: "Projects" }}
+      />
       <ProjectForm action={updateProject.bind(null, project.id)} project={project} />
     </>
   );

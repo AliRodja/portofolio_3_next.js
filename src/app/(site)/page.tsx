@@ -9,7 +9,7 @@ import { FullPage, FullPageSection } from "@/components/sections/fullpage";
 import { SocialLinks } from "@/components/sections/social-links";
 import { ButtonLink } from "@/components/ui/button";
 import { Photo } from "@/components/ui/photo";
-import { site } from "@/data/site";
+import { getProfile } from "@/db/queries/profile";
 import { FeatureSection } from "./_components/feature-section";
 
 const sections = [
@@ -19,7 +19,9 @@ const sections = [
   { id: "contact", label: "Contact", icon: faEnvelope },
 ];
 
-export default function HomePage() {
+export default async function HomePage() {
+  const profile = await getProfile();
+
   return (
     <FullPage sections={sections}>
       <FullPageSection id="home">
@@ -28,8 +30,8 @@ export default function HomePage() {
             <Reveal className="mx-auto my-10 md:hidden">
               <div className="relative h-60 w-60 overflow-hidden rounded-full bg-slate-500 grayscale transition duration-300 hover:grayscale-0">
                 <Photo
-                  src={site.photos.hero}
-                  alt={site.fullName}
+                  src={profile.heroPhoto}
+                  alt={profile.fullName}
                   sizes="240px"
                   priority
                 />
@@ -37,23 +39,23 @@ export default function HomePage() {
             </Reveal>
             <Reveal delay={0.2}>
               <p className="mb-3 font-display text-xl tracking-[.5rem] text-gray-500 uppercase">
-                {site.fullName}
+                {profile.fullName}
               </p>
             </Reveal>
             <Reveal delay={0.3}>
               <h1 className="my-2 text-4xl font-bold text-black md:my-5 md:text-6xl 2xl:text-8xl">
-                {site.role}
+                {profile.role}
               </h1>
             </Reveal>
             <Reveal delay={0.4}>
               <p className="mt-4 font-display text-base leading-[1.7rem] tracking-wider text-gray-500 2xl:text-xl">
-                {site.intro}
+                {profile.intro}
               </p>
             </Reveal>
             <Reveal delay={0.5} className="mt-10 flex flex-wrap justify-center gap-4">
-              {site.cvUrl ? (
+              {profile.cvUrl ? (
                 <ButtonLink
-                  href={site.cvUrl}
+                  href={profile.cvUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   download
@@ -76,8 +78,8 @@ export default function HomePage() {
           >
             <div className="relative aspect-[8/11] w-full max-w-[26vw] overflow-hidden rounded-full bg-slate-500 grayscale transition duration-300 hover:grayscale-0">
               <Photo
-                src={site.photos.hero}
-                alt={site.fullName}
+                src={profile.heroPhoto}
+                alt={profile.fullName}
                 sizes="26vw"
                 priority
               />
@@ -90,8 +92,8 @@ export default function HomePage() {
         id="about"
         title="About Me"
         description="A brief introduction to my journey as a software engineer."
-        photo={site.photos.about}
-        photoAlt={site.fullName}
+        photo={profile.aboutPhoto}
+        photoAlt={profile.fullName}
       >
         <ButtonLink href="/about">Learn More</ButtonLink>
       </FeatureSection>
@@ -100,7 +102,7 @@ export default function HomePage() {
         id="projects"
         title="My Projects"
         description="Selected works that I've built and am currently working on."
-        photo={site.photos.projects}
+        photo={profile.projectsPhoto}
         photoAlt="Projects"
       >
         <ButtonLink href="/projects">Learn More</ButtonLink>
@@ -114,17 +116,17 @@ export default function HomePage() {
             Feel free to contact me if you have any questions or just want to
             say hi.
             <a
-              href={`mailto:${site.email}`}
+              href={`mailto:${profile.email}`}
               className="mt-4 block text-gray-500 hover:text-black"
             >
-              {site.email}
+              {profile.email}
             </a>
           </>
         }
-        photo={site.photos.contact}
+        photo={profile.contactPhoto}
         photoAlt="Contact"
       >
-        <SocialLinks />
+        <SocialLinks email={profile.email} socials={profile.socials} />
       </FeatureSection>
     </FullPage>
   );

@@ -1,5 +1,6 @@
 import { db } from "@/db";
-import { type NewProject, projects } from "@/db/schema";
+import { type NewProject, profile, projects } from "@/db/schema";
+import { defaultProfile } from "@/lib/default-profile";
 
 // Starter content for an empty database. Safe to run again: existing slugs are
 // skipped, so edits made in the dashboard are never overwritten.
@@ -55,6 +56,13 @@ const seedProjects: NewProject[] = [
 ];
 
 async function main() {
+  const [seededProfile] = await db
+    .insert(profile)
+    .values({ id: 1, ...defaultProfile })
+    .onConflictDoNothing()
+    .returning({ id: profile.id });
+  console.log(seededProfile ? "Seeded profile." : "Profile already exists.");
+
   const inserted = await db
     .insert(projects)
     .values(seedProjects)

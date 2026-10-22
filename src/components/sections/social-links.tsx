@@ -10,7 +10,7 @@ import {
 import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { motion } from "motion/react";
-import { site, type SocialIcon } from "@/data/site";
+import type { SocialIcon, SocialLink } from "@/lib/social-icons";
 
 const icons = {
   github: faGithub,
@@ -20,10 +20,16 @@ const icons = {
   discord: faDiscord,
 } satisfies Record<SocialIcon, unknown>;
 
-export function SocialLinks() {
+export function SocialLinks({
+  email,
+  socials,
+}: {
+  email: string;
+  socials: SocialLink[];
+}) {
   const links = [
-    { label: "Send email", href: `mailto:${site.email}`, icon: faEnvelope },
-    ...site.socials.map((social) => ({
+    { label: "Send email", href: `mailto:${email}`, icon: faEnvelope },
+    ...socials.map((social) => ({
       label: `${social.label} profile`,
       href: social.href,
       icon: icons[social.icon],

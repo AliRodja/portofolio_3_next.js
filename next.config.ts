@@ -8,6 +8,8 @@ const nextConfig: NextConfig = {
     // Images uploaded from the dashboard live on Vercel Blob.
     remotePatterns: [
       { protocol: "https", hostname: "*.public.blob.vercel-storage.com" },
+      // GitHub avatars for the signed-in user in the dashboard.
+      { protocol: "https", hostname: "avatars.githubusercontent.com" },
     ],
   },
   turbopack: {

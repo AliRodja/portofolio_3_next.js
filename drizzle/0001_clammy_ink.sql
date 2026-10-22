@@ -1,0 +1,21 @@
+CREATE TABLE "profile" (
+	"id" integer PRIMARY KEY DEFAULT 1 NOT NULL,
+	"name" text NOT NULL,
+	"full_name" text NOT NULL,
+	"role" text NOT NULL,
+	"email" text NOT NULL,
+	"intro" text NOT NULL,
+	"about" text[] DEFAULT '{}' NOT NULL,
+	"description" text NOT NULL,
+	"cv_url" text,
+	"hero_photo" text,
+	"about_photo" text,
+	"projects_photo" text,
+	"contact_photo" text,
+	"collage_photos" text[] DEFAULT '{}' NOT NULL,
+	"socials" jsonb DEFAULT '[]'::jsonb NOT NULL,
+	"quote_line_1" text DEFAULT '' NOT NULL,
+	"quote_line_2" text DEFAULT '' NOT NULL,
+	"updated_at" timestamp DEFAULT now() NOT NULL,
+	CONSTRAINT "profile_singleton" CHECK ("profile"."id" = 1)
+);

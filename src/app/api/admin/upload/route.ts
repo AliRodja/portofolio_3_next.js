@@ -4,7 +4,7 @@ import { getAdmin } from "@/lib/session";
 
 const MAX_SIZE = 10 * 1024 * 1024;
 
-// Issues short-lived tokens so the dashboard can upload images straight to
+// Issues short-lived tokens so the dashboard can upload files straight to
 // Vercel Blob from the browser, bypassing the Server Action body size limit.
 export async function POST(request: Request) {
   if (!(await getAdmin())) {
@@ -25,6 +25,7 @@ export async function POST(request: Request) {
             "image/webp",
             "image/avif",
             "image/gif",
+            "application/pdf",
           ],
           maximumSizeInBytes: MAX_SIZE,
           addRandomSuffix: true,

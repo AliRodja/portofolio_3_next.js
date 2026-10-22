@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { requireAdmin } from "@/lib/session";
+import { PageHeader } from "../../_components/page-header";
 import { ProjectForm } from "../_components/project-form";
 import { createProject } from "../actions";
 
@@ -12,7 +13,10 @@ export default async function NewProjectPage() {
 
   return (
     <>
-      <h1 className="mb-8 text-3xl font-bold">New project</h1>
+      <PageHeader
+        title="New project"
+        back={{ href: "/admin/projects", label: "Projects" }}
+      />
       <ProjectForm action={createProject} />
     </>
   );

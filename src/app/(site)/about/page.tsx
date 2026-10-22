@@ -1,34 +1,39 @@
 import type { Metadata } from "next";
 import { BackButton } from "@/components/layout/back-button";
 import { PageHero } from "@/components/sections/page-hero";
-import { site } from "@/data/site";
+import { getProfile } from "@/db/queries/profile";
 import { Education } from "./_components/education";
 import { Experience } from "./_components/experience";
 import { Quote } from "./_components/quote";
 import { Skills } from "./_components/skills";
 import { WhoAmI } from "./_components/who-am-i";
 
-export const metadata: Metadata = {
-  title: "About",
-  description: `Background, skills, and experience of ${site.fullName}.`,
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const profile = await getProfile();
+  return {
+    title: "About",
+    description: `Background, skills, and experience of ${profile.fullName}.`,
+  };
+}
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const profile = await getProfile();
+
   return (
     <main className="overflow-hidden">
       <BackButton href="/#about" />
       <PageHero
         title="About Me"
         description="A brief introduction to my journey as a software engineer."
-        photo={site.photos.about}
-        photoAlt={site.fullName}
+        photo={profile.aboutPhoto}
+        photoAlt={profile.fullName}
         scrollTargetId="content"
       />
       <WhoAmI />
       <Skills />
       <Experience />
       <Education />
-      <Quote />
+      <Quote lines={[profile.quoteLine1, profile.quoteLine2]} />
     </main>
   );
 }

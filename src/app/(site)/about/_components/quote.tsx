@@ -2,13 +2,13 @@
 
 import { motion, useInView } from "motion/react";
 import { useRef } from "react";
-import { site } from "@/data/site";
 
 // Each word un-blurs one after another when the quote scrolls into view.
-export function Quote() {
+export function Quote({ lines }: { lines: [string, string] }) {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { amount: 0.1 });
-  const [first, second] = site.quote.map((line) => line.split(" "));
+  const [first, second] = lines.map((line) => line.split(" ").filter(Boolean));
+  if (first.length + second.length === 0) return null;
 
   const word = (text: string, order: number) => (
     <motion.span

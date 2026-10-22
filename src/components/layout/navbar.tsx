@@ -3,7 +3,7 @@
 import { motion, type Variants } from "motion/react";
 import Link from "next/link";
 import { useState } from "react";
-import { navLinks, site } from "@/data/site";
+import { navLinks } from "@/lib/site-config";
 
 // The menu grows as a circle from the burger button in the top-right corner.
 const menuVariants: Variants = {
@@ -30,7 +30,7 @@ const itemVariants: Variants = {
   },
 };
 
-export function Navbar() {
+export function Navbar({ name }: { name: string }) {
   const [isOpen, setIsOpen] = useState(false);
   const state = isOpen ? "open" : "closed";
 
@@ -48,7 +48,7 @@ export function Navbar() {
             isOpen ? "text-white" : ""
           }`}
         >
-          {site.name}
+          {name}
         </Link>
         <button
           type="button"

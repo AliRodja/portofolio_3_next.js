@@ -16,7 +16,7 @@ export function PageHero({
 }: {
   title: string;
   description: string;
-  photo?: string;
+  photo?: string | null;
   photoAlt: string;
   scrollTargetId: string;
 }) {

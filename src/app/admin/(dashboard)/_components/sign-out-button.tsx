@@ -1,5 +1,7 @@
 "use client";
 
+import { faArrowRightFromBracket } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 
@@ -15,9 +17,11 @@ export function SignOutButton() {
     <button
       type="button"
       onClick={signOut}
-      className="rounded-lg border border-gray-300 px-3 py-1.5 transition hover:bg-gray-100"
+      aria-label="Sign out"
+      title="Sign out"
+      className="flex h-8 w-8 items-center justify-center rounded-lg text-gray-500 transition hover:bg-gray-100 hover:text-gray-900"
     >
-      Sign out
+      <FontAwesomeIcon icon={faArrowRightFromBracket} />
     </button>
   );
 }

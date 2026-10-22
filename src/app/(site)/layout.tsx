@@ -1,9 +1,12 @@
 import { Navbar } from "@/components/layout/navbar";
+import { getProfile } from "@/db/queries/profile";
 
-export default function SiteLayout({ children }: LayoutProps<"/">) {
+export default async function SiteLayout({ children }: LayoutProps<"/">) {
+  const profile = await getProfile();
+
   return (
     <>
-      <Navbar />
+      <Navbar name={profile.name} />
       {children}
     </>
   );

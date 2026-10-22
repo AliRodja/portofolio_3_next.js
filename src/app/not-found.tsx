@@ -1,10 +1,13 @@
 import Link from "next/link";
 import { Navbar } from "@/components/layout/navbar";
+import { getProfile } from "@/db/queries/profile";
 
-export default function NotFound() {
+export default async function NotFound() {
+  const profile = await getProfile();
+
   return (
     <>
-      <Navbar />
+      <Navbar name={profile.name} />
       <main className="flex min-h-screen flex-col items-center justify-center gap-10 p-10">
         <div className="text-center">
           <h2 className="text-lg font-normal tracking-[8px] text-neutral-400 uppercase">
