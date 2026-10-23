@@ -7,6 +7,7 @@ import { PROFILE_TAG } from "@/db/queries/profile";
 import { type ProfileData, profile } from "@/db/schema";
 import { requireAdmin } from "@/lib/session";
 import { socialIconKeys } from "@/lib/social-icons";
+import { httpUrl, mediaUrl, optionalMediaUrl } from "@/lib/validation";
 import type { FormState } from "../_components/form";
 
 const required = (message: string) => z.string().trim().min(1, message);
@@ -22,16 +23,16 @@ const profileSchema = z.object({
     300,
     "Keep it under 300 characters",
   ),
-  cvUrl: z.string().trim(),
-  heroPhoto: z.string().trim(),
-  aboutPhoto: z.string().trim(),
-  projectsPhoto: z.string().trim(),
-  contactPhoto: z.string().trim(),
-  collagePhotos: z.array(z.string().trim().min(1)).max(3),
+  cvUrl: optionalMediaUrl,
+  heroPhoto: optionalMediaUrl,
+  aboutPhoto: optionalMediaUrl,
+  projectsPhoto: optionalMediaUrl,
+  contactPhoto: optionalMediaUrl,
+  collagePhotos: z.array(mediaUrl).max(3),
   socials: z.array(
     z.object({
       label: z.string().trim().min(1),
-      href: z.url(),
+      href: httpUrl,
       icon: z.enum(socialIconKeys),
     }),
   ),

@@ -9,9 +9,8 @@ import { PROJECTS_TAG } from "@/db/queries/projects";
 import { type NewProject, projects } from "@/db/schema";
 import { projectCategoryKeys } from "@/lib/project-categories";
 import { requireAdmin } from "@/lib/session";
+import { mediaUrl, optionalHttpUrl, optionalMediaUrl } from "@/lib/validation";
 import type { FormState } from "../_components/form";
-
-const optionalUrl = z.union([z.literal(""), z.url("Enter a full URL")]);
 
 const projectSchema = z.object({
   title: z.string().trim().min(1, "Title is required"),
@@ -33,10 +32,10 @@ const projectSchema = z.object({
     .array(z.enum(projectCategoryKeys))
     .min(1, "Pick at least one category"),
   highlight: z.boolean(),
-  thumbnail: z.string().trim(),
-  images: z.array(z.string().trim().min(1)),
-  previewUrl: optionalUrl,
-  sourceUrl: optionalUrl,
+  thumbnail: optionalMediaUrl,
+  images: z.array(mediaUrl),
+  previewUrl: optionalHttpUrl,
+  sourceUrl: optionalHttpUrl,
 });
 
 function slugify(text: string) {

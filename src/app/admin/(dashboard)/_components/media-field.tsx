@@ -13,6 +13,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRef, useState, type DragEvent, type ReactNode } from "react";
+import { mediaUrl } from "@/lib/validation";
 import { uploadFile, useUploadMode } from "./upload";
 
 // Tile sizes that match how each image is shown on the site.
@@ -104,6 +105,14 @@ export function MediaField({
   const addLink = () => {
     const url = link.trim();
     if (!url) return;
+    // Same rule the Server Actions enforce, checked here so the message
+    // shows next to this field.
+    const result = mediaUrl.safeParse(url);
+    if (!result.success) {
+      setError(result.error.issues[0].message);
+      return;
+    }
+    setError(null);
     add([url]);
     setLink("");
     setShowLink(false);

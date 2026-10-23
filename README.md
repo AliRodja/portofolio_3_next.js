@@ -83,6 +83,23 @@ Hanya email di `ADMIN_EMAILS` yang bisa membuat akun. Siapa pun yang login denga
 4. Ubah **Build Command** menjadi `pnpm db:migrate && pnpm build`, supaya migration berjalan setiap deploy.
 5. Setelah deploy pertama, isi konten sekali dengan menjalankan `DATABASE_URL="<url production>" pnpm db:seed` dari komputer. Profil, proyek, pengalaman, skill, dan pendidikan dari CV langsung terisi. Foto dan file CV tidak ikut, jadi upload dari dashboard production.
 
+### Keamanan
+
+Yang sudah ditangani di kode:
+
+- **HTTPS:** Vercel memasang sertifikat SSL otomatis, untuk domain `.vercel.app` maupun domain sendiri, dan mengalihkan HTTP ke HTTPS. Header `Strict-Transport-Security` membuat browser selalu memakai HTTPS selama dua tahun.
+- **Header keamanan** di `next.config.ts`: Content Security Policy (hanya memuat dari situs ini, Vercel Blob, dan avatar GitHub), larangan menampilkan situs di dalam iframe, `nosniff`, `Referrer-Policy`, dan `Permissions-Policy`. Header `X-Powered-By` dimatikan.
+- **Dashboard:** setiap halaman, Server Action, dan API upload mengecek login dan daftar `ADMIN_EMAILS`. Cookie sesi otomatis `Secure` dan `HttpOnly` di production.
+- **Input:** semua form divalidasi di server. Link hanya boleh `http`/`https` dan foto hanya boleh path `/...` atau link `https://`, jadi link `javascript:` ditolak. Upload dibatasi gambar dan PDF, maksimal 10 MB, tanpa SVG.
+
+Yang perlu diatur sendiri saat deploy:
+
+1. `BETTER_AUTH_SECRET` di production harus baru dan acak (`openssl rand -base64 32`), jangan memakai secret lokal.
+2. `BETTER_AUTH_URL` berisi domain production dengan `https://`, dan OAuth App GitHub production memakai callback ke domain itu.
+3. `ADMIN_EMAILS` hanya berisi email kamu sendiri.
+4. `DATABASE_URL` dari Neon harus memakai `sslmode=require` (sudah ada di connection string bawaan Neon).
+5. Jangan pernah commit `.env.local`. File itu sudah ada di `.gitignore`.
+
 ## Struktur Project
 
 ```
@@ -138,7 +155,8 @@ src/
 │   ├── experience.ts           # Jenis pekerjaan
 │   ├── skill-icons.ts          # Ikon yang bisa dipilih untuk kategori skill
 │   ├── education.ts            # Jenis prestasi dan format tahun
-│   └── dates.ts                # Format bulan ("Jan 2025") untuk semua halaman
+│   ├── dates.ts                # Format bulan ("Jan 2025") untuk semua halaman
+│   └── validation.ts           # Validasi link dan path foto yang aman
 drizzle/                        # File migration SQL
 scripts/seed.ts                 # Konten dari CV untuk database kosong
 ```

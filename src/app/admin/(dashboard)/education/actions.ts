@@ -14,6 +14,7 @@ import {
 } from "@/db/schema";
 import { achievementTypeKeys } from "@/lib/education";
 import { requireAdmin } from "@/lib/session";
+import { mediaUrl } from "@/lib/validation";
 import type { FormState } from "../_components/form";
 
 const year = z.coerce
@@ -31,7 +32,7 @@ const educationSchema = z
     endYear: z.string(),
     description: z.string().trim(),
     badges: z.array(z.string().trim().min(1), "Check the badges list"),
-    photos: z.array(z.string().trim().min(1)).max(3, "Up to three photos"),
+    photos: z.array(mediaUrl).max(3, "Up to three photos"),
   })
   .superRefine((data, ctx) => {
     if (data.current) return;
