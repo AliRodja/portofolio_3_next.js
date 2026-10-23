@@ -2,6 +2,7 @@
 
 import { startTransition, useActionState, useState } from "react";
 import type { Experience } from "@/db/schema";
+import { toMonthInput } from "@/lib/dates";
 import { employmentTypes } from "@/lib/experience";
 import {
   Field,
@@ -12,9 +13,6 @@ import {
 } from "../../_components/form";
 
 type Action = (state: FormState, formData: FormData) => Promise<FormState>;
-
-// Stored as the first of the month; <input type="month"> wants YYYY-MM.
-const toMonth = (date?: string | null) => date?.slice(0, 7) ?? "";
 
 export function ExperienceForm({
   action,
@@ -95,7 +93,7 @@ export function ExperienceForm({
             <input
               name="start"
               type="month"
-              defaultValue={toMonth(experience?.startDate)}
+              defaultValue={toMonthInput(experience?.startDate)}
               className={inputClass}
               required
             />
@@ -104,7 +102,7 @@ export function ExperienceForm({
             <input
               name="end"
               type="month"
-              defaultValue={toMonth(experience?.endDate)}
+              defaultValue={toMonthInput(experience?.endDate)}
               disabled={isCurrent}
               required={!isCurrent}
               className={`${inputClass} disabled:bg-gray-50 disabled:text-gray-400`}

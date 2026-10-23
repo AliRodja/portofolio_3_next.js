@@ -12,9 +12,11 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { getAchievements, getEducations } from "@/db/queries/education";
 import { getExperiences } from "@/db/queries/experience";
 import { getProfile } from "@/db/queries/profile";
 import { getProjects } from "@/db/queries/projects";
+import { getSkillCategories } from "@/db/queries/skills";
 import { requireAdmin } from "@/lib/session";
 import { primaryButtonClass, secondaryButtonClass } from "./_components/form";
 import { PageHeader } from "./_components/page-header";
@@ -26,18 +28,21 @@ export const metadata: Metadata = {
 // Reads the session on every request (see the dashboard layout).
 export const instant = false;
 
-const upcoming = [
-  { title: "Skills", icon: faLayerGroup },
-  { title: "Education & achievements", icon: faGraduationCap },
-];
-
 export default async function OverviewPage() {
   const admin = await requireAdmin();
-  const [profile, projects, experiences] = await Promise.all([
-    getProfile(),
-    getProjects(),
-    getExperiences(),
-  ]);
+  const [profile, projects, experiences, skillCategories, educations, achievements] =
+    await Promise.all([
+      getProfile(),
+      getProjects(),
+      getExperiences(),
+      getSkillCategories(),
+      getEducations(),
+      getAchievements(),
+    ]);
+  const skillCount = skillCategories.reduce(
+    (total, category) => total + category.languages.length,
+    0,
+  );
   const highlight = projects.find((project) => project.highlight);
   const latestExperience = experiences[0];
   const firstName = admin.name.split(" ")[0];
@@ -91,25 +96,26 @@ export default async function OverviewPage() {
               : "Hidden on the About page until you add one"
           }
         />
+        <SectionCard
+          href="/admin/skills"
+          icon={faLayerGroup}
+          title="Skills"
+          value={`${skillCategories.length} ${skillCategories.length === 1 ? "category" : "categories"}`}
+          detail={
+            skillCategories.length
+              ? `${skillCount} ${skillCount === 1 ? "technology" : "technologies"} in total`
+              : "Hidden on the About page until you add one"
+          }
+        />
+        <SectionCard
+          href="/admin/education"
+          icon={faGraduationCap}
+          title="Education"
+          value={`${educations.length} ${educations.length === 1 ? "school" : "schools"}`}
+          detail={`${achievements.length} ${achievements.length === 1 ? "achievement" : "achievements"}`}
+        />
       </div>
 
-      <section className="mt-8 rounded-xl border border-gray-200 bg-white">
-        <div className="border-b border-gray-100 px-5 py-4">
-          <h2 className="font-semibold">Coming soon</h2>
-          <p className="mt-0.5 text-sm text-gray-500">
-            These are still edited in <code className="text-xs">src/data/</code>{" "}
-            for now.
-          </p>
-        </div>
-        <ul className="divide-y divide-gray-100">
-          {upcoming.map((item) => (
-            <li key={item.title} className="flex items-center gap-3 px-5 py-3 text-sm text-gray-500">
-              <FontAwesomeIcon icon={item.icon} className="w-4 text-gray-400" />
-              {item.title}
-            </li>
-          ))}
-        </ul>
-      </section>
     </>
   );
 }

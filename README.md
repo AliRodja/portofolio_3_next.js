@@ -11,7 +11,7 @@ Website portfolio pribadi yang dibangun dengan Next.js (App Router), TypeScript,
 - Halaman About: skill per kategori, timeline pengalaman, pendidikan dan prestasi, serta quote dengan efek blur per kata
 - Halaman Projects: highlight proyek, filter kategori, halaman detail, dan arsip
 - SEO: metadata per halaman, `sitemap.xml`, dan `robots.txt`
-- **Dashboard** di `/admin` untuk mengelola profil, proyek, dan pengalaman kerja tanpa mengubah kode
+- **Dashboard** di `/admin` untuk mengelola semua konten (profil, proyek, pengalaman kerja, skill, pendidikan, dan prestasi) tanpa mengubah kode
 - **Liquid glass dengan WebGL**: latar dan permukaan kaca digambar di satu canvas WebGL, dengan refraksi di tepi kaca. Shader-nya diadaptasi dari [liquid-glass-js](https://github.com/dashersw/liquid-glass-js) (MIT). Tanpa WebGL, atau saat pengguna memilih "kurangi transparansi", otomatis kembali ke kaca CSS.
 
 ## Tech Stack
@@ -35,7 +35,7 @@ Prasyarat: Node.js 20+, pnpm (`corepack enable pnpm`), dan Postgres.
 pnpm install
 cp .env.example .env.local   # lalu isi nilainya, lihat di bawah
 pnpm db:migrate              # buat tabel
-pnpm db:seed                 # isi profil, proyek, dan pengalaman contoh (aman dijalankan ulang)
+pnpm db:seed                 # isi konten dari CV ke tabel yang masih kosong (aman dijalankan ulang)
 pnpm dev
 ```
 
@@ -81,7 +81,7 @@ Hanya email di `ADMIN_EMAILS` yang bisa membuat akun. Siapa pun yang login denga
 2. Di tab **Storage**, tambahkan database **Neon** (mengisi `DATABASE_URL`) dan **Blob** (mengisi `BLOB_READ_WRITE_TOKEN`).
 3. Isi variabel lain di **Settings → Environment Variables**, dengan `BETTER_AUTH_URL` berisi domain production.
 4. Ubah **Build Command** menjadi `pnpm db:migrate && pnpm build`, supaya migration berjalan setiap deploy.
-5. Setelah deploy pertama, isi data awal sekali dengan menjalankan `pnpm db:seed` dari komputer dengan `DATABASE_URL` production, atau tambahkan proyek langsung dari dashboard.
+5. Setelah deploy pertama, isi konten sekali dengan menjalankan `DATABASE_URL="<url production>" pnpm db:seed` dari komputer. Profil, proyek, pengalaman, skill, dan pendidikan dari CV langsung terisi. Foto dan file CV tidak ikut, jadi upload dari dashboard production.
 
 ## Struktur Project
 
@@ -109,7 +109,9 @@ src/
 │   │       ├── _components/    # Sidebar, form, upload gambar/file
 │   │       ├── profile/        # Edit profil + Server Action
 │   │       ├── projects/       # Daftar, tambah, edit proyek + Server Actions
-│   │       └── experience/     # Daftar, tambah, edit pengalaman + Server Actions
+│   │       ├── experience/     # Daftar, tambah, edit pengalaman + Server Actions
+│   │       ├── skills/         # Kategori skill, urutan, editor chip + Server Actions
+│   │       └── education/      # Pendidikan dan prestasi + Server Actions
 │   ├── api/
 │   │   ├── auth/[...all]/      # Endpoint Better Auth
 │   │   └── admin/upload/       # Token upload Vercel Blob
@@ -133,18 +135,19 @@ src/
 │   ├── site-config.ts          # URL website dan menu navbar
 │   ├── social-icons.ts         # Platform sosial media yang didukung
 │   ├── project-categories.ts   # Daftar kategori proyek
-│   └── experience.ts           # Jenis pekerjaan dan format bulan
-└── data/                       # Konten yang belum pindah ke dashboard
-    ├── skills.ts               # Skill per kategori
-    └── education.ts            # Pendidikan dan prestasi
+│   ├── experience.ts           # Jenis pekerjaan
+│   ├── skill-icons.ts          # Ikon yang bisa dipilih untuk kategori skill
+│   ├── education.ts            # Jenis prestasi dan format tahun
+│   └── dates.ts                # Format bulan ("Jan 2025") untuk semua halaman
 drizzle/                        # File migration SQL
-scripts/seed.ts                 # Data profil, proyek, dan pengalaman awal
+scripts/seed.ts                 # Konten dari CV untuk database kosong
 ```
 
 ## Mengubah Konten
 
 - **Proyek:** kelola dari dashboard di `/admin/projects`. Perubahan langsung tampil di website tanpa deploy ulang. Hanya satu proyek yang bisa di-highlight. Saat proyek lain ditandai, highlight lama otomatis dilepas.
 - **Profil:** kelola dari dashboard di `/admin/profile`: nama, role, intro, about, foto, sosial media, quote, dan CV. Teks about bisa diberi **tebal** dengan `**dua bintang**`.
-- **Foto:** upload dari dashboard, atau simpan di `public/images/` lalu isi path-nya, misalnya `/images/me/hero.jpg`. Selama belum diisi, tampil kotak "Add photo". Foto pendidikan masih diisi di `education.ts` (`photos`).
+- **Foto:** upload dari dashboard, atau simpan di `public/images/` lalu isi path-nya, misalnya `/images/me/hero.jpg`. Selama belum diisi, tampil kotak "Add photo".
 - **Pengalaman kerja:** kelola dari dashboard di `/admin/experience`. Urutannya otomatis: posisi yang masih berjalan ("Present") di atas, lalu berdasarkan bulan mulai. Selama belum ada data, section Professional Experience di halaman About disembunyikan.
-- **Skill, pendidikan:** masih diubah lewat file di `src/data/`. Akan dipindah ke dashboard di tahap berikutnya.
+- **Skill:** kelola dari dashboard di `/admin/skills`. Setiap kategori punya ikon, daftar teknologi, dan daftar tools. Beri bintang pada teknologi yang paling dikuasai supaya tampil menonjol. Urutan kategori di halaman About diatur dengan tombol panah.
+- **Pendidikan dan prestasi:** kelola dari dashboard di `/admin/education`. Bisa lebih dari satu sekolah, masing-masing dengan deskripsi, badge (misalnya IPK), dan sampai tiga foto. Prestasi otomatis diurutkan dari yang terbaru dan dikelompokkan per tahun.

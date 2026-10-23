@@ -10,8 +10,10 @@ import {
   text,
   timestamp,
 } from "drizzle-orm/pg-core";
+import type { AchievementType } from "@/lib/education";
 import type { EmploymentType } from "@/lib/experience";
 import type { ProjectCategory } from "@/lib/project-categories";
+import type { SkillIcon, SkillItem } from "@/lib/skill-icons";
 import type { SocialLink } from "@/lib/social-icons";
 
 // Content
@@ -105,6 +107,67 @@ export const experiences = pgTable("experiences", {
 
 export type Experience = typeof experiences.$inferSelect;
 export type NewExperience = typeof experiences.$inferInsert;
+
+export const skillCategories = pgTable("skill_categories", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
+  description: text("description").notNull(),
+  icon: text("icon").$type<SkillIcon>().notNull(),
+  // The "Technology Stack" list.
+  languages: jsonb("languages").$type<SkillItem[]>().notNull().default([]),
+  // The "Infrastructure & Tools" list.
+  tools: text("tools").array().notNull().default([]),
+  // Order on the About page, lowest first. Set from the dashboard.
+  position: integer("position").notNull().default(0),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at")
+    .notNull()
+    .defaultNow()
+    .$onUpdate(() => new Date()),
+});
+
+export type SkillCategory = typeof skillCategories.$inferSelect;
+export type NewSkillCategory = typeof skillCategories.$inferInsert;
+
+export const educations = pgTable("educations", {
+  id: serial("id").primaryKey(),
+  school: text("school").notNull(),
+  degree: text("degree").notNull(),
+  startYear: integer("start_year").notNull(),
+  // Empty while still studying ("Present").
+  endYear: integer("end_year"),
+  // One entry per paragraph. **Double asterisks** make text bold.
+  description: text("description").array().notNull().default([]),
+  // Short facts shown as pills, e.g. "GPA: 3.8 out of 4".
+  badges: text("badges").array().notNull().default([]),
+  // Either paths inside public/ or Vercel Blob URLs. Up to three are shown.
+  photos: text("photos").array().notNull().default([]),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at")
+    .notNull()
+    .defaultNow()
+    .$onUpdate(() => new Date()),
+});
+
+export type Education = typeof educations.$inferSelect;
+export type NewEducation = typeof educations.$inferInsert;
+
+export const achievements = pgTable("achievements", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
+  event: text("event").notNull(),
+  // The first of the month, as YYYY-MM-DD. Only the month and year are shown.
+  date: date("date").notNull(),
+  type: text("type").$type<AchievementType>().notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at")
+    .notNull()
+    .defaultNow()
+    .$onUpdate(() => new Date()),
+});
+
+export type Achievement = typeof achievements.$inferSelect;
+export type NewAchievement = typeof achievements.$inferInsert;
 
 // Better Auth. Table and column names follow its defaults.
 

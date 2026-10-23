@@ -10,11 +10,9 @@ import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 import { monoPhotoClass, Photo } from "@/components/ui/photo";
 import { RichText } from "@/components/ui/rich-text";
-import {
-  achievements,
-  education,
-  type AchievementType,
-} from "@/data/education";
+import type { Achievement, Education as EducationItem } from "@/db/schema";
+import { formatMonth } from "@/lib/dates";
+import { formatYears, type AchievementType } from "@/lib/education";
 
 const INITIAL_COUNT = 4;
 
@@ -28,12 +26,17 @@ const achievementStyles: Record<
   finalist: { color: "from-blue-500 to-purple-600", icon: faAward },
 };
 
-export function Education() {
-  const [isExpanded, setIsExpanded] = useState(false);
-  const visible = isExpanded
-    ? achievements
-    : achievements.slice(0, INITIAL_COUNT);
-  const hiddenCount = achievements.length - INITIAL_COUNT;
+export function Education({
+  educations,
+  achievements,
+}: {
+  educations: EducationItem[];
+  achievements: Achievement[];
+}) {
+  // Nothing to show yet.
+  if (educations.length === 0 && achievements.length === 0) return null;
+  // With only one of the two, it gets the full width.
+  const hasBoth = educations.length > 0 && achievements.length > 0;
 
   return (
     <motion.section
@@ -51,126 +54,161 @@ export function Education() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-        <motion.div
-          className="px-5"
-          initial={{ opacity: 0, x: -50 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-        >
-          <p className="mb-4 text-lg font-medium">
-            {education.start} - {education.end}
-          </p>
-          <h3 className="text-xl font-semibold">{education.school}</h3>
-          <p className="mb-3">{education.degree}</p>
-
-          {/* Hovering a photo widens it. */}
-          <div className="mb-4 flex h-[250px] gap-4 xl:h-[400px] md:h-[300px]">
-            {[0, 1, 2].map((index) => (
-              <div
-                key={index}
-                className="group relative flex-1 overflow-hidden rounded-lg transition-all duration-300 hover:flex-3"
-              >
-                <Photo
-                  src={education.photos[index]}
-                  alt={education.school}
-                  sizes="(max-width: 768px) 33vw, 20vw"
-                  className={monoPhotoClass}
-                />
-              </div>
+      <div
+        className={`grid grid-cols-1 gap-8 ${hasBoth ? "md:grid-cols-2" : "mx-auto max-w-3xl"}`}
+      >
+        {educations.length > 0 && (
+          <motion.div
+            className="space-y-12 px-5"
+            initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+          >
+            {educations.map((education) => (
+              <EducationEntry key={education.id} education={education} />
             ))}
-          </div>
+          </motion.div>
+        )}
 
-          <div className="space-y-4 text-justify font-display text-lg text-white/70">
-            {education.description.map((paragraph) => (
-              <p key={paragraph}>
-                <RichText text={paragraph} />
-              </p>
-            ))}
-          </div>
-          <div className="mt-4 flex flex-wrap gap-2 text-sm">
-            {education.badges.map((badge) => (
-              <span
-                key={badge}
-                className="rounded-2xl border border-white/20 bg-white/10 px-3 py-1 text-white"
-              >
-                {badge}
-              </span>
-            ))}
-          </div>
-        </motion.div>
-
-        <motion.div
-          className="flex flex-col px-5 md:px-0"
-          initial={{ opacity: 0, x: 50 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-        >
-          <h3 className="mt-7 text-xl font-semibold">Achievements</h3>
-          <p className="mb-3 text-white/70 md:mb-6">Some of my achievements during my study.</p>
-
-          <ul className="space-y-4">
-            <AnimatePresence>
-              {visible.map((achievement, index) => {
-                const style = achievementStyles[achievement.type];
-                const isFirstOfYear =
-                  visible[index - 1]?.year !== achievement.year;
-                return (
-                  <motion.li
-                    key={`${achievement.event}-${achievement.date}`}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    transition={{ duration: 0.5, delay: index * 0.05 }}
-                  >
-                    {isFirstOfYear && (
-                      <div className="mt-2 mb-3 flex items-center gap-3">
-                        <span className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-white/10 text-xs font-bold text-white/80">
-                          {achievement.year}
-                        </span>
-                        <span className="h-px flex-1 bg-linear-to-r from-white/30 to-transparent" />
-                      </div>
-                    )}
-                    <div className="glass glass-hover group flex items-center gap-4 rounded-2xl p-4 transition duration-300">
-                      <span
-                        className={`flex aspect-square w-10 items-center justify-center rounded-full bg-linear-to-r grayscale transition duration-300 group-hover:grayscale-0 ${style.color}`}
-                      >
-                        <FontAwesomeIcon
-                          icon={style.icon}
-                          className="h-5 w-5 text-white"
-                        />
-                      </span>
-                      <div>
-                        <p className="font-medium">{achievement.title}</p>
-                        <p className="text-sm">{achievement.event}</p>
-                        <p className="mt-1 text-xs text-white/50">
-                          {achievement.date}
-                        </p>
-                      </div>
-                    </div>
-                  </motion.li>
-                );
-              })}
-            </AnimatePresence>
-          </ul>
-
-          {hiddenCount > 0 && (
-            <div className="mt-6 flex justify-center">
-              <button
-                type="button"
-                onClick={() => setIsExpanded(!isExpanded)}
-                className="glass glass-hover flex items-center gap-2 rounded-full px-6 py-3 text-sm font-medium transition duration-300"
-              >
-                {isExpanded ? "Show Less" : `Show ${hiddenCount} More`}
-                <FontAwesomeIcon
-                  icon={faChevronDown}
-                  className={`h-3 w-3 transition-transform ${isExpanded ? "rotate-180" : ""}`}
-                />
-              </button>
-            </div>
-          )}
-        </motion.div>
+        {achievements.length > 0 && (
+          <motion.div
+            className="flex flex-col px-5 md:px-0"
+            initial={{ opacity: 0, x: 50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+          >
+            <Achievements achievements={achievements} />
+          </motion.div>
+        )}
       </div>
     </motion.section>
+  );
+}
+
+function EducationEntry({ education }: { education: EducationItem }) {
+  return (
+    <div>
+      <p className="mb-4 text-lg font-medium">
+        {formatYears(education.startYear, education.endYear)}
+      </p>
+      <h3 className="text-xl font-semibold">{education.school}</h3>
+      <p className="mb-3">{education.degree}</p>
+
+      {/* Hovering a photo widens it. */}
+      <div className="mb-4 flex h-[250px] gap-4 xl:h-[400px] md:h-[300px]">
+        {[0, 1, 2].map((index) => (
+          <div
+            key={index}
+            className="group relative flex-1 overflow-hidden rounded-lg transition-all duration-300 hover:flex-3"
+          >
+            <Photo
+              src={education.photos[index]}
+              alt={education.school}
+              sizes="(max-width: 768px) 33vw, 20vw"
+              className={monoPhotoClass}
+            />
+          </div>
+        ))}
+      </div>
+
+      {education.description.length > 0 && (
+        <div className="space-y-4 text-justify font-display text-lg text-white/70">
+          {education.description.map((paragraph, index) => (
+            <p key={index}>
+              <RichText text={paragraph} />
+            </p>
+          ))}
+        </div>
+      )}
+      {education.badges.length > 0 && (
+        <div className="mt-4 flex flex-wrap gap-2 text-sm">
+          {education.badges.map((badge) => (
+            <span
+              key={badge}
+              className="rounded-2xl border border-white/20 bg-white/10 px-3 py-1 text-white"
+            >
+              {badge}
+            </span>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function Achievements({ achievements }: { achievements: Achievement[] }) {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const visible = isExpanded
+    ? achievements
+    : achievements.slice(0, INITIAL_COUNT);
+  const hiddenCount = achievements.length - INITIAL_COUNT;
+
+  return (
+    <>
+      <h3 className="mt-7 text-xl font-semibold">Achievements</h3>
+      <p className="mb-3 text-white/70 md:mb-6">Some of my achievements during my study.</p>
+
+      <ul className="space-y-4">
+        <AnimatePresence>
+          {visible.map((achievement, index) => {
+            const style = achievementStyles[achievement.type];
+            // Dates are YYYY-MM-DD, so the year is the first four characters.
+            const year = achievement.date.slice(0, 4);
+            const isFirstOfYear = visible[index - 1]?.date.slice(0, 4) !== year;
+            return (
+              <motion.li
+                key={achievement.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.5, delay: index * 0.05 }}
+              >
+                {isFirstOfYear && (
+                  <div className="mt-2 mb-3 flex items-center gap-3">
+                    <span className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-white/10 text-xs font-bold text-white/80">
+                      {year}
+                    </span>
+                    <span className="h-px flex-1 bg-linear-to-r from-white/30 to-transparent" />
+                  </div>
+                )}
+                <div className="glass glass-hover group flex items-center gap-4 rounded-2xl p-4 transition duration-300">
+                  <span
+                    className={`flex aspect-square w-10 items-center justify-center rounded-full bg-linear-to-r grayscale transition duration-300 group-hover:grayscale-0 ${style.color}`}
+                  >
+                    <FontAwesomeIcon
+                      icon={style.icon}
+                      className="h-5 w-5 text-white"
+                    />
+                  </span>
+                  <div>
+                    <p className="font-medium">{achievement.title}</p>
+                    <p className="text-sm">{achievement.event}</p>
+                    <p className="mt-1 text-xs text-white/50">
+                      {formatMonth(achievement.date)}
+                    </p>
+                  </div>
+                </div>
+              </motion.li>
+            );
+          })}
+        </AnimatePresence>
+      </ul>
+
+      {hiddenCount > 0 && (
+        <div className="mt-6 flex justify-center">
+          <button
+            type="button"
+            onClick={() => setIsExpanded(!isExpanded)}
+            className="glass glass-hover flex items-center gap-2 rounded-full px-6 py-3 text-sm font-medium transition duration-300"
+          >
+            {isExpanded ? "Show Less" : `Show ${hiddenCount} More`}
+            <FontAwesomeIcon
+              icon={faChevronDown}
+              className={`h-3 w-3 transition-transform ${isExpanded ? "rotate-180" : ""}`}
+            />
+          </button>
+        </div>
+      )}
+    </>
   );
 }

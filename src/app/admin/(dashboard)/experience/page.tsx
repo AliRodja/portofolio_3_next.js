@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getExperiences } from "@/db/queries/experience";
-import { formatMonth } from "@/lib/experience";
+import { formatMonth } from "@/lib/dates";
 import { requireAdmin } from "@/lib/session";
 import { DeleteButton } from "../_components/delete-button";
 import { primaryButtonClass } from "../_components/form";

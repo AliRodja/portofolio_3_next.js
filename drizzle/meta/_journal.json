@@ -22,6 +22,20 @@
       "when": 1792681147289,
       "tag": "0002_add_experiences",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1792681853463,
+      "tag": "0003_add_skill_categories",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1792682440162,
+      "tag": "0004_add_education",
+      "breakpoints": true
     }
   ]
 }

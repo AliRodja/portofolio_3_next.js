@@ -6,7 +6,7 @@ import { motion } from "motion/react";
 import { useState } from "react";
 import { SectionTitle } from "@/components/sections/section-title";
 import type { Experience as ExperienceItem } from "@/db/schema";
-import { formatMonth } from "@/lib/experience";
+import { formatMonth } from "@/lib/dates";
 
 const INITIAL_COUNT = 3;
 

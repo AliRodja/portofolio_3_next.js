@@ -23,8 +23,6 @@ type NavLink = {
   icon: IconDefinition;
   // Only highlight on an exact match, for links whose path prefixes others.
   exact?: boolean;
-  // Not built yet. Shown disabled so the full structure is visible.
-  soon?: boolean;
 };
 
 const groups: { title: string; links: NavLink[] }[] = [
@@ -40,8 +38,8 @@ const groups: { title: string; links: NavLink[] }[] = [
     links: [
       { label: "Projects", href: "/admin/projects", icon: faFolderOpen },
       { label: "Experience", href: "/admin/experience", icon: faBriefcase },
-      { label: "Skills", href: "/admin/skills", icon: faLayerGroup, soon: true },
-      { label: "Education", href: "/admin/education", icon: faGraduationCap, soon: true },
+      { label: "Skills", href: "/admin/skills", icon: faLayerGroup },
+      { label: "Education", href: "/admin/education", icon: faGraduationCap },
     ],
   },
 ];
@@ -119,29 +117,19 @@ export function SidebarFrame({
               <ul className="space-y-1">
                 {group.links.map((link) => (
                   <li key={link.href}>
-                    {link.soon ? (
-                      <span className="flex cursor-not-allowed items-center gap-3 rounded-lg px-3 py-2 text-sm text-gray-400">
-                        <FontAwesomeIcon icon={link.icon} className="w-4" />
-                        {link.label}
-                        <span className="ml-auto rounded-full bg-gray-100 px-2 py-0.5 text-[10px] font-medium text-gray-500">
-                          Soon
-                        </span>
-                      </span>
-                    ) : (
-                      <Link
-                        href={link.href}
-                        onClick={() => setIsOpen(false)}
-                        aria-current={isActive(link) ? "page" : undefined}
-                        className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition ${
-                          isActive(link)
-                            ? "bg-gray-900 text-white"
-                            : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
-                        }`}
-                      >
-                        <FontAwesomeIcon icon={link.icon} className="w-4" />
-                        {link.label}
-                      </Link>
-                    )}
+                    <Link
+                      href={link.href}
+                      onClick={() => setIsOpen(false)}
+                      aria-current={isActive(link) ? "page" : undefined}
+                      className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition ${
+                        isActive(link)
+                          ? "bg-gray-900 text-white"
+                          : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                      }`}
+                    >
+                      <FontAwesomeIcon icon={link.icon} className="w-4" />
+                      {link.label}
+                    </Link>
                   </li>
                 ))}
               </ul>

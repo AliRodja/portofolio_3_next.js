@@ -1,20 +1,21 @@
 import type { ProfileData } from "@/db/schema";
 
 // Shown until the profile is saved from the dashboard, and used by the seed
-// script for a fresh database.
+// script for a fresh database. Photos and the CV are uploads, so they are
+// added from the dashboard.
 export const defaultProfile: ProfileData = {
   name: "Ali",
   fullName: "Ali Imran Rodja",
-  role: "Software Engineer",
-  email: "hello@example.com",
+  role: "Junior Full Stack Web Developer",
+  email: "rodjaali@gmail.com",
   intro:
-    "Hi! I'm Ali, a software engineer who builds fast, accessible web applications with Next.js and TypeScript. Replace this text with a short introduction about yourself.",
+    "I am a Junior Full-Stack Web Developer and UI/UX Designer with a strong foundation in both software engineering and visual design, a combination that allows me to build digital products that are not only functional, but also intuitive and user-centered.",
   about: [
-    "I am a **Software Engineer** focused on building modern web applications. Write a few sentences about who you are, what you focus on, and what kind of problems you enjoy solving.",
-    "Add a second paragraph about your background, your **current work**, or what you are learning right now.",
+    "What I bring to a team:",
+    "End-to-end product thinking from wireframe to working system, Strong communication and organizational skills sharpened through real leadership roles, A learning-first mindset with hands-on experience in live project environments",
   ],
   description:
-    "Personal portfolio of Ali Imran Rodja, a software engineer building modern web applications.",
+    "Portfolio of Ali Imran Rodja, a full-stack web developer and UI/UX designer building web applications with Next.js, Laravel, and PostgreSQL.",
   cvUrl: null,
   heroPhoto: null,
   aboutPhoto: null,
@@ -25,15 +26,15 @@ export const defaultProfile: ProfileData = {
     { label: "GitHub", href: "https://github.com/AliRodja", icon: "github" },
     {
       label: "LinkedIn",
-      href: "https://www.linkedin.com/in/your-username",
+      href: "https://www.linkedin.com/in/aliimrnrdj",
       icon: "linkedin",
     },
     {
       label: "Instagram",
-      href: "https://www.instagram.com/your-username",
+      href: "https://www.instagram.com/aliimrnrdj_",
       icon: "instagram",
     },
   ],
-  quoteLine1: '"There are no limits to what you can accomplish',
-  quoteLine2: 'except the limits you place on your own thinking."',
+  quoteLine1: "Building digital solutions while growing as a leader.",
+  quoteLine2: "- Ali Imran Rodja -",
 };

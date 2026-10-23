@@ -1,22 +1,10 @@
 "use client";
 
-import {
-  faBrain,
-  faCode,
-  faMobileScreen,
-  faServer,
-} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
-import { skillCategories, type SkillIcon } from "@/data/skills";
-
-const icons = {
-  web: faCode,
-  backend: faServer,
-  ai: faBrain,
-  mobile: faMobileScreen,
-} satisfies Record<SkillIcon, unknown>;
+import type { SkillCategory } from "@/db/schema";
+import { skillIcons } from "@/lib/skill-icons";
 
 const tagVariants = {
   hidden: { opacity: 0, scale: 0.8 },
@@ -28,9 +16,13 @@ const staggerVariants = {
   show: { transition: { staggerChildren: 0.04, delayChildren: 0.1 } },
 };
 
-export function Skills() {
+export function Skills({ categories }: { categories: SkillCategory[] }) {
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const selected = skillCategories[selectedIndex];
+  // Fall back to the first one if the selected category was deleted.
+  const selected = categories[selectedIndex] ?? categories[0];
+
+  // Nothing to show yet.
+  if (!selected) return null;
 
   return (
     <section className="container mx-auto px-6 py-20">
@@ -48,12 +40,13 @@ export function Skills() {
         </p>
       </motion.div>
 
-      <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-        {skillCategories.map((category, index) => {
+      {/* Wraps four to a row, with a short last row centered. */}
+      <div className="mb-8 flex flex-wrap justify-center gap-6">
+        {categories.map((category, index) => {
           const isSelected = index === selectedIndex;
           return (
             <motion.button
-              key={category.title}
+              key={category.id}
               type="button"
               onClick={() => setSelectedIndex(index)}
               aria-pressed={isSelected}
@@ -62,7 +55,7 @@ export function Skills() {
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
               transition={{ delay: index * 0.1 }}
-              className={`glass flex flex-col items-center gap-4 rounded-2xl p-6 text-center transition-colors duration-300 ${
+              className={`glass flex w-full flex-col items-center gap-4 rounded-2xl p-6 text-center transition-colors duration-300 md:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-4.5rem)/4)] ${
                 isSelected ? "bg-white/20 ring-2 ring-white/70" : "glass-hover"
               }`}
             >
@@ -70,7 +63,7 @@ export function Skills() {
                 className={`rounded-xl p-4 ${isSelected ? "bg-white/25" : "bg-white/10"}`}
               >
                 <FontAwesomeIcon
-                  icon={icons[category.icon]}
+                  icon={skillIcons[category.icon].icon}
                   className="h-8 w-8 text-white"
                 />
               </span>
@@ -89,7 +82,7 @@ export function Skills() {
 
       <AnimatePresence mode="wait">
         <motion.div
-          key={selected.title}
+          key={selected.id}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
@@ -127,27 +120,29 @@ export function Skills() {
             </motion.ul>
           </div>
 
-          <div className="rounded-2xl border border-white/15 bg-white/8 p-8">
-            <h3 className="mb-6 text-center text-xl font-medium tracking-wider text-white/70 uppercase">
-              Infrastructure & Tools
-            </h3>
-            <motion.ul
-              className="flex flex-wrap justify-center gap-3"
-              variants={staggerVariants}
-              initial="hidden"
-              animate="show"
-            >
-              {selected.tools.map((tool) => (
-                <motion.li
-                  key={tool}
-                  variants={tagVariants}
-                  className="rounded-lg border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-medium text-white/85"
-                >
-                  {tool}
-                </motion.li>
-              ))}
-            </motion.ul>
-          </div>
+          {selected.tools.length > 0 && (
+            <div className="rounded-2xl border border-white/15 bg-white/8 p-8">
+              <h3 className="mb-6 text-center text-xl font-medium tracking-wider text-white/70 uppercase">
+                Infrastructure & Tools
+              </h3>
+              <motion.ul
+                className="flex flex-wrap justify-center gap-3"
+                variants={staggerVariants}
+                initial="hidden"
+                animate="show"
+              >
+                {selected.tools.map((tool) => (
+                  <motion.li
+                    key={tool}
+                    variants={tagVariants}
+                    className="rounded-lg border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-medium text-white/85"
+                  >
+                    {tool}
+                  </motion.li>
+                ))}
+              </motion.ul>
+            </div>
+          )}
         </motion.div>
       </AnimatePresence>
     </section>
