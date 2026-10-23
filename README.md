@@ -4,9 +4,10 @@ Website portfolio pribadi yang dibangun dengan Next.js (App Router), TypeScript,
 
 ## Fitur
 
-- **Fullpage scroll** di beranda: berpindah satu layar per section, dengan sidebar ikon yang menandai section aktif
+- **Fullpage scroll** di beranda: berpindah satu layar per section, dengan Dynamic Island kaca yang menandai section aktif
 - **Animasi scroll**: judul, teks, dan foto bergeser masuk saat terlihat di layar
-- **Menu layar penuh** yang terbuka dengan efek lingkaran dari tombol burger
+- **Mode terang dan gelap** lewat tombol ☀/☾ di kanan atas. Pilihan disimpan di browser dan diterapkan sebelum halaman tampil, jadi tidak berkedip. Gelap adalah default, dan dashboard selalu terang.
+- **Navigasi:** di desktop lewat island kaca di tengah atas, di HP lewat tab bar kaca di bawah (seperti Instagram) yang mengikuti section di beranda
 - **Foto hitam-putih** yang berwarna saat di-hover
 - Halaman About: skill per kategori, timeline pengalaman, pendidikan dan prestasi, serta quote dengan efek blur per kata
 - Halaman Projects: highlight proyek, filter kategori, halaman detail, dan arsip
@@ -137,7 +138,7 @@ src/
 │   └── robots.ts               # /robots.txt
 ├── components/                 # Komponen yang dipakai di banyak halaman
 │   ├── glass/                  # Liquid glass WebGL: shader, renderer, GlassStage
-│   ├── layout/                 # Navbar, Footer, BackButton
+│   ├── layout/                 # Navbar, ThemeToggle, TabBar, Footer, BackButton
 │   ├── ui/                     # Button, Photo, RichText
 │   ├── motion/                 # Reveal, DoubleBar
 │   └── sections/               # FullPage, PageHero, SectionTitle, SocialLinks

@@ -15,11 +15,12 @@ export async function Footer() {
   const [year, profile] = await Promise.all([getCurrentYear(), getProfile()]);
 
   return (
-    <footer className="mt-5 flex flex-col items-center overflow-hidden">
-      <div className="flex min-h-[50vh] min-w-[80vw] flex-col items-center justify-center border-b border-white/20">
+    // On phones the bottom padding keeps the copyright clear of the tab bar.
+    <footer className="mt-5 flex flex-col items-center overflow-hidden max-md:pb-24">
+      <div className="flex min-h-[50vh] min-w-[80vw] flex-col items-center justify-center border-b border-ink/20">
         <Link href="/#contact" className="group text-center">
           <Reveal from="left" delay={0.2}>
-            <p className="font-display text-xl font-medium whitespace-nowrap text-white/60 group-hover:underline md:tracking-[0.5rem]">
+            <p className="font-display text-xl font-medium whitespace-nowrap text-ink/60 group-hover:underline md:tracking-[0.5rem]">
               Want something like this?
             </p>
           </Reveal>
@@ -31,8 +32,8 @@ export async function Footer() {
           </Reveal>
         </Link>
       </div>
-      <p className="my-5 text-sm text-white/60">
-        &copy; {year} - <span className="text-lg text-white/80">{profile.name}</span>
+      <p className="my-5 text-sm text-ink/60">
+        &copy; {year} - <span className="text-lg text-ink/80">{profile.name}</span>
       </p>
     </footer>
   );

@@ -4,6 +4,7 @@ import type { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { AnimatePresence, motion, useAnimate } from "motion/react";
 import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useReportSection } from "@/components/layout/current-place";
 import { LightStreaks } from "@/components/layout/glass-backdrop";
 
 export type FullPageSectionConfig = {
@@ -24,6 +25,8 @@ export function FullPage({
   const containerRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [hasScrolled, setHasScrolled] = useState(false);
+  // For the phone tab bar.
+  useReportSection(sections[activeIndex]?.id);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -72,16 +75,18 @@ export function FullPage({
       <AnimatePresence>
         {!hasScrolled && (
           <motion.div
-            className="pointer-events-none fixed bottom-8 left-1/2 z-30 flex -translate-x-1/2 flex-col items-center gap-3"
+            // Hidden on phones, where the tab bar takes the bottom and the
+            // island's dots already show there is more below.
+            className="pointer-events-none fixed bottom-8 left-1/2 z-30 flex -translate-x-1/2 flex-col items-center gap-3 max-md:hidden"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1, transition: { duration: 0.6, delay: 1.2 } }}
             exit={{ opacity: 0, transition: { duration: 0.4 } }}
           >
-            <span className="text-[10px] font-medium tracking-[4px] text-white/60 uppercase">
+            <span className="text-[10px] font-medium tracking-[4px] text-ink/60 uppercase">
               Scroll
             </span>
             <motion.span
-              className="h-14 w-[1.5px] origin-top bg-white/60"
+              className="h-14 w-[1.5px] origin-top bg-ink/60"
               animate={{ scaleY: [0, 1, 1], opacity: [0, 1, 0] }}
               transition={{
                 duration: 2,
@@ -99,11 +104,11 @@ export function FullPage({
 
 const islandSpring = { type: "spring", stiffness: 420, damping: 34 } as const;
 
-// A black pill at the top center that behaves like the Dynamic Island on an
+// A glass pill at the top center that behaves like the Dynamic Island on an
 // iPhone. At rest it is a compact button showing the current section and
 // position dots. Hovering (or tapping on touch, or focusing with the keyboard)
-// expands it into the full section list, with the active one in a white
-// bubble. It sits under the navbar's menu overlay (z-45).
+// expands it into the full section list, with the active one in a bubble.
+// Wide screens only; phones get the tab bar at the bottom.
 function SectionIsland({
   sections,
   activeIndex,
@@ -155,7 +160,8 @@ function SectionIsland({
   };
 
   return (
-    <div className="pointer-events-none fixed inset-x-0 top-2 z-44 flex justify-center transition-opacity duration-300 [html[data-menu-open]_&]:opacity-0">
+    // On phones the tab bar at the bottom follows the sections instead.
+    <div className="pointer-events-none fixed inset-x-0 top-2 z-44 flex justify-center transition-opacity duration-300 max-md:hidden">
       <motion.div
         ref={scope}
         initial={{ y: -72, opacity: 0 }}
@@ -185,7 +191,7 @@ function SectionIsland({
             lastPointer.current = event.pointerType;
           }}
           style={{ borderRadius: 9999 }}
-          className={`flex items-center bg-black shadow-[inset_0_1px_0_rgb(255_255_255/0.2),0_12px_32px_-12px_rgb(0_0_0/0.9)] ring-1 ring-white/25 ${
+          className={`glass glass-bar flex items-center ${
             isOpen ? "gap-1 p-1.5" : "gap-0 p-1"
           }`}
         >
@@ -219,9 +225,9 @@ function SectionIsland({
                   } ${
                     isActive
                       ? isOpen
-                        ? "text-black"
-                        : "text-white"
-                      : "text-gray-400 hover:text-white"
+                        ? "text-canvas"
+                        : "text-ink"
+                      : "text-ink/55 hover:text-ink"
                   }`}
                 >
                   {isActive && isOpen && (
@@ -231,7 +237,7 @@ function SectionIsland({
                       animate={{ opacity: 1, scale: 1 }}
                       transition={islandSpring}
                       style={{ borderRadius: 9999 }}
-                      className="absolute inset-0 bg-white"
+                      className="absolute inset-0 bg-ink"
                     />
                   )}
                   <motion.span layout="position" className="relative flex">
@@ -257,7 +263,7 @@ function SectionIsland({
                         <span
                           key={dot.id}
                           className={`h-1.5 rounded-full transition-all duration-300 ${
-                            dotIndex === activeIndex ? "w-3 bg-white" : "w-1.5 bg-white/35"
+                            dotIndex === activeIndex ? "w-3 bg-ink" : "w-1.5 bg-ink/35"
                           }`}
                         />
                       ))}
@@ -283,7 +289,8 @@ export function FullPageSection({
   return (
     <section
       id={id}
-      className="relative flex min-h-dvh w-full snap-start snap-always items-center justify-center overflow-hidden"
+      // On phones the bottom padding keeps content clear of the tab bar.
+      className="relative flex min-h-dvh w-full snap-start snap-always items-center justify-center overflow-hidden max-md:pb-24"
     >
       {children}
     </section>

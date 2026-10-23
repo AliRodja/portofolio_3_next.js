@@ -1,19 +1,19 @@
-// A near-black backdrop lit like a studio: a soft key light from the top
-// left, a faint fill from the bottom right, slow gray glows, and fine grain.
-// Glass needs tonal variation behind it to read as glass; on flat black the
-// effect disappears.
+// A backdrop lit like a studio: a soft key light from the top left, a faint
+// fill from the bottom right, slow gray glows, and fine grain, in the theme's
+// colors (see globals.css). Glass needs tonal variation behind it to read as
+// glass; on a flat color the effect disappears.
 export function GlassBackdrop() {
   return (
     <div
       aria-hidden
-      className="glass-backdrop-css pointer-events-none fixed inset-0 -z-10 overflow-hidden bg-[#050505]"
+      className="glass-backdrop-css pointer-events-none fixed inset-0 -z-10 overflow-hidden bg-canvas"
     >
-      <div className="absolute inset-0 bg-[radial-gradient(60%_55%_at_12%_8%,rgb(255_255_255/0.16),transparent_70%)]" />
-      <div className="absolute inset-0 bg-[radial-gradient(45%_40%_at_92%_96%,rgb(255_255_255/0.07),transparent_70%)]" />
-      <div className="glass-blob top-[10%] right-[-15%] size-[max(40vw,20rem)] bg-[#3b3e44]" />
-      <div className="glass-blob bottom-[-30%] left-[15%] size-[max(50vw,24rem)] bg-[#2a2c30] [animation-delay:-12s]" />
+      <div className="absolute inset-0 bg-[radial-gradient(60%_55%_at_12%_8%,var(--backdrop-key),transparent_70%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(45%_40%_at_92%_96%,var(--backdrop-fill),transparent_70%)]" />
+      <div className="glass-blob top-[10%] right-[-15%] size-[max(40vw,20rem)] bg-(--backdrop-blob-1)" />
+      <div className="glass-blob bottom-[-30%] left-[15%] size-[max(50vw,24rem)] bg-(--backdrop-blob-2) [animation-delay:-12s]" />
       <div className="grain absolute inset-0 opacity-[0.08]" />
-      <div className="absolute inset-0 bg-[radial-gradient(120%_90%_at_50%_40%,transparent_55%,rgb(0_0_0/0.7))]" />
+      <div className="absolute inset-0 bg-[radial-gradient(120%_90%_at_50%_40%,transparent_55%,var(--backdrop-vignette))]" />
     </div>
   );
 }

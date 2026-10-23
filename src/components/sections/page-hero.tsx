@@ -30,7 +30,7 @@ export function PageHero({
           initial={{ scale: 0.625 }}
           animate={{ scale: 1 }}
           transition={{ ease: "circOut", duration: 1.2 }}
-          className="group relative h-[400px] w-[80vw] overflow-hidden rounded-2xl bg-white/5 ring-1 ring-white/20 md:h-[600px] md:w-[30vw]"
+          className="group relative h-[400px] w-[80vw] overflow-hidden rounded-2xl bg-ink/5 ring-1 ring-ink/20 md:h-[600px] md:w-[30vw]"
         >
           <motion.div
             className="absolute inset-0"
@@ -49,10 +49,10 @@ export function PageHero({
         </motion.div>
       </div>
 
-      <div className="absolute top-[60%] z-10 flex w-full flex-col items-start bg-black/20 px-10 pt-4 backdrop-blur-sm md:top-1/3 md:left-[10%] md:w-auto md:bg-transparent md:pt-0 md:backdrop-blur-none">
-        <h1 className="text-5xl font-bold text-white md:text-8xl">{title}</h1>
+      <div className="absolute top-[60%] z-10 flex w-full flex-col items-start bg-canvas/20 px-10 pt-4 backdrop-blur-sm md:top-1/3 md:left-[10%] md:w-auto md:bg-transparent md:pt-0 md:backdrop-blur-none">
+        <h1 className="text-5xl font-bold text-ink md:text-8xl">{title}</h1>
         <DoubleBar />
-        <p className="mt-4 mb-5 font-display text-xl leading-[1.7rem] tracking-wider text-white/80">
+        <p className="mt-4 mb-5 font-display text-xl leading-[1.7rem] tracking-wider text-ink/80">
           {description}
         </p>
         <motion.button

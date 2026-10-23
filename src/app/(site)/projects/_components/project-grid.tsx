@@ -50,8 +50,8 @@ export function ProjectGrid({ projects }: { projects: Project[] }) {
             aria-pressed={filter === value}
             className={`rounded-full px-4 py-2 text-sm font-medium transition duration-300 md:px-5 ${
               filter === value
-                ? "bg-white text-gray-900 shadow-md"
-                : "glass glass-hover text-white"
+                ? "bg-ink text-canvas shadow-md"
+                : "glass glass-hover text-ink"
             }`}
           >
             {label}
@@ -87,7 +87,7 @@ function ProjectCard({ project }: { project: Project }) {
             className="object-cover opacity-10 transition duration-500 group-hover:opacity-100"
           />
         )}
-        <span className="absolute top-0 left-0 rounded-br-2xl bg-black/30 px-4 py-2 font-display text-white backdrop-blur-sm">
+        <span className="absolute top-0 left-0 rounded-br-2xl bg-canvas/30 px-4 py-2 font-display text-ink backdrop-blur-sm">
           {project.year}
         </span>
         <div
@@ -96,7 +96,7 @@ function ProjectCard({ project }: { project: Project }) {
           }`}
         >
           <h3 className="mb-3 text-3xl font-bold">{project.title}</h3>
-          <p className="text-white/75">
+          <p className="text-ink/75">
             {project.summary.length > 125
               ? `${project.summary.slice(0, 125)}...`
               : project.summary}
@@ -105,7 +105,7 @@ function ProjectCard({ project }: { project: Project }) {
             {project.tech.map((tech) => (
               <span
                 key={tech}
-                className="m-1 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-sm text-white"
+                className="m-1 rounded-full border border-ink/20 bg-ink/10 px-3 py-1 text-sm text-ink"
               >
                 {tech}
               </span>

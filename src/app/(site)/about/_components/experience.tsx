@@ -23,7 +23,7 @@ export function Experience({ experiences }: { experiences: ExperienceItem[] }) {
       <div className="container mx-auto px-6 py-10">
         <div className="relative mx-auto w-full max-w-6xl">
           {/* Timeline line: on the left on mobile, centered on desktop. */}
-          <div className="absolute left-0 h-full w-1 bg-linear-to-b from-white/80 via-white/30 to-transparent md:left-1/2 md:-translate-x-1/2" />
+          <div className="absolute left-0 h-full w-1 bg-linear-to-b from-ink/80 via-ink/30 to-transparent md:left-1/2 md:-translate-x-1/2" />
 
           <ol className="relative space-y-12 md:space-y-16">
             {visible.map((item, index) => {
@@ -33,7 +33,7 @@ export function Experience({ experiences }: { experiences: ExperienceItem[] }) {
                   key={item.id}
                   className="relative md:grid md:grid-cols-2 md:items-start md:gap-12"
                 >
-                  <span className="absolute top-5 left-0 z-10 h-6 w-6 -translate-x-1/2 rounded-full border-4 border-white/90 bg-black shadow-lg md:top-4 md:left-1/2" />
+                  <span className="absolute top-5 left-0 z-10 h-6 w-6 -translate-x-1/2 rounded-full border-4 border-ink/90 bg-canvas shadow-lg md:top-4 md:left-1/2" />
 
                   <motion.div
                     initial={{ opacity: 0, y: -20 }}
@@ -45,22 +45,22 @@ export function Experience({ experiences }: { experiences: ExperienceItem[] }) {
                         : "md:col-start-2 md:justify-start"
                     }`}
                   >
-                    <div className="glass flex items-center gap-6 rounded-xl px-8 py-3 text-white">
+                    <div className="glass flex items-center gap-6 rounded-xl px-8 py-3 text-ink">
                       <div className="text-center">
                         <div className="text-sm font-bold">{formatMonth(item.startDate)}</div>
-                        <div className="text-xs text-white/60">Start</div>
+                        <div className="text-xs text-ink/60">Start</div>
                       </div>
-                      <div className="h-8 w-px bg-white/20" />
+                      <div className="h-8 w-px bg-ink/20" />
                       <div className="text-center">
                         <div className="text-sm font-bold">{formatMonth(item.endDate)}</div>
-                        <div className="text-xs text-white/60">End</div>
+                        <div className="text-xs text-ink/60">End</div>
                       </div>
-                      <div className="h-8 w-px bg-white/20" />
+                      <div className="h-8 w-px bg-ink/20" />
                       <div className="text-center">
-                        <div className="text-sm font-medium text-white/80">
+                        <div className="text-sm font-medium text-ink/80">
                           {item.location}
                         </div>
-                        <div className="text-xs text-white/60">Location</div>
+                        <div className="text-xs text-ink/60">Location</div>
                       </div>
                     </div>
                   </motion.div>
@@ -74,19 +74,19 @@ export function Experience({ experiences }: { experiences: ExperienceItem[] }) {
                     }`}
                   >
                     <div className="glass glass-hover rounded-2xl p-6 transition duration-300">
-                      <h3 className="mb-1 text-xl font-bold text-white">
+                      <h3 className="mb-1 text-xl font-bold text-ink">
                         {item.company}
                       </h3>
-                      <p className="mb-4 font-display text-lg font-medium text-white/85">
+                      <p className="mb-4 font-display text-lg font-medium text-ink/85">
                         {item.role}
-                        <span className="ml-2 text-sm font-normal text-white/50">
+                        <span className="ml-2 text-sm font-normal text-ink/50">
                           • {item.type}
                         </span>
                       </p>
                       {item.description.map((paragraph, i) => (
                         <p
                           key={i}
-                          className="mb-4 text-justify leading-relaxed text-white/70"
+                          className="mb-4 text-justify leading-relaxed text-ink/70"
                         >
                           {paragraph}
                         </p>
@@ -95,7 +95,7 @@ export function Experience({ experiences }: { experiences: ExperienceItem[] }) {
                         {item.skills.map((skill) => (
                           <li
                             key={skill}
-                            className="rounded-full border border-white/20 bg-white/10 px-3 py-1 text-sm font-medium text-white transition duration-300 hover:scale-105"
+                            className="rounded-full border border-ink/20 bg-ink/10 px-3 py-1 text-sm font-medium text-ink transition duration-300 hover:scale-105"
                           >
                             {skill}
                           </li>
@@ -113,7 +113,7 @@ export function Experience({ experiences }: { experiences: ExperienceItem[] }) {
               <button
                 type="button"
                 onClick={() => setShowAll(!showAll)}
-                className="glass-solid glass-solid-hover flex items-center gap-2 rounded-full px-8 py-3 font-medium text-gray-950 transition duration-300 hover:scale-105"
+                className="glass-solid glass-solid-hover flex items-center gap-2 rounded-full px-8 py-3 font-medium text-canvas transition duration-300 hover:scale-105"
               >
                 {showAll ? "Show Less" : "View More Experience"}
                 <FontAwesomeIcon

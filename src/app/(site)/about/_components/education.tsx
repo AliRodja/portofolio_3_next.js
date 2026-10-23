@@ -49,7 +49,7 @@ export function Education({
         <h2 className="text-3xl font-bold tracking-tighter md:text-4xl">
           Education
         </h2>
-        <p className="mx-auto max-w-[800px] text-white/70">
+        <p className="mx-auto max-w-[800px] text-ink/70">
           Get to know more about my educational background.
         </p>
       </div>
@@ -112,7 +112,7 @@ function EducationEntry({ education }: { education: EducationItem }) {
       </div>
 
       {education.description.length > 0 && (
-        <div className="space-y-4 text-justify font-display text-lg text-white/70">
+        <div className="space-y-4 text-justify font-display text-lg text-ink/70">
           {education.description.map((paragraph, index) => (
             <p key={index}>
               <RichText text={paragraph} />
@@ -125,7 +125,7 @@ function EducationEntry({ education }: { education: EducationItem }) {
           {education.badges.map((badge) => (
             <span
               key={badge}
-              className="rounded-2xl border border-white/20 bg-white/10 px-3 py-1 text-white"
+              className="rounded-2xl border border-ink/20 bg-ink/10 px-3 py-1 text-ink"
             >
               {badge}
             </span>
@@ -146,7 +146,7 @@ function Achievements({ achievements }: { achievements: Achievement[] }) {
   return (
     <>
       <h3 className="mt-7 text-xl font-semibold">Achievements</h3>
-      <p className="mb-3 text-white/70 md:mb-6">Some of my achievements during my study.</p>
+      <p className="mb-3 text-ink/70 md:mb-6">Some of my achievements during my study.</p>
 
       <ul className="space-y-4">
         <AnimatePresence>
@@ -165,10 +165,10 @@ function Achievements({ achievements }: { achievements: Achievement[] }) {
               >
                 {isFirstOfYear && (
                   <div className="mt-2 mb-3 flex items-center gap-3">
-                    <span className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-white/10 text-xs font-bold text-white/80">
+                    <span className="flex h-10 w-10 items-center justify-center rounded-full border border-ink/20 bg-ink/10 text-xs font-bold text-ink/80">
                       {year}
                     </span>
-                    <span className="h-px flex-1 bg-linear-to-r from-white/30 to-transparent" />
+                    <span className="h-px flex-1 bg-linear-to-r from-ink/30 to-transparent" />
                   </div>
                 )}
                 <div className="glass glass-hover group flex items-center gap-4 rounded-2xl p-4 transition duration-300">
@@ -183,7 +183,7 @@ function Achievements({ achievements }: { achievements: Achievement[] }) {
                   <div>
                     <p className="font-medium">{achievement.title}</p>
                     <p className="text-sm">{achievement.event}</p>
-                    <p className="mt-1 text-xs text-white/50">
+                    <p className="mt-1 text-xs text-ink/50">
                       {formatMonth(achievement.date)}
                     </p>
                   </div>

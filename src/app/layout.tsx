@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { Jost, Poppins } from "next/font/google";
 import { getProfile } from "@/db/queries/profile";
 import { siteUrl } from "@/lib/site-config";
+import { themeScript } from "@/lib/theme";
 import "./globals.css";
 
 // The Font Awesome stylesheet is imported above, so it does not need to be
@@ -46,7 +47,11 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${poppins.variable} ${jost.variable}`}>
+    // The theme script below may add data-theme before React hydrates.
+    <html lang="en" className={`${poppins.variable} ${jost.variable}`} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
       <body className="font-sans antialiased">
         {children}
       </body>

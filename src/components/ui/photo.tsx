@@ -20,12 +20,14 @@ export function Photo({
   alt: string;
   sizes: string;
   className?: string;
+  // For the large photo at the top of a page: load it right away instead of
+  // waiting until it scrolls into view.
   priority?: boolean;
 }) {
   if (!src) {
     return (
       <div
-        className={`absolute inset-0 flex flex-col items-center justify-center gap-2 bg-slate-400 text-slate-600 on-dark:bg-white/5 on-dark:text-white/50 ${className}`}
+        className={`absolute inset-0 flex flex-col items-center justify-center gap-2 bg-ink/5 text-ink/50 ${className}`}
       >
         <FontAwesomeIcon icon={faImage} className="text-3xl" />
         <span className="text-xs uppercase tracking-widest">Add photo</span>
@@ -39,7 +41,9 @@ export function Photo({
       alt={alt}
       fill
       sizes={sizes}
-      priority={priority}
+      // Next.js 16 deprecated the priority prop in favor of these.
+      loading={priority ? "eager" : undefined}
+      fetchPriority={priority ? "high" : undefined}
       className={`object-cover ${className}`}
     />
   );

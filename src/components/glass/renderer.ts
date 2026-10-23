@@ -26,6 +26,8 @@ export type Frame = {
   blobs: [Blob, Blob];
   streaks: Streak[];
   streakHalfLength: number;
+  // 0 for the dark theme, 1 for the light one, in between while switching.
+  light: number;
   panes: Pane[];
 };
 
@@ -68,6 +70,7 @@ export class GlassRenderer {
       "u_streak1",
       "u_streak2",
       "u_streakHalfLength",
+      "u_light",
     ]);
     this.copy = this.createProgram(fullscreenVertex, copyFragment, [
       "u_texture",
@@ -80,6 +83,7 @@ export class GlassRenderer {
       "u_radius",
       "u_opacity",
       "u_dpr",
+      "u_light",
     ]);
 
     this.texture = gl.createTexture()!;
@@ -149,6 +153,7 @@ export class GlassRenderer {
       gl.uniform4f(location, streak?.x ?? 0, streak?.y ?? 0, streak?.angle ?? 0, streak?.opacity ?? 0);
     }
     gl.uniform1f(b.u_streakHalfLength, frame.streakHalfLength);
+    gl.uniform1f(b.u_light, frame.light);
     gl.drawArrays(gl.TRIANGLES, 0, 6);
 
     // 2. Backdrop to the screen.
@@ -168,6 +173,7 @@ export class GlassRenderer {
     gl.uniform1i(g.u_texture, 0);
     gl.uniform2f(g.u_resolution, width, height);
     gl.uniform1f(g.u_dpr, dpr);
+    gl.uniform1f(g.u_light, frame.light);
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
     gl.enable(gl.SCISSOR_TEST);

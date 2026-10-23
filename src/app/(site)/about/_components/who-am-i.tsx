@@ -48,7 +48,7 @@ export async function WhoAmI() {
           <h3 className="mb-3 text-2xl font-bold tracking-wider">
             {profile.fullName}
           </h3>
-          <div className="space-y-5 text-justify font-display text-lg leading-relaxed text-white/70">
+          <div className="space-y-5 text-justify font-display text-lg leading-relaxed text-ink/70">
             {profile.about.map((paragraph) => (
               <p key={paragraph}>
                 <RichText text={paragraph} />

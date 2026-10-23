@@ -25,6 +25,9 @@ export function GlassStage() {
     const root = document.documentElement;
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const start = performance.now();
+    // Eases between the themes instead of jumping (0 dark, 1 light).
+    let light = readLight();
+    let lastTime = start;
     let frameId = 0;
     let active = true;
 
@@ -42,11 +45,19 @@ export function GlassStage() {
       const height = Math.round(canvas.clientHeight * dpr);
       renderer.resize(width, height, dpr);
 
-      const seconds = reduceMotion ? 0 : (performance.now() - start) / 1000;
+      const now = performance.now();
+      const seconds = reduceMotion ? 0 : (now - start) / 1000;
+      const target = readLight();
+      light = reduceMotion
+        ? target
+        : light + (target - light) * Math.min(1, ((now - lastTime) / 1000) * 10);
+      if (Math.abs(target - light) < 0.001) light = target;
+      lastTime = now;
       renderer.render({
         blobs: readBlobs(seconds, dpr),
         streaks: readStreaks(dpr),
         streakHalfLength: 0.8 * Math.max(window.innerWidth, window.innerHeight) * dpr,
+        light,
         panes: readPanes(dpr),
       });
       frameId = requestAnimationFrame(loop);
@@ -73,6 +84,10 @@ export function GlassStage() {
       />
     </>
   );
+}
+
+function readLight() {
+  return document.documentElement.dataset.theme === "light" ? 1 : 0;
 }
 
 // Same blobs as GlassBackdrop: sizes, positions, and the 28s alternating

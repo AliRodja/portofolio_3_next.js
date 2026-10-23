@@ -77,7 +77,7 @@ export default async function ProjectsPage() {
                   <h3 className="mb-3 text-2xl font-bold tracking-wider">
                     {highlight.title}
                   </h3>
-                  <p className="text-justify font-display text-lg text-white/70">
+                  <p className="text-justify font-display text-lg text-ink/70">
                     {highlight.description[0]}
                   </p>
                   <div className="mt-3 flex flex-wrap gap-3">

@@ -13,10 +13,11 @@ void main() {
 }
 `;
 
-// Draws the page backdrop: near-black base, a studio key and fill light, two
-// slowly drifting gray glows, film grain, a vignette, and up to two light
-// streaks. Mirrors GlassBackdrop and LightStreaks, which stay as the CSS
-// fallback.
+// Draws the page backdrop: a studio key and fill light, two slowly drifting
+// gray glows, film grain, a vignette, and up to two light streaks. u_light
+// blends from the dark theme (0: near-black, silver streaks) to the light one
+// (1: paper white, graphite streaks). Mirrors GlassBackdrop and LightStreaks,
+// which stay as the CSS fallback, and the theme colors in globals.css.
 export const backdropFragment = `
 precision highp float;
 uniform vec2 u_resolution;
@@ -26,6 +27,7 @@ uniform vec3 u_blob2;
 uniform vec4 u_streak1; // center.xy, angle (radians), opacity
 uniform vec4 u_streak2;
 uniform float u_streakHalfLength;
+uniform float u_light;
 
 float hash(vec2 p) {
   return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453);
@@ -65,18 +67,21 @@ void main() {
   vec2 R = u_resolution;
   vec2 p = vec2(gl_FragCoord.x, R.y - gl_FragCoord.y);
 
-  vec3 col = vec3(5.0 / 255.0);
-  col = mix(col, vec3(1.0), 0.16 * radial(p, vec2(0.12, 0.08) * R, vec2(0.60, 0.55) * R, 0.7));
-  col = mix(col, vec3(1.0), 0.07 * radial(p, vec2(0.92, 0.96) * R, vec2(0.45, 0.40) * R, 0.7));
-  col = mix(col, vec3(59.0, 62.0, 68.0) / 255.0, 0.45 * blob(p, u_blob1));
-  col = mix(col, vec3(42.0, 44.0, 48.0) / 255.0, 0.45 * blob(p, u_blob2));
+  float L = u_light;
+  vec3 col = mix(vec3(5.0), vec3(236.0, 236.0, 234.0), L) / 255.0;
+  col = mix(col, vec3(1.0), mix(0.16, 0.9, L) * radial(p, vec2(0.12, 0.08) * R, vec2(0.60, 0.55) * R, 0.7));
+  col = mix(col, vec3(1.0), mix(0.07, 0.55, L) * radial(p, vec2(0.92, 0.96) * R, vec2(0.45, 0.40) * R, 0.7));
+  col = mix(col, mix(vec3(59.0, 62.0, 68.0), vec3(196.0, 199.0, 204.0), L) / 255.0, 0.45 * blob(p, u_blob1));
+  col = mix(col, mix(vec3(42.0, 44.0, 48.0), vec3(211.0, 213.0, 217.0), L) / 255.0, 0.45 * blob(p, u_blob2));
 
   col += (hash(floor(p / u_dpr)) - 0.5) * 0.035;
 
   float vignette = length((p - vec2(0.5, 0.4) * R) / (vec2(1.2, 0.9) * R));
-  col = mix(col, vec3(0.0), 0.7 * clamp((vignette - 0.55) / 0.45, 0.0, 1.0));
+  col = mix(col, vec3(0.0), mix(0.7, 0.14, L) * clamp((vignette - 0.55) / 0.45, 0.0, 1.0));
 
-  col += vec3(streak(p, u_streak1) + streak(p, u_streak2));
+  // Silver streaks brighten the dark backdrop; graphite ones darken the light.
+  float streaks = streak(p, u_streak1) + streak(p, u_streak2);
+  col = mix(col + vec3(streaks), col * (1.0 - 0.9 * min(streaks, 1.0)), L);
   gl_FragColor = vec4(clamp(col, 0.0, 1.0), 1.0);
 }
 `;
@@ -113,6 +118,7 @@ uniform vec4 u_rect;
 uniform float u_radius;
 uniform float u_opacity;
 uniform float u_dpr;
+uniform float u_light;
 varying vec2 v_pixel;
 
 // Signed distance to a rounded rectangle centered at the origin: negative
@@ -171,10 +177,12 @@ void main() {
   }
   col /= total;
 
-  // Lit from the left, slightly brighter at the top, like the reference.
+  // Lit from the left, slightly brighter at the top, like the reference. In
+  // the light theme the glass is frosted white, so the tint is stronger.
   float across = (v_pixel.x - u_rect.x) / u_rect.z;
   float down = (v_pixel.y - u_rect.y) / u_rect.w;
-  col = mix(col, vec3(1.0), 0.03 + 0.08 * (1.0 - across) + 0.02 * (1.0 - down));
+  float tint = 0.03 + 0.08 * (1.0 - across) + 0.02 * (1.0 - down);
+  col = mix(col, vec3(1.0), mix(tint, 0.3 + 2.0 * tint, u_light));
 
   // Soft inner glow along the edge and a specular rim, brightest at the
   // top left and bottom right.
@@ -183,6 +191,8 @@ void main() {
   float light = 0.9 * max(dot(n, normalize(vec2(-1.0, -1.0))), 0.0)
               + 0.55 * max(dot(n, normalize(vec2(1.0, 1.0))), 0.0);
   col += vec3(1.0) * rim * (0.12 + 0.5 * light);
+  // On a light backdrop a white rim alone disappears, so add a fine dark edge.
+  col = mix(col, vec3(0.0), u_light * 0.16 * exp(-inside / (0.8 * u_dpr)));
 
   gl_FragColor = vec4(clamp(col, 0.0, 1.0), mask * u_opacity);
 }

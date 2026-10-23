@@ -32,10 +32,10 @@ export function Skills({ categories }: { categories: SkillCategory[] }) {
         transition={{ duration: 0.6 }}
         className="mb-16 space-y-4 text-center"
       >
-        <h2 className="bg-linear-to-r from-white to-white/60 bg-clip-text text-5xl font-bold text-transparent">
+        <h2 className="bg-linear-to-r from-ink to-ink/60 bg-clip-text text-5xl font-bold text-transparent">
           Skills & Expertise
         </h2>
-        <p className="mx-auto max-w-2xl text-lg leading-relaxed text-white/70">
+        <p className="mx-auto max-w-2xl text-lg leading-relaxed text-ink/70">
           Click on any category to see the technologies and tools I work with.
         </p>
       </motion.div>
@@ -56,22 +56,22 @@ export function Skills({ categories }: { categories: SkillCategory[] }) {
               whileTap={{ scale: 0.97 }}
               transition={{ delay: index * 0.1 }}
               className={`glass flex w-full flex-col items-center gap-4 rounded-2xl p-6 text-center transition-colors duration-300 md:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-4.5rem)/4)] ${
-                isSelected ? "bg-white/20 ring-2 ring-white/70" : "glass-hover"
+                isSelected ? "bg-ink/20 ring-2 ring-ink/70" : "glass-hover"
               }`}
             >
               <span
-                className={`rounded-xl p-4 ${isSelected ? "bg-white/25" : "bg-white/10"}`}
+                className={`rounded-xl p-4 ${isSelected ? "bg-ink/25" : "bg-ink/10"}`}
               >
                 <FontAwesomeIcon
                   icon={skillIcons[category.icon].icon}
-                  className="h-8 w-8 text-white"
+                  className="h-8 w-8 text-ink"
                 />
               </span>
               <span>
-                <span className="mb-2 block font-display text-lg font-semibold text-white">
+                <span className="mb-2 block font-display text-lg font-semibold text-ink">
                   {category.title}
                 </span>
-                <span className="block text-sm leading-relaxed text-white/60">
+                <span className="block text-sm leading-relaxed text-ink/60">
                   {category.description}
                 </span>
               </span>
@@ -90,7 +90,7 @@ export function Skills({ categories }: { categories: SkillCategory[] }) {
           className="mt-12 space-y-8"
         >
           <div className="glass rounded-2xl p-8">
-            <h3 className="mb-6 text-center text-2xl font-semibold text-white">
+            <h3 className="mb-6 text-center text-2xl font-semibold text-ink">
               Technology Stack
             </h3>
             <motion.ul
@@ -105,12 +105,12 @@ export function Skills({ categories }: { categories: SkillCategory[] }) {
                   variants={tagVariants}
                   className={`flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium ${
                     language.highlight
-                      ? "scale-105 bg-white text-gray-900 shadow-md"
-                      : "border border-white/20 bg-white/10 text-white"
+                      ? "scale-105 bg-ink text-canvas shadow-md"
+                      : "border border-ink/20 bg-ink/10 text-ink"
                   }`}
                 >
                   {language.highlight && (
-                    <span className="animate-pulse text-[10px] text-gray-400">
+                    <span className="animate-pulse text-[10px] text-canvas/50">
                       ✦
                     </span>
                   )}
@@ -121,8 +121,8 @@ export function Skills({ categories }: { categories: SkillCategory[] }) {
           </div>
 
           {selected.tools.length > 0 && (
-            <div className="rounded-2xl border border-white/15 bg-white/8 p-8">
-              <h3 className="mb-6 text-center text-xl font-medium tracking-wider text-white/70 uppercase">
+            <div className="rounded-2xl border border-ink/15 bg-ink/8 p-8">
+              <h3 className="mb-6 text-center text-xl font-medium tracking-wider text-ink/70 uppercase">
                 Infrastructure & Tools
               </h3>
               <motion.ul
@@ -135,7 +135,7 @@ export function Skills({ categories }: { categories: SkillCategory[] }) {
                   <motion.li
                     key={tool}
                     variants={tagVariants}
-                    className="rounded-lg border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-medium text-white/85"
+                    className="rounded-lg border border-ink/20 bg-ink/10 px-4 py-1.5 text-xs font-medium text-ink/85"
                   >
                     {tool}
                   </motion.li>

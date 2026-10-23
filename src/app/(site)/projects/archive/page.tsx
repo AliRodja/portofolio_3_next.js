@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 };
 
 const headerClass =
-  "px-3 py-3 text-sm font-medium tracking-wider text-white/60 uppercase";
+  "px-3 py-3 text-sm font-medium tracking-wider text-ink/60 uppercase";
 
 export default async function ArchivePage() {
   const projects = await getProjects();
@@ -39,7 +39,7 @@ export default async function ArchivePage() {
                 {projects.map((project) => (
                   <tr
                     key={project.slug}
-                    className="border-t border-white/10 transition duration-300 hover:bg-white/5"
+                    className="border-t border-ink/10 transition duration-300 hover:bg-ink/5"
                   >
                     <td className="px-3 py-2">{project.year}</td>
                     <td className="px-3 py-2">
