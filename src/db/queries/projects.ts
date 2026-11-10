@@ -5,7 +5,6 @@ import { projects } from "@/db/schema";
 
 export const PROJECTS_TAG = "projects";
 
-// Cached until a dashboard change calls updateTag(PROJECTS_TAG).
 export async function getProjects() {
   "use cache";
   cacheTag(PROJECTS_TAG);
@@ -17,8 +16,7 @@ export async function getProjects() {
     .orderBy(desc(projects.year), desc(projects.createdAt));
 }
 
-// Keyed by slug rather than reusing getProjects(), so a detail page for a
-// project added after the build never renders from a stale project list.
+// Query by slug directly so newly added projects never read from a stale list cache.
 export async function getProject(slug: string) {
   "use cache";
   cacheTag(PROJECTS_TAG);

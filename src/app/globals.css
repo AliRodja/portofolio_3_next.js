@@ -3,8 +3,7 @@
 @theme inline {
   --font-sans: var(--font-poppins);
   --font-display: var(--font-jost);
-  /* Theme colors for the public site: ink for text and lines, canvas for the
-     page behind. Use them with opacity, e.g. text-ink/70 or bg-ink/10. */
+  /* Semantic theme tokens: ink for foreground text/borders, canvas for page background. */
   --color-ink: var(--ink);
   --color-canvas: var(--canvas);
 }
@@ -17,29 +16,73 @@
   }
 }
 
-/* ---------------------------------------------------------------------------
-   Themes
-   ---------------------------------------------------------------------------
-   Dark is the default. <html data-theme="light"> switches the public site to
-   light; an inline script in the root layout sets it before the first paint
-   from the visitor's saved choice. The dashboard keeps its own light look.
-   --------------------------------------------------------------------------- */
+/* Light theme is the default; <html data-theme="dark"> activates the dark palette. */
 
-:root {
+:root,
+html[data-theme="light"] {
+  color-scheme: light;
+  --canvas: #ffffff;
+  --ink: #0f172a;
+
+  --backdrop-key: transparent;
+  --backdrop-fill: transparent;
+  --backdrop-blob-1: transparent;
+  --backdrop-blob-2: transparent;
+  --backdrop-vignette: transparent;
+  --streak: 255 255 255;
+
+  --glass-fill: rgb(255 255 255 / 0.85);
+  --glass-hover-fill: rgb(248 250 252 / 0.95);
+  --glass-webgl-hover: rgb(15 23 42 / 0.04);
+  --glass-shadow:
+    0 4px 20px -2px rgb(15 23 42 / 0.06),
+    0 1px 3px 0 rgb(15 23 42 / 0.04);
+  --glass-rim: linear-gradient(
+    135deg,
+    rgb(15 23 42 / 0.12),
+    rgb(15 23 42 / 0.08) 50%,
+    rgb(15 23 42 / 0.12)
+  );
+  --glass-bar-fill: rgb(255 255 255 / 0.88);
+  --glass-bar-hover-fill: rgb(248 250 252 / 0.96);
+  --glass-solid-fallback: #ffffff;
+
+  --solid-fill: #0f172a;
+  --solid-hover-fill: #1e293b;
+  --solid-shadow:
+    0 8px 20px -4px rgb(15 23 42 / 0.25),
+    0 2px 6px -1px rgb(15 23 42 / 0.1);
+  --solid-rim: linear-gradient(
+    135deg,
+    rgb(15 23 42),
+    rgb(30 41 59)
+  );
+  --solid-fallback: #0f172a;
+
+  --selection: #e2e8f0;
+  --surface-fill: #f8fafc;
+  --surface-hover-fill: #f1f5f9;
+  --surface-border: rgb(15 23 42 / 0.14);
+}
+
+/* Hide decorative backdrop layers in light mode to keep the canvas pure white. */
+html:not([data-theme="dark"]) .glass-backdrop-css > *,
+html:not([data-theme="dark"]) .light-streak-layer {
+  display: none;
+}
+
+html[data-theme="dark"] {
   color-scheme: dark;
   --canvas: #050505;
   --ink: #ffffff;
 
-  /* Backdrop (the CSS version; the WebGL stage has its own copy). */
   --backdrop-key: rgb(255 255 255 / 0.16);
   --backdrop-fill: rgb(255 255 255 / 0.07);
   --backdrop-blob-1: #3b3e44;
   --backdrop-blob-2: #2a2c30;
   --backdrop-vignette: rgb(0 0 0 / 0.7);
-  /* Light streaks, as an "r g b" triplet so alphas can be applied. */
   --streak: 255 255 255;
 
-  /* Clear glass. */
   --glass-fill: linear-gradient(
     100deg,
     rgb(255 255 255 / 0.16) 0%,
@@ -64,7 +107,6 @@
     rgb(255 255 255 / 0.08) 60%,
     rgb(255 255 255 / 0.65)
   );
-  /* Frosted glass for navigation over scrolling content. */
   --glass-bar-fill: linear-gradient(
     100deg,
     rgb(40 40 44 / 0.55) 0%,
@@ -77,7 +119,6 @@
   );
   --glass-solid-fallback: rgb(38 38 40);
 
-  /* Solid glass for primary actions: a white pill in the dark theme. */
   --solid-fill: linear-gradient(
     100deg,
     rgb(255 255 255 / 0.95) 0%,
@@ -105,99 +146,12 @@
   --solid-fallback: rgb(235 236 238);
 
   --selection: #2a2d35;
+  --surface-fill: rgb(255 255 255 / 0.04);
+  --surface-hover-fill: rgb(255 255 255 / 0.08);
+  --surface-border: rgb(255 255 255 / 0.14);
 }
 
-/* Light: a soft paper-white studio, frosted white glass with a fine edge,
-   and graphite primary buttons. */
-html[data-theme="light"] {
-  color-scheme: light;
-  --canvas: #ececea;
-  --ink: #0c0c0d;
-
-  --backdrop-key: rgb(255 255 255 / 0.9);
-  --backdrop-fill: rgb(255 255 255 / 0.55);
-  --backdrop-blob-1: #c4c7cc;
-  --backdrop-blob-2: #d3d5d9;
-  --backdrop-vignette: rgb(0 0 0 / 0.14);
-  --streak: 20 20 22;
-
-  --glass-fill: linear-gradient(
-    100deg,
-    rgb(255 255 255 / 0.7) 0%,
-    rgb(255 255 255 / 0.45) 45%,
-    rgb(255 255 255 / 0.3) 100%
-  );
-  --glass-hover-fill: linear-gradient(
-    100deg,
-    rgb(255 255 255 / 0.9) 0%,
-    rgb(255 255 255 / 0.65) 45%,
-    rgb(255 255 255 / 0.5) 100%
-  );
-  --glass-webgl-hover: rgb(255 255 255 / 0.35);
-  --glass-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 0.95),
-    inset 0 -10px 18px -10px rgb(0 0 0 / 0.06),
-    0 14px 34px -14px rgb(0 0 0 / 0.28);
-  --glass-rim: linear-gradient(
-    135deg,
-    rgb(255 255 255),
-    rgb(0 0 0 / 0.08) 35%,
-    rgb(0 0 0 / 0.12) 60%,
-    rgb(255 255 255 / 0.9)
-  );
-  --glass-bar-fill: linear-gradient(
-    100deg,
-    rgb(255 255 255 / 0.78) 0%,
-    rgb(246 246 244 / 0.66) 100%
-  );
-  --glass-bar-hover-fill: linear-gradient(
-    100deg,
-    rgb(255 255 255 / 0.95) 0%,
-    rgb(255 255 255 / 0.85) 100%
-  );
-  --glass-solid-fallback: rgb(248 248 246);
-
-  --solid-fill: linear-gradient(
-    100deg,
-    rgb(20 20 22 / 0.95) 0%,
-    rgb(44 45 49 / 0.92) 55%,
-    rgb(72 74 80 / 0.88) 100%
-  );
-  --solid-hover-fill: linear-gradient(
-    100deg,
-    rgb(0 0 0) 0%,
-    rgb(32 33 36 / 0.96) 55%,
-    rgb(58 60 66 / 0.92) 100%
-  );
-  --solid-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 0.25),
-    inset 0 -10px 18px -10px rgb(0 0 0 / 0.4),
-    0 14px 34px -14px rgb(0 0 0 / 0.45);
-  --solid-rim: linear-gradient(
-    135deg,
-    rgb(255 255 255 / 0.45),
-    rgb(255 255 255 / 0.1) 35%,
-    rgb(255 255 255 / 0.05) 60%,
-    rgb(255 255 255 / 0.3)
-  );
-  --solid-fallback: rgb(30 30 32);
-
-  --selection: #c9ccd2;
-}
-
-/* ---------------------------------------------------------------------------
-   Liquid Glass
-   ---------------------------------------------------------------------------
-   A clear surface lit from the left, a crisp rim that is brightest at the
-   top-left and bottom-right (drawn by ::before), and a soft inner glow along
-   the bottom. Colors come from the theme variables above.
-
-   Write backdrop-filter and mask unprefixed only. The CSS minifier
-   (Lightning CSS) treats prefixed and unprefixed versions as one property
-   and keeps only the last one written, so adding a -webkit- line by hand
-   drops the unprefixed one that Chrome and Firefox need. The minifier adds
-   the Safari prefixes itself.
-   --------------------------------------------------------------------------- */
+/* Keep backdrop-filter and mask unprefixed; Lightning CSS adds vendor prefixes and drops duplicates. */
 
 @utility glass {
   position: relative;
@@ -223,8 +177,6 @@ html[data-theme="light"] {
   }
 }
 
-/* Solid glass for primary actions, like a pill catching the full light:
-   white in the dark theme, graphite in the light one. Use text-canvas. */
 @utility glass-solid {
   position: relative;
   isolation: isolate;
@@ -248,10 +200,7 @@ html[data-theme="light"] {
   }
 }
 
-/* While the WebGL glass stage runs (components/glass), it draws the backdrop
-   and the clear glass itself. The CSS backdrop and streaks only hide, so the
-   stage can still read the streaks' positions, and the glass keeps its rim,
-   shadow, and hover tint while its fill and blur step aside. */
+/* When WebGL glass is active, hide CSS backdrop layers with visibility so their DOM rects stay measurable. */
 html[data-glass="webgl"] .glass-backdrop-css,
 html[data-glass="webgl"] .light-streak-layer {
   visibility: hidden;
@@ -266,11 +215,8 @@ html[data-glass="webgl"] .glass-hover:hover {
   background: var(--glass-webgl-hover);
 }
 
-/* Glass for anything that floats over scrolling content: the name pill,
-   theme toggle, and back button, the islands, and the phone tab bar. The WebGL glass only bends the backdrop, not
-   the text and photos passing behind, so these keep a frosted blur and a
-   tint in every mode to stay readable. Use together with .glass.
-   Plain CSS rather than @utility, so it outranks the WebGL rules above. */
+/* Floating nav controls keep CSS backdrop-filter so scrolling text behind them stays legible (R-10).
+   Written as plain CSS to outrank the html[data-glass="webgl"] .glass reset above. */
 .glass.glass-bar,
 html[data-glass="webgl"] .glass.glass-bar {
   background: var(--glass-bar-fill);
@@ -282,7 +228,6 @@ html[data-glass="webgl"] .glass.glass-bar.glass-hover:hover {
   background: var(--glass-bar-hover-fill);
 }
 
-/* Hover: the surface catches a little more light. */
 @utility glass-hover {
   &:hover {
     background: var(--glass-hover-fill);
@@ -295,7 +240,18 @@ html[data-glass="webgl"] .glass.glass-bar.glass-hover:hover {
   }
 }
 
-/* A large blurred color blob for the home page backdrop. */
+/* Matte editorial card surface for inline content (respecting R-10 glass dose cap). */
+@utility surface-card {
+  background: var(--surface-fill);
+  border: 1px solid var(--surface-border);
+}
+
+@utility surface-card-hover {
+  &:hover {
+    background: var(--surface-hover-fill);
+  }
+}
+
 @utility glass-blob {
   position: absolute;
   border-radius: 9999px;
@@ -313,9 +269,6 @@ html[data-glass="webgl"] .glass.glass-bar.glass-hover:hover {
   }
 }
 
-/* A faint glint line: silver in the dark theme, graphite in the light one.
-   Glass reads best when something sharp passes behind it, so a few of these
-   sit behind the main buttons. */
 @utility light-streak {
   position: absolute;
   height: 2px;
@@ -356,7 +309,6 @@ html[data-glass="webgl"] .glass.glass-bar.glass-hover:hover {
   }
 }
 
-/* Accessibility: fall back to solid surfaces when transparency is reduced. */
 @media (prefers-reduced-transparency: reduce) {
   .glass,
   .glass.glass-bar {
@@ -370,13 +322,11 @@ html[data-glass="webgl"] .glass.glass-bar.glass-hover:hover {
   }
 }
 
-/* Scale the whole layout smoothly with the viewport width. */
 html {
   font-size: clamp(13px, 0.89vw, 17px);
 }
 
-/* The dashboard is a work tool: fixed, readable sizes and a light page,
-   independent of the public site's scaling and theme. */
+/* Lock the admin dashboard to 16px and light mode, independent of public site scaling and theme. */
 html:has([data-admin]) {
   font-size: 16px;
   color-scheme: light;
@@ -386,8 +336,6 @@ html:has([data-admin]) body {
   background-color: #f9fafb;
 }
 
-/* Matches the public pages' backdrop, so overscroll and the moment before
-   it paints never flash another color. The dashboard sets its own. */
 body {
   background-color: var(--canvas);
   color: black;
@@ -410,4 +358,48 @@ h6 {
 html:has([data-admin]) ::selection {
   background: #2a2d35;
   color: #ffffff;
+}
+
+/* Base pointer affordances and keyboard focus rings (R-32, R-39). */
+
+@layer base {
+  a[href],
+  button:not(:disabled),
+  summary,
+  select:not(:disabled),
+  label[for],
+  label:has(input:not(:disabled)),
+  input[type="checkbox"]:not(:disabled),
+  input[type="radio"]:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]),
+  [role="tab"]:not([aria-disabled="true"]),
+  [role="switch"]:not([aria-disabled="true"]) {
+    cursor: pointer;
+  }
+
+  button:disabled,
+  select:disabled,
+  input:disabled,
+  textarea:disabled,
+  [aria-disabled="true"] {
+    cursor: not-allowed;
+  }
+
+  a:focus-visible,
+  button:focus-visible,
+  summary:focus-visible,
+  select:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  [role="button"]:focus-visible,
+  [role="tab"]:focus-visible,
+  [role="switch"]:focus-visible {
+    outline: 2px solid var(--ink);
+    outline-offset: 2px;
+  }
+
+  html:has([data-admin]) :is(a, button, summary, select, input, textarea, [role="button"]):focus-visible {
+    outline: 2px solid #111827;
+    outline-offset: 2px;
+  }
 }

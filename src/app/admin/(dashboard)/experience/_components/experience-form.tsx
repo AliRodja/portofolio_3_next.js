@@ -29,8 +29,7 @@ export function ExperienceForm({
 
   return (
     <form
-      // Submitting through onSubmit instead of the action prop keeps React
-      // from resetting the fields when validation fails.
+      // Submit via onSubmit so React does not reset uncontrolled fields when validation fails.
       onSubmit={(event) => {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);

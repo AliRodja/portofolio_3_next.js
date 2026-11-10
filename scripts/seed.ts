@@ -12,11 +12,7 @@ import {
 } from "@/db/schema";
 import { defaultProfile } from "@/lib/default-profile";
 
-// Starting content for an empty database, taken from Ali's CV. Safe to run
-// again: projects with an existing slug are skipped, and the other sections
-// are only filled while their table is empty, so edits made in the dashboard
-// are never overwritten. Photos and the CV file are uploads, so add them from
-// the dashboard.
+// Safe to re-run: existing project slugs and non-empty tables are skipped so dashboard edits stay intact.
 
 const seedProjects: NewProject[] = [
   {
@@ -261,8 +257,7 @@ const seedEducations: NewEducation[] = [
   },
 ];
 
-// Inserts rows only while the table is empty, since these sections have no
-// natural key to skip duplicates by.
+// These tables have no natural unique key, so only seed them when empty.
 async function seedIfEmpty<T extends Parameters<typeof db.insert>[0]>(
   table: T,
   rows: T["$inferInsert"][],

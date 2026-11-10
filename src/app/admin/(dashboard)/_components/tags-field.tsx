@@ -5,10 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState, type KeyboardEvent } from "react";
 import { FieldError, inputClass } from "./form";
 
-// A list of short names edited as chips: type and press Enter (or a comma,
-// unless `commas` is off for values that contain them) to add one. With
-// `highlightable`, each chip has a star toggle. Submitted as one JSON field:
-// Tag[] when highlightable, string[] otherwise.
+// Serializes chips into a hidden JSON input as Tag[] when highlightable, or string[] otherwise.
 export type Tag = { name: string; highlight: boolean };
 
 export function TagsField({

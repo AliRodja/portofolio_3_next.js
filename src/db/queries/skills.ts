@@ -5,8 +5,6 @@ import { skillCategories } from "@/db/schema";
 
 export const SKILLS_TAG = "skills";
 
-// In the order set in the dashboard. Cached until a dashboard change calls
-// updateTag(SKILLS_TAG).
 export async function getSkillCategories() {
   "use cache";
   cacheTag(SKILLS_TAG);

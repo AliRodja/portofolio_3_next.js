@@ -14,9 +14,9 @@ import { usePathname } from "next/navigation";
 import { Suspense, type ReactNode } from "react";
 import { navLinks } from "@/lib/site-config";
 import { useCurrentSection } from "./current-place";
+import { DynamicIsland } from "./dynamic-island";
 import { scrollWithinPage } from "./scroll-within-page";
 
-// Each tab's icon, and the home page section it stands for.
 const tabs: Record<string, { icon: IconDefinition; section: string }> = {
   "/": { icon: faHouse, section: "home" },
   "/about": { icon: faUser, section: "about" },
@@ -35,20 +35,10 @@ type Item = {
   onHome: boolean;
 };
 
-// The main links, Home, About, Projects, and Contact, in two places:
-//
-// - On phones, a glass tab bar at the bottom of the screen, like the one in
-//   the Instagram app, in easy reach of a thumb.
-// - On wide screens, a glass pill at the top center of every page except
-//   the home page, where the Dynamic Island already lists the same four.
-//
-// The home page has a section for each link, so there the current tab
-// follows the section on screen and a tab scrolls to its section. Elsewhere
-// the links open their pages.
+// Renders the bottom tab bar on mobile and the top Dynamic Island on non-home desktop pages.
 export function TabBar() {
   return (
-    // The current path is only known per request on some routes, so the
-    // static shell renders the phone bar without a current tab.
+    // Prerender the mobile bar without an active tab while usePathname resolves inside Suspense.
     <Suspense fallback={<PhoneBar items={buildItems()} />}>
       <ActiveTabBar />
     </Suspense>
@@ -145,23 +135,11 @@ function PhoneBar({ items }: { items: Item[] }) {
 
 function PageIsland({ items }: { items: Item[] }) {
   return (
-    <div className="pointer-events-none fixed inset-x-0 top-2 z-44 flex justify-center max-md:hidden">
-      <nav
-        aria-label="Pages"
-        className="glass glass-bar pointer-events-auto flex items-center gap-1 rounded-full p-1.5"
-      >
-        {items.map((item) => (
-          <TabLink
-            key={item.key}
-            item={item}
-            bubbleId="page-island-current"
-            className="h-10 gap-2 px-4 text-sm"
-          >
-            <FontAwesomeIcon icon={item.icon} className="relative w-4 text-base" />
-            <span className="relative">{item.label}</span>
-          </TabLink>
-        ))}
-      </nav>
-    </div>
+    <DynamicIsland
+      items={items}
+      activeIndex={items.findIndex((item) => item.current)}
+      label="Pages"
+      bubbleId="page-island-current"
+    />
   );
 }

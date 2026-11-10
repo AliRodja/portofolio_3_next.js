@@ -16,13 +16,13 @@ export default async function NotFound() {
       <TabBar />
       <main className="flex min-h-screen flex-col items-center justify-center gap-10 p-10">
         <div className="text-center">
-          <h2 className="text-lg font-normal tracking-[8px] text-ink/60 uppercase">
+          <p className="text-sm font-medium tracking-[0.2em] text-ink/70 uppercase">
             Page not found
-          </h2>
-          <h1 className="text-4xl font-medium text-ink">404</h1>
+          </p>
+          <h1 className="mt-2 text-5xl font-bold text-ink">404</h1>
         </div>
         <Link href="/" className={buttonClass("glassSolid")}>
-          Go Home
+          Return to Home
         </Link>
       </main>
     </div>

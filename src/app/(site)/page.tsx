@@ -29,19 +29,19 @@ export default async function HomePage() {
         <FullPageSection id="home">
           <div className="mx-auto grid w-[82%] max-w-screen-2xl grid-cols-1 gap-4 p-10 md:grid-cols-3">
             <div className="col-span-2 flex flex-col items-center justify-center text-center md:items-start md:text-start">
-              <Reveal className="mx-auto my-10 md:hidden">
-                <div className="group relative h-60 w-60 overflow-hidden rounded-full bg-ink/5 ring-1 ring-ink/20">
+              <Reveal className="mx-auto my-6 md:hidden">
+                <div className="group relative h-52 w-52 overflow-hidden rounded-full bg-ink/5 ring-1 ring-ink/20">
                   <Photo
                     src={profile.heroPhoto}
                     alt={profile.fullName}
-                    sizes="240px"
+                    sizes="208px"
                     priority
                     className={monoPhotoClass}
                   />
                 </div>
               </Reveal>
               <Reveal delay={0.2}>
-                <p className="mb-3 font-display text-xl tracking-[.5rem] text-ink/60 uppercase">
+                <p className="mb-3 font-display text-lg tracking-[0.2em] text-ink/70 uppercase md:text-xl">
                   {profile.fullName}
                 </p>
               </Reveal>
@@ -51,11 +51,11 @@ export default async function HomePage() {
                 </h1>
               </Reveal>
               <Reveal delay={0.4}>
-                <p className="mt-4 font-display text-base leading-[1.7rem] tracking-wider text-ink/70 2xl:text-xl">
+                <p className="mt-4 font-display text-base leading-[1.7rem] tracking-wider text-ink/75 2xl:text-xl">
                   {profile.intro}
                 </p>
               </Reveal>
-              <Reveal delay={0.5} className="mt-10 flex flex-wrap justify-center gap-4">
+              <Reveal delay={0.5} className="mt-8 flex flex-wrap justify-center gap-4 md:mt-10">
                 {profile.cvUrl ? (
                   // A plain link, so Next.js does not treat the PDF as a route.
                   <a
@@ -104,7 +104,7 @@ export default async function HomePage() {
           photoAlt={profile.fullName}
         >
           <ButtonLink href="/about" variant="glassSolid">
-            Learn More
+            Read My Background
           </ButtonLink>
         </FeatureSection>
 
@@ -116,7 +116,7 @@ export default async function HomePage() {
           photoAlt="Projects"
         >
           <ButtonLink href="/projects" variant="glassSolid">
-            Learn More
+            Browse Selected Works
           </ButtonLink>
         </FeatureSection>
 

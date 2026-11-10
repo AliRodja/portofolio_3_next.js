@@ -55,6 +55,8 @@ export default async function AdminProjectsPage() {
                     <img
                       src={project.thumbnail}
                       alt=""
+                      width={80}
+                      height={48}
                       className="h-full w-full object-cover"
                     />
                   )}

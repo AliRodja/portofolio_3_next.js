@@ -1,10 +1,5 @@
-// GLSL for the WebGL glass stage. Coordinates in the fragment shaders are
-// device pixels with the origin at the top left, like the DOM.
-//
-// The glass shader's approach (refraction strongest at the rim and falling
-// off inward, Gaussian blur of what is behind, a vertical tint, and a shape
-// mask) is adapted from liquid-glass-js by Armagan Amcalar, MIT License,
-// https://github.com/dashersw/liquid-glass-js.
+// Fragment coordinates use device pixels with a top-left origin to match DOM rects.
+// Glass refraction adapted from liquid-glass-js by Armagan Amcalar (MIT, https://github.com/dashersw/liquid-glass-js).
 
 export const fullscreenVertex = `
 attribute vec2 a_position;
@@ -13,11 +8,7 @@ void main() {
 }
 `;
 
-// Draws the page backdrop: a studio key and fill light, two slowly drifting
-// gray glows, film grain, a vignette, and up to two light streaks. u_light
-// blends from the dark theme (0: near-black, silver streaks) to the light one
-// (1: paper white, graphite streaks). Mirrors GlassBackdrop and LightStreaks,
-// which stay as the CSS fallback, and the theme colors in globals.css.
+// Renders the studio backdrop and blends between dark (u_light = 0) and light (u_light = 1) themes.
 export const backdropFragment = `
 precision highp float;
 uniform vec2 u_resolution;
@@ -33,8 +24,6 @@ float hash(vec2 p) {
   return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453);
 }
 
-// A CSS-style radial gradient from a color at the center to transparent at
-// \`stop\` (as a fraction of the ellipse radii).
 float radial(vec2 p, vec2 center, vec2 radii, float stop) {
   float k = length((p - center) / radii);
   return max(1.0 - k / stop, 0.0);
@@ -46,15 +35,12 @@ float blob(vec2 p, vec3 b) {
   return 1.0 - smoothstep(b.z - feather, b.z + feather, d);
 }
 
-// The CSS streak: a 2px line with a soft glow, fading in toward the middle.
 float streak(vec2 p, vec4 s) {
   if (s.w <= 0.0) return 0.0;
   vec2 dir = vec2(cos(s.z), sin(s.z));
   vec2 normal = vec2(-dir.y, dir.x);
   vec2 rel = p - s.xy;
   float across = abs(dot(rel, normal));
-  // The CSS gradient runs 0, 0.5, 1, 0.5, 0 along the line: linear from
-  // the middle out.
   float along = clamp(abs(dot(rel, dir)) / u_streakHalfLength, 0.0, 1.0);
   float fade = 1.0 - along;
   float core = exp(-pow(across / (1.0 * u_dpr), 2.0));
@@ -68,25 +54,23 @@ void main() {
   vec2 p = vec2(gl_FragCoord.x, R.y - gl_FragCoord.y);
 
   float L = u_light;
-  vec3 col = mix(vec3(5.0), vec3(236.0, 236.0, 234.0), L) / 255.0;
-  col = mix(col, vec3(1.0), mix(0.16, 0.9, L) * radial(p, vec2(0.12, 0.08) * R, vec2(0.60, 0.55) * R, 0.7));
-  col = mix(col, vec3(1.0), mix(0.07, 0.55, L) * radial(p, vec2(0.92, 0.96) * R, vec2(0.45, 0.40) * R, 0.7));
-  col = mix(col, mix(vec3(59.0, 62.0, 68.0), vec3(196.0, 199.0, 204.0), L) / 255.0, 0.45 * blob(p, u_blob1));
-  col = mix(col, mix(vec3(42.0, 44.0, 48.0), vec3(211.0, 213.0, 217.0), L) / 255.0, 0.45 * blob(p, u_blob2));
+  vec3 col = mix(vec3(5.0), vec3(255.0, 255.0, 255.0), L) / 255.0;
+  col = mix(col, vec3(1.0), mix(0.16, 0.95, L) * radial(p, vec2(0.12, 0.08) * R, vec2(0.60, 0.55) * R, 0.7));
+  col = mix(col, vec3(1.0), mix(0.07, 0.8, L) * radial(p, vec2(0.92, 0.96) * R, vec2(0.45, 0.40) * R, 0.7));
+  col = mix(col, mix(vec3(59.0, 62.0, 68.0), vec3(236.0, 240.0, 246.0), L) / 255.0, 0.45 * blob(p, u_blob1));
+  col = mix(col, mix(vec3(42.0, 44.0, 48.0), vec3(241.0, 244.0, 249.0), L) / 255.0, 0.45 * blob(p, u_blob2));
 
-  col += (hash(floor(p / u_dpr)) - 0.5) * 0.035;
+  col += (hash(floor(p / u_dpr)) - 0.5) * mix(0.035, 0.01, L);
 
   float vignette = length((p - vec2(0.5, 0.4) * R) / (vec2(1.2, 0.9) * R));
-  col = mix(col, vec3(0.0), mix(0.7, 0.14, L) * clamp((vignette - 0.55) / 0.45, 0.0, 1.0));
+  col = mix(col, vec3(0.0), mix(0.7, 0.02, L) * clamp((vignette - 0.55) / 0.45, 0.0, 1.0));
 
-  // Silver streaks brighten the dark backdrop; graphite ones darken the light.
   float streaks = streak(p, u_streak1) + streak(p, u_streak2);
-  col = mix(col + vec3(streaks), col * (1.0 - 0.9 * min(streaks, 1.0)), L);
+  col = mix(col + vec3(streaks), col * (1.0 - 0.22 * min(streaks, 1.0)), L);
   gl_FragColor = vec4(clamp(col, 0.0, 1.0), 1.0);
 }
 `;
 
-// Copies the rendered backdrop texture to the screen.
 export const copyFragment = `
 precision mediump float;
 uniform sampler2D u_texture;
@@ -96,7 +80,6 @@ void main() {
 }
 `;
 
-// One quad per glass element, placed over its DOM rectangle.
 export const glassVertex = `
 attribute vec2 a_position;
 uniform vec4 u_rect; // x, y, width, height in device px, top-left origin
@@ -121,8 +104,7 @@ uniform float u_dpr;
 uniform float u_light;
 varying vec2 v_pixel;
 
-// Signed distance to a rounded rectangle centered at the origin: negative
-// inside, positive outside.
+// Signed distance to a rounded rectangle centered at the origin (negative inside).
 float roundedRect(vec2 p, vec2 halfSize, float r) {
   vec2 q = abs(p) - halfSize + r;
   return length(max(q, 0.0)) + min(max(q.x, q.y), 0.0) - r;
@@ -143,7 +125,6 @@ void main() {
   if (mask <= 0.0) discard;
   float inside = -d;
 
-  // Outward normal from the distance field.
   vec2 e = vec2(1.0, 0.0);
   vec2 n = vec2(
     roundedRect(q + e.xy, halfSize, r) - roundedRect(q - e.xy, halfSize, r),
@@ -151,20 +132,12 @@ void main() {
   );
   n = length(n) > 0.0 ? normalize(n) : vec2(0.0, -1.0);
 
-  // Refraction: like the curved edge of a lens, the rim bends the backdrop,
-  // strongest at the edge and fading out within a band inside it.
-  // Both scale with the element, so a small button bends a little and a
-  // large card bends a lot; a fixed shift would swallow small buttons whole.
+  // Scale rim refraction with element size and sample outward so background lines bend at the edge.
   float shortSide = min(halfSize.x, halfSize.y);
   float band = min(0.6 * shortSide, 28.0 * u_dpr);
   float t = clamp(1.0 - inside / band, 0.0, 1.0);
-  // Sampling outward (as liquid-glass-js does) squeezes what is behind
-  // toward the rim and pulls in a little from beyond it, so lines passing
-  // behind bend at the edge instead of disappearing.
   vec2 samplePoint = v_pixel + n * (t * t * min(0.35 * shortSide, 24.0 * u_dpr));
 
-  // A light Gaussian blur, so sharp things behind stay visible and the
-  // bending at the rim can be seen.
   vec3 col = vec3(0.0);
   float total = 0.0;
   float spread = 0.9 * u_dpr;
@@ -177,22 +150,19 @@ void main() {
   }
   col /= total;
 
-  // Lit from the left, slightly brighter at the top, like the reference. In
-  // the light theme the glass is frosted white, so the tint is stronger.
   float across = (v_pixel.x - u_rect.x) / u_rect.z;
   float down = (v_pixel.y - u_rect.y) / u_rect.w;
   float tint = 0.03 + 0.08 * (1.0 - across) + 0.02 * (1.0 - down);
-  col = mix(col, vec3(1.0), mix(tint, 0.3 + 2.0 * tint, u_light));
+  vec3 lightGlass = mix(vec3(0.955, 0.965, 0.98), vec3(1.0), (1.0 - across) * 0.65 + (1.0 - down) * 0.35);
+  col = mix(mix(col, vec3(1.0), tint), mix(col, lightGlass, 0.55), u_light);
 
-  // Soft inner glow along the edge and a specular rim, brightest at the
-  // top left and bottom right.
   col += vec3(1.0) * 0.06 * exp(-inside / (7.0 * u_dpr));
   float rim = exp(-inside / (1.3 * u_dpr));
   float light = 0.9 * max(dot(n, normalize(vec2(-1.0, -1.0))), 0.0)
               + 0.55 * max(dot(n, normalize(vec2(1.0, 1.0))), 0.0);
   col += vec3(1.0) * rim * (0.12 + 0.5 * light);
   // On a light backdrop a white rim alone disappears, so add a fine dark edge.
-  col = mix(col, vec3(0.0), u_light * 0.16 * exp(-inside / (0.8 * u_dpr)));
+  col = mix(col, vec3(0.06, 0.09, 0.16), u_light * 0.14 * exp(-inside / (0.9 * u_dpr)));
 
   gl_FragColor = vec4(clamp(col, 0.0, 1.0), mask * u_opacity);
 }

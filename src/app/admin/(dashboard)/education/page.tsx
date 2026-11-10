@@ -161,7 +161,13 @@ function Row({
         >
           {thumbnail ? (
             // eslint-disable-next-line @next/next/no-img-element -- small preview of arbitrary URLs
-            <img src={thumbnail} alt="" className="h-full w-full object-cover" />
+            <img
+              src={thumbnail}
+              alt=""
+              width={40}
+              height={40}
+              className="h-full w-full object-cover"
+            />
           ) : (
             <FontAwesomeIcon icon={icon} />
           )}

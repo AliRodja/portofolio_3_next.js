@@ -24,8 +24,7 @@ export const auth = betterAuth({
   databaseHooks: {
     user: {
       create: {
-        // Only allowlisted emails get an account. Returning false aborts the
-        // sign-in, and Better Auth redirects back with an error.
+        // Returning false aborts account creation for non-allowlisted emails.
         before: async (user) => {
           if (!isAdminEmail(user.email)) return false;
         },

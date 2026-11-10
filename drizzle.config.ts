@@ -1,7 +1,6 @@
 import { defineConfig } from "drizzle-kit";
 
-// drizzle-kit does not read .env.local on its own. In CI and on Vercel the
-// variables come from the environment instead.
+// drizzle-kit does not load .env.local automatically.
 try {
   process.loadEnvFile(".env.local");
 } catch {}

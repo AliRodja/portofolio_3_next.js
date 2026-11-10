@@ -9,10 +9,9 @@ import { THEME_STORAGE_KEY, type Theme } from "@/lib/theme";
 const root = () => document.documentElement;
 
 function readTheme(): Theme {
-  return root().dataset.theme === "light" ? "light" : "dark";
+  return root().dataset.theme === "dark" ? "dark" : "light";
 }
 
-// Re-render when anything changes the attribute, including another toggle.
 function subscribe(onChange: () => void) {
   const observer = new MutationObserver(onChange);
   observer.observe(root(), { attributes: true, attributeFilter: ["data-theme"] });
@@ -20,8 +19,7 @@ function subscribe(onChange: () => void) {
 }
 
 function applyTheme(theme: Theme) {
-  if (theme === "light") root().dataset.theme = "light";
-  else delete root().dataset.theme;
+  root().dataset.theme = theme;
   try {
     localStorage.setItem(THEME_STORAGE_KEY, theme);
   } catch {
@@ -29,18 +27,13 @@ function applyTheme(theme: Theme) {
   }
 }
 
-// Switches the public site between the dark and light themes. Shows the
-// theme it switches to, like the toggle in most apps.
 export function ThemeToggle() {
-  // The server cannot know the visitor's choice, so it renders the default
-  // and the real theme takes over right after hydration.
-  const theme = useSyncExternalStore(subscribe, readTheme, () => "dark" as const);
+  // Server snapshot defaults to "light" and syncs with data-theme on hydration.
+  const theme = useSyncExternalStore(subscribe, readTheme, () => "light" as const);
   const next: Theme = theme === "dark" ? "light" : "dark";
 
   const toggle = () => {
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    // Cross-fade the whole page, the WebGL backdrop included, where the
-    // browser supports it.
     if (document.startViewTransition && !reduceMotion) {
       document.startViewTransition(() => applyTheme(next));
     } else {

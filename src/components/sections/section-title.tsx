@@ -6,8 +6,7 @@ export function SectionTitle({ title }: { title: string }) {
     <div className="mt-16 flex w-full flex-col items-start pl-10 md:pl-32">
       <div className="my-5 flex flex-col">
         <DoubleBar variant="long" />
-        {/* A short slide: starting fully off screen, a short title like
-            "Archive" never counts as in view, so it would never appear. */}
+        {/* Keep the initial offset small so short headings still intersect the viewport and trigger Reveal. */}
         <Reveal from="left" distance={80} delay={0.5}>
           <h2 className="mt-3 text-3xl font-bold">{title}</h2>
         </Reveal>

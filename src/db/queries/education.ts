@@ -5,9 +5,6 @@ import { achievements, educations } from "@/db/schema";
 
 export const EDUCATION_TAG = "education";
 
-// Newest first: what you are still studying on top, then by start year.
-// Cached until a dashboard change calls updateTag(EDUCATION_TAG), which also
-// covers the achievements.
 export async function getEducations() {
   "use cache";
   cacheTag(EDUCATION_TAG);
@@ -23,7 +20,6 @@ export async function getEducations() {
     );
 }
 
-// Newest first.
 export async function getAchievements() {
   "use cache";
   cacheTag(EDUCATION_TAG);

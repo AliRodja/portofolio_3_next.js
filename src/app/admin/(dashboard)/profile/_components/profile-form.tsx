@@ -24,8 +24,7 @@ export function ProfileForm({ profile }: { profile: ProfileData }) {
 
   return (
     <form
-      // Submitting through onSubmit instead of the action prop keeps React
-      // from resetting the fields after each save.
+      // Submit via onSubmit so React does not reset uncontrolled fields after each save.
       onSubmit={(event) => {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);

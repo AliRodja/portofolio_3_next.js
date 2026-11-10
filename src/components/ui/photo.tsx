@@ -2,13 +2,9 @@ import { faImage } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 
-// Black and white until the nearest `group` ancestor is hovered, then the real
-// colors fade in. Pass as Photo's className.
 export const monoPhotoClass =
   "grayscale transition-[filter] duration-500 group-hover:grayscale-0";
 
-// Fills its parent, which must be positioned and sized.
-// Without a src it shows a placeholder so the layout still looks right.
 export function Photo({
   src,
   alt,
@@ -20,8 +16,6 @@ export function Photo({
   alt: string;
   sizes: string;
   className?: string;
-  // For the large photo at the top of a page: load it right away instead of
-  // waiting until it scrolls into view.
   priority?: boolean;
 }) {
   if (!src) {

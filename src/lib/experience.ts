@@ -5,7 +5,6 @@ export const employmentTypes = [
   "Freelance",
   "Internship",
   "Volunteer",
-  // Roles in student or community organizations.
   "Organization",
 ] as const;
 

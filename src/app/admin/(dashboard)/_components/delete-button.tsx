@@ -2,8 +2,6 @@
 
 import { useTransition } from "react";
 
-// Asks for confirmation, then runs a delete Server Action bound to one item,
-// e.g. action={deleteProject.bind(null, project.id)}.
 export function DeleteButton({
   action,
   title,

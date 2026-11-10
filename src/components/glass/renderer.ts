@@ -36,10 +36,7 @@ type Program = {
   uniforms: Record<string, WebGLUniformLocation | null>;
 };
 
-// Renders the backdrop into a texture, copies it to the screen, then draws
-// every glass pane on top, sampling that texture. One WebGL context for the
-// whole page, so the number of glass elements is not limited by the
-// browser's cap on contexts.
+// Shares a single WebGL context across all glass panes to avoid the browser's per-page context limit.
 export class GlassRenderer {
   private gl: WebGLRenderingContext;
   private quad: WebGLBuffer;
@@ -95,8 +92,6 @@ export class GlassRenderer {
     this.framebuffer = gl.createFramebuffer()!;
   }
 
-  // Returns null when WebGL or a shader is unavailable, so the caller can
-  // keep the CSS fallback.
   static create(canvas: HTMLCanvasElement): GlassRenderer | null {
     const gl = canvas.getContext("webgl", {
       alpha: false,
@@ -133,7 +128,6 @@ export class GlassRenderer {
     const { width, height, dpr } = this;
     if (!width || !height) return;
 
-    // 1. Backdrop into the texture.
     gl.bindFramebuffer(gl.FRAMEBUFFER, this.framebuffer);
     gl.viewport(0, 0, width, height);
     gl.disable(gl.BLEND);
@@ -156,7 +150,6 @@ export class GlassRenderer {
     gl.uniform1f(b.u_light, frame.light);
     gl.drawArrays(gl.TRIANGLES, 0, 6);
 
-    // 2. Backdrop to the screen.
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     gl.viewport(0, 0, width, height);
     this.use(this.copy);
@@ -166,7 +159,6 @@ export class GlassRenderer {
     gl.uniform2f(this.copy.uniforms.u_resolution, width, height);
     gl.drawArrays(gl.TRIANGLES, 0, 6);
 
-    // 3. Glass panes, blended over the backdrop and clipped like the DOM.
     if (!frame.panes.length) return;
     this.use(this.glass);
     const g = this.glass.uniforms;
@@ -203,8 +195,7 @@ export class GlassRenderer {
     for (const { program } of [this.backdrop, this.copy, this.glass]) {
       gl.deleteProgram(program);
     }
-    // The context itself is left alive: React mounts effects twice in
-    // development, and a lost context could not be reused by the canvas.
+    // Leave the WebGL context alive so React Strict Mode remounts can reuse the same canvas.
   }
 
   private use({ program }: Program) {

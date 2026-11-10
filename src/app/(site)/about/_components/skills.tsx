@@ -1,150 +1,145 @@
 "use client";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useState } from "react";
+import { SectionTitle } from "@/components/sections/section-title";
 import type { SkillCategory } from "@/db/schema";
 import { skillIcons } from "@/lib/skill-icons";
 
-const tagVariants = {
-  hidden: { opacity: 0, scale: 0.8 },
-  show: { opacity: 1, scale: 1 },
-};
-
-const staggerVariants = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.04, delayChildren: 0.1 } },
-};
-
 export function Skills({ categories }: { categories: SkillCategory[] }) {
   const [selectedIndex, setSelectedIndex] = useState(0);
-  // Fall back to the first one if the selected category was deleted.
+  const reduceMotion = useReducedMotion();
   const selected = categories[selectedIndex] ?? categories[0];
 
-  // Nothing to show yet.
   if (!selected) return null;
 
   return (
-    <section className="container mx-auto px-6 py-20">
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="mb-16 space-y-4 text-center"
-      >
-        <h2 className="bg-linear-to-r from-ink to-ink/60 bg-clip-text text-5xl font-bold text-transparent">
-          Skills & Expertise
-        </h2>
-        <p className="mx-auto max-w-2xl text-lg leading-relaxed text-ink/70">
-          Click on any category to see the technologies and tools I work with.
-        </p>
-      </motion.div>
+    <section className="py-12">
+      <SectionTitle title="Skills & Expertise" />
 
-      {/* Wraps four to a row, with a short last row centered. */}
-      <div className="mb-8 flex flex-wrap justify-center gap-6">
-        {categories.map((category, index) => {
-          const isSelected = index === selectedIndex;
-          return (
-            <motion.button
-              key={category.id}
-              type="button"
-              onClick={() => setSelectedIndex(index)}
-              aria-pressed={isSelected}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.97 }}
-              transition={{ delay: index * 0.1 }}
-              className={`glass flex w-full flex-col items-center gap-4 rounded-2xl p-6 text-center transition-colors duration-300 md:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-4.5rem)/4)] ${
-                isSelected ? "bg-ink/20 ring-2 ring-ink/70" : "glass-hover"
-              }`}
-            >
-              <span
-                className={`rounded-xl p-4 ${isSelected ? "bg-ink/25" : "bg-ink/10"}`}
-              >
-                <FontAwesomeIcon
-                  icon={skillIcons[category.icon].icon}
-                  className="h-8 w-8 text-ink"
-                />
-              </span>
-              <span>
-                <span className="mb-2 block font-display text-lg font-semibold text-ink">
-                  {category.title}
-                </span>
-                <span className="block text-sm leading-relaxed text-ink/60">
-                  {category.description}
-                </span>
-              </span>
-            </motion.button>
-          );
-        })}
-      </div>
-
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={selected.id}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.4 }}
-          className="mt-12 space-y-8"
+      <div className="container mx-auto mt-6 grid grid-cols-1 gap-8 px-6 md:px-10 lg:grid-cols-12">
+        <div
+          role="tablist"
+          aria-label="Skill categories"
+          className="flex flex-col gap-3 lg:col-span-5"
         >
-          <div className="glass rounded-2xl p-8">
-            <h3 className="mb-6 text-center text-2xl font-semibold text-ink">
-              Technology Stack
-            </h3>
-            <motion.ul
-              className="flex flex-wrap justify-center gap-3"
-              variants={staggerVariants}
-              initial="hidden"
-              animate="show"
-            >
-              {selected.languages.map((language) => (
-                <motion.li
-                  key={language.name}
-                  variants={tagVariants}
-                  className={`flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium ${
-                    language.highlight
-                      ? "scale-105 bg-ink text-canvas shadow-md"
-                      : "border border-ink/20 bg-ink/10 text-ink"
+          {categories.map((category, index) => {
+            const isSelected = index === selectedIndex;
+            return (
+              <button
+                key={category.id}
+                type="button"
+                role="tab"
+                id={`skill-tab-${category.id}`}
+                aria-selected={isSelected}
+                aria-controls={`skill-panel-${category.id}`}
+                onClick={() => setSelectedIndex(index)}
+                className={`group flex w-full items-start gap-4 rounded-2xl border p-5 text-left transition-all duration-200 ${
+                  isSelected
+                    ? "border-ink bg-ink text-canvas shadow-sm"
+                    : "surface-card surface-card-hover text-ink"
+                }`}
+              >
+                <span
+                  aria-hidden="true"
+                  className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl transition-colors ${
+                    isSelected
+                      ? "bg-canvas/15 text-canvas"
+                      : "bg-ink/8 text-ink"
                   }`}
                 >
-                  {language.highlight && (
-                    <span className="animate-pulse text-[10px] text-canvas/50">
-                      ✦
+                  <FontAwesomeIcon
+                    icon={skillIcons[category.icon].icon}
+                    className="h-5 w-5"
+                  />
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="flex items-baseline justify-between gap-2">
+                    <span className="font-display text-lg font-semibold">
+                      {category.title}
                     </span>
-                  )}
-                  {language.name}
-                </motion.li>
-              ))}
-            </motion.ul>
-          </div>
-
-          {selected.tools.length > 0 && (
-            <div className="rounded-2xl border border-ink/15 bg-ink/8 p-8">
-              <h3 className="mb-6 text-center text-xl font-medium tracking-wider text-ink/70 uppercase">
-                Infrastructure & Tools
-              </h3>
-              <motion.ul
-                className="flex flex-wrap justify-center gap-3"
-                variants={staggerVariants}
-                initial="hidden"
-                animate="show"
-              >
-                {selected.tools.map((tool) => (
-                  <motion.li
-                    key={tool}
-                    variants={tagVariants}
-                    className="rounded-lg border border-ink/20 bg-ink/10 px-4 py-1.5 text-xs font-medium text-ink/85"
+                    <span
+                      className={`font-mono text-xs ${
+                        isSelected ? "text-canvas/75" : "text-ink/60"
+                      }`}
+                    >
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                  </span>
+                  <span
+                    className={`mt-1 block text-sm leading-relaxed ${
+                      isSelected ? "text-canvas/80" : "text-ink/70"
+                    }`}
                   >
-                    {tool}
-                  </motion.li>
-                ))}
-              </motion.ul>
-            </div>
-          )}
-        </motion.div>
-      </AnimatePresence>
+                    {category.description}
+                  </span>
+                </span>
+              </button>
+            );
+          })}
+        </div>
+
+        <div className="lg:col-span-7">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={selected.id}
+              role="tabpanel"
+              id={`skill-panel-${selected.id}`}
+              aria-labelledby={`skill-tab-${selected.id}`}
+              initial={reduceMotion ? false : { opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={reduceMotion ? undefined : { opacity: 0, y: -12 }}
+              transition={{ duration: 0.25 }}
+              className="surface-card flex h-full flex-col justify-between gap-8 rounded-2xl p-8"
+            >
+              <div>
+                <div className="mb-6 flex flex-wrap items-baseline justify-between gap-2 border-b border-ink/15 pb-4">
+                  <h3 className="font-display text-2xl font-semibold text-ink">
+                    {selected.title}: Stack
+                  </h3>
+                  <span className="text-xs font-medium tracking-wider text-ink/65 uppercase">
+                    Solid tags indicate primary focus
+                  </span>
+                </div>
+
+                <ul className="flex flex-wrap gap-2.5">
+                  {selected.languages.map((language) => (
+                    <li
+                      key={language.name}
+                      className={`inline-flex items-center rounded-lg px-3.5 py-2 text-sm font-medium ${
+                        language.highlight
+                          ? "bg-ink font-semibold text-canvas"
+                          : "border border-ink/20 bg-ink/5 text-ink"
+                      }`}
+                    >
+                      {language.name}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {selected.tools.length > 0 && (
+                <div className="border-t border-ink/15 pt-6">
+                  <h4 className="mb-4 text-xs font-semibold tracking-[0.15em] text-ink/70 uppercase">
+                    Infrastructure &amp; Tools
+                  </h4>
+                  <ul className="flex flex-wrap gap-2">
+                    {selected.tools.map((tool) => (
+                      <li
+                        key={tool}
+                        className="rounded-md border border-ink/20 bg-ink/5 px-3 py-1.5 text-xs font-medium text-ink/85"
+                      >
+                        {tool}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </motion.div>
+          </AnimatePresence>
+        </div>
+      </div>
     </section>
   );
 }

@@ -5,8 +5,7 @@ import { NextResponse } from "next/server";
 import { getAdmin } from "@/lib/session";
 import { getUploadMode, UPLOAD_MAX_SIZE, UPLOAD_TYPES } from "@/lib/uploads";
 
-// Development fallback when BLOB_READ_WRITE_TOKEN is not set: saves the file
-// into public/uploads/<folder>/ and returns its public path.
+// Development fallback when BLOB_READ_WRITE_TOKEN is unset: writes uploads to public/uploads/<folder>/.
 export async function POST(request: Request) {
   if (!(await getAdmin())) {
     return NextResponse.json({ error: "Not signed in" }, { status: 401 });
@@ -41,7 +40,6 @@ export async function POST(request: Request) {
     );
   }
 
-  // Keep the original name readable, but make it safe and unique.
   const extension = path.extname(file.name).toLowerCase();
   const base = path
     .basename(file.name, extension)

@@ -13,8 +13,7 @@ import { ScrollToggle } from "../_components/scroll-toggle";
 
 export async function generateStaticParams() {
   const projects = await getProjects();
-  // Cache Components fails the build on an empty list, so fall back to a slug
-  // that renders the 404 page until the first project is added.
+  // Cache Components requires at least one param at build time; "placeholder" falls through to notFound().
   if (projects.length === 0) return [{ slug: "placeholder" }];
   return projects.map((project) => ({ slug: project.slug }));
 }
@@ -38,17 +37,15 @@ export async function generateMetadata({
 function Detail({ label, children }: { label: string; children: ReactNode }) {
   return (
     <div>
-      <h2 className="text-lg font-normal tracking-[8px] text-ink/50 uppercase">
+      <h2 className="text-sm font-medium tracking-[0.2em] text-ink/65 uppercase">
         {label}
       </h2>
-      <div className="text-2xl font-normal text-ink">{children}</div>
+      <div className="mt-1 text-2xl font-normal text-ink">{children}</div>
     </div>
   );
 }
 
-// The frame is the same for every project, so it stays in the shell that
-// shows the moment a link is clicked. Only the part that reads the URL waits
-// behind Suspense (see "Move URL data behind Suspense" in the Next.js docs).
+// Keep the static shell outside Suspense so navigation renders the frame before params resolve.
 export default function ProjectPage({ params }: PageProps<"/projects/[slug]">) {
   return (
     <PageTransition>
@@ -65,10 +62,14 @@ export default function ProjectPage({ params }: PageProps<"/projects/[slug]">) {
 
 function ProjectSkeleton() {
   return (
-    <div aria-hidden className="flex min-h-screen w-full max-w-6xl flex-col justify-center gap-6">
-      <div className="h-4 w-32 animate-pulse rounded-full bg-ink/10" />
-      <div className="h-10 w-2/3 animate-pulse rounded-full bg-ink/10" />
-      <div className="h-6 w-1/2 animate-pulse rounded-full bg-ink/10" />
+    <div
+      role="status"
+      aria-label="Loading project details"
+      className="flex min-h-screen w-full max-w-6xl flex-col justify-center gap-6"
+    >
+      <p className="text-sm font-medium text-ink/65">Loading project details…</p>
+      <div className="h-10 w-2/3 animate-pulse rounded-lg bg-ink/10" />
+      <div className="h-6 w-1/2 animate-pulse rounded-lg bg-ink/10" />
     </div>
   );
 }
@@ -87,10 +88,10 @@ async function ProjectDetails({ params }: Pick<PageProps<"/projects/[slug]">, "p
         <div className="mx-auto mt-10 grid w-full max-w-6xl grid-cols-1 gap-10 md:mt-0 md:grid-cols-2">
           <Reveal className="mx-auto flex flex-col justify-center space-y-10">
             <div>
-              <h2 className="text-lg font-normal tracking-[8px] text-ink/50 uppercase">
+              <p className="text-sm font-medium tracking-[0.2em] text-ink/65 uppercase">
                 Project
-              </h2>
-              <h1 className="text-4xl font-medium text-ink">
+              </p>
+              <h1 className="mt-1 text-4xl font-medium text-ink">
                 {project.title}
               </h1>
             </div>
@@ -104,7 +105,7 @@ async function ProjectDetails({ params }: Pick<PageProps<"/projects/[slug]">, "p
                   rel="noopener noreferrer"
                   className="hover:underline"
                 >
-                  Preview
+                  Open Live Site
                   <FontAwesomeIcon
                     icon={faArrowUpRightFromSquare}
                     className="ml-3"
@@ -120,7 +121,7 @@ async function ProjectDetails({ params }: Pick<PageProps<"/projects/[slug]">, "p
                   rel="noopener noreferrer"
                   className="hover:underline"
                 >
-                  GitHub
+                  View on GitHub
                   <FontAwesomeIcon icon={faGithub} className="ml-3" />
                 </a>
               </Detail>
@@ -128,13 +129,13 @@ async function ProjectDetails({ params }: Pick<PageProps<"/projects/[slug]">, "p
           </Reveal>
 
           <Reveal from="right" delay={0.2} className="flex flex-col justify-center">
-            <h2 className="text-lg font-normal tracking-[8px] text-ink/50 uppercase">
+            <h2 className="mb-2 text-sm font-medium tracking-[0.2em] text-ink/65 uppercase">
               Description
             </h2>
             {project.description.map((paragraph) => (
               <p
                 key={paragraph}
-                className="mb-5 text-justify text-xl tracking-wide text-ink/70"
+                className="mb-5 text-justify text-xl tracking-wide text-ink/75"
               >
                 {paragraph}
               </p>

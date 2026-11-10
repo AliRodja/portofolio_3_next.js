@@ -11,7 +11,6 @@ import { employmentTypes } from "@/lib/experience";
 import { requireAdmin } from "@/lib/session";
 import type { FormState } from "../_components/form";
 
-// <input type="month"> submits YYYY-MM.
 const month = z.string().regex(/^\d{4}-(0[1-9]|1[0-2])$/, "Pick a month");
 
 const experienceSchema = z
@@ -65,7 +64,6 @@ function parseExperience(formData: FormData) {
     location: data.location,
     startDate: `${data.start}-01`,
     endDate: data.current ? null : `${data.end}-01`,
-    // Blank lines separate paragraphs.
     description: data.description.split(/\n\s*\n/).map((p) => p.trim()),
     skills: data.skills
       .split(",")

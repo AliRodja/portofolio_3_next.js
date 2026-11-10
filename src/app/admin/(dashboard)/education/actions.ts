@@ -47,7 +47,6 @@ const educationSchema = z
 const achievementSchema = z.object({
   title: z.string().trim().min(1, "Title is required"),
   event: z.string().trim().min(1, "Event is required"),
-  // <input type="month"> submits YYYY-MM.
   date: z.string().regex(/^\d{4}-(0[1-9]|1[0-2])$/, "Pick a month"),
   type: z.enum(achievementTypeKeys, "Pick a type"),
 });
@@ -91,7 +90,6 @@ async function submitEducation(formData: FormData, id?: number): Promise<FormSta
     degree: data.degree,
     startYear: data.startYear,
     endYear: data.current ? null : Number(data.endYear),
-    // Blank lines separate paragraphs. Optional.
     description: data.description
       ? data.description.split(/\n\s*\n/).map((p) => p.trim())
       : [],

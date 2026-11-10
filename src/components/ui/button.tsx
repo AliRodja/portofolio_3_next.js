@@ -15,7 +15,7 @@ const variants: Record<Variant, string> = {
 };
 
 export function buttonClass(variant: Variant = "primary") {
-  return `inline-block px-8 py-2 font-display transition-all duration-300 ease-[cubic-bezier(0.25,1,0.5,1)] ${variants[variant]}`;
+  return `inline-flex min-h-11 items-center justify-center px-8 py-2.5 font-display transition-all duration-300 ease-[cubic-bezier(0.25,1,0.5,1)] ${variants[variant]}`;
 }
 
 export function ButtonLink({

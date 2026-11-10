@@ -54,8 +54,7 @@ export default async function AdminSkillsPage() {
                 className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center md:px-6"
               >
                 <div className="flex min-w-0 flex-1 items-center gap-4">
-                  {/* Plain forms, so reordering works without waiting for
-                      the page's JavaScript. */}
+                  {/* Use native form actions so reordering works before hydration. */}
                   <div className="flex shrink-0 flex-col">
                     <form action={moveSkillCategory.bind(null, category.id, "up")}>
                       <button

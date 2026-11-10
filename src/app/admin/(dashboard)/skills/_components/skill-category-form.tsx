@@ -28,8 +28,7 @@ export function SkillCategoryForm({
 
   return (
     <form
-      // Submitting through onSubmit instead of the action prop keeps React
-      // from resetting the fields when validation fails.
+      // Submit via onSubmit so React does not reset uncontrolled fields when validation fails.
       onSubmit={(event) => {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
@@ -72,7 +71,7 @@ export function SkillCategoryForm({
             {skillIconKeys.map((key, index) => (
               <label
                 key={key}
-                className="flex cursor-pointer flex-col items-center gap-2 rounded-lg border border-gray-200 px-2 py-3 text-xs text-gray-600 transition hover:border-gray-300 has-checked:border-gray-900 has-checked:bg-gray-900 has-checked:text-white"
+                className="flex cursor-pointer flex-col items-center gap-2 rounded-lg border border-gray-200 px-2 py-3 text-xs text-gray-600 transition hover:border-gray-300 focus-within:ring-2 focus-within:ring-gray-900 focus-within:ring-offset-1 has-checked:border-gray-900 has-checked:bg-gray-900 has-checked:text-white"
               >
                 <input
                   type="radio"

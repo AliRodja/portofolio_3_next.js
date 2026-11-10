@@ -16,17 +16,21 @@ import { useRef, useState, type DragEvent, type ReactNode } from "react";
 import { mediaUrl } from "@/lib/validation";
 import { uploadFile, useUploadMode } from "./upload";
 
-// Tile sizes that match how each image is shown on the site.
 const aspects = {
   portrait: "aspect-[3/4] w-36",
   square: "aspect-square w-36",
   video: "aspect-video w-56",
 };
 
+const aspectDimensions: Record<Aspect, { width: number; height: number }> = {
+  portrait: { width: 144, height: 192 },
+  square: { width: 144, height: 144 },
+  video: { width: 224, height: 126 },
+};
+
 type Aspect = keyof typeof aspects;
 
-// Picks images (or a PDF) by upload, drag and drop, or a pasted link. The
-// chosen URLs are submitted as hidden inputs named `name`, in display order.
+// Submits uploaded or linked media URLs as hidden inputs named `name` in display order.
 export function MediaField({
   name,
   label,
@@ -62,7 +66,6 @@ export function MediaField({
   const isSingle = max === 1;
   const canAdd = isSingle ? urls.length === 0 : urls.length + uploading < max;
 
-  // A single field replaces its value. A list appends, up to `max`.
   const add = (newUrls: string[]) =>
     setUrls((current) => {
       if (isSingle) return newUrls.slice(-1);
@@ -105,8 +108,7 @@ export function MediaField({
   const addLink = () => {
     const url = link.trim();
     if (!url) return;
-    // Same rule the Server Actions enforce, checked here so the message
-    // shows next to this field.
+    // Validate with mediaUrl client-side so errors appear inline before form submission.
     const result = mediaUrl.safeParse(url);
     if (!result.success) {
       setError(result.error.issues[0].message);
@@ -143,7 +145,7 @@ export function MediaField({
       <span className="text-xs font-medium">
         {kind === "file" ? "Upload PDF" : "Upload"}
       </span>
-      <span className="text-[11px] text-gray-400">or drop here</span>
+      <span className="text-[11px] text-gray-500">or drop here</span>
     </button>
   );
 
@@ -180,7 +182,13 @@ export function MediaField({
               className={`group relative overflow-hidden rounded-lg border border-gray-200 bg-gray-100 ${aspects[aspect]}`}
             >
               {/* eslint-disable-next-line @next/next/no-img-element -- preview of arbitrary URLs */}
-              <img src={url} alt="" className="h-full w-full object-cover" />
+              <img
+                src={url}
+                alt=""
+                width={aspectDimensions[aspect].width}
+                height={aspectDimensions[aspect].height}
+                className="h-full w-full object-cover"
+              />
               <div className="absolute inset-x-0 bottom-0 flex justify-center gap-1 bg-linear-to-t from-black/70 to-transparent p-2 pt-6 transition sm:opacity-0 sm:group-focus-within:opacity-100 sm:group-hover:opacity-100">
                 {!isSingle && index > 0 && (
                   <TileButton label="Move left" onClick={() => move(index, -1)}>
@@ -270,7 +278,7 @@ export function MediaField({
               }}
               placeholder={kind === "file" ? "/docs/cv.pdf or https://..." : "/images/... or https://..."}
               aria-label={`${label} link`}
-              className="min-w-0 flex-1 rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-sm placeholder:text-gray-400 focus:border-gray-900 focus:outline-none"
+              className="min-w-0 flex-1 rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-sm placeholder:text-gray-400 focus:border-gray-900 focus:ring-2 focus:ring-gray-900/15 focus:outline-none"
             />
             <button
               type="button"

@@ -44,8 +44,6 @@ const groups: { title: string; links: NavLink[] }[] = [
   },
 ];
 
-// On desktop the sidebar is always visible. On mobile it slides in from the
-// left, opened from a top bar.
 export function SidebarFrame({
   pathname,
   user,
@@ -111,7 +109,7 @@ export function SidebarFrame({
         <nav className="flex-1 overflow-y-auto px-3 py-2">
           {groups.map((group) => (
             <div key={group.title} className="mb-6">
-              <p className="mb-2 px-3 text-xs font-medium tracking-wider text-gray-400 uppercase">
+              <p className="mb-2 px-3 text-xs font-semibold tracking-wider text-gray-500 uppercase">
                 {group.title}
               </p>
               <ul className="space-y-1">
@@ -153,8 +151,7 @@ export function SidebarFrame({
   );
 }
 
-// The current path is only known at request time, so the layout renders
-// SidebarFrame without it in the static shell and swaps this in.
+// Reads usePathname() at request time while SidebarFrame prerenders in the static shell.
 export function ActiveSidebar({ user }: { user: ReactNode }) {
   return <SidebarFrame pathname={usePathname()} user={user} />;
 }

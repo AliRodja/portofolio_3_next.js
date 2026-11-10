@@ -76,7 +76,6 @@ function parseProject(formData: FormData) {
   const data = result.data;
   const values: NewProject = {
     ...data,
-    // Blank lines separate paragraphs.
     description: data.description.split(/\n\s*\n/).map((p) => p.trim()),
     tech: data.tech
       .split(",")
@@ -98,8 +97,7 @@ function isUniqueViolation(error: unknown) {
   return code === "23505" || cause?.code === "23505";
 }
 
-// Only one project can be highlighted. Saving one with the flag clears it
-// from the rest.
+// Only one project can be highlighted at a time; setting it clears the flag on others.
 async function saveProject(values: NewProject, id?: number) {
   return db.transaction(async (tx) => {
     const [saved] = id

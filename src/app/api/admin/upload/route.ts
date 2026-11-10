@@ -3,8 +3,7 @@ import { NextResponse } from "next/server";
 import { getAdmin } from "@/lib/session";
 import { UPLOAD_MAX_SIZE, UPLOAD_TYPES } from "@/lib/uploads";
 
-// Issues short-lived tokens so the dashboard can upload files straight to
-// Vercel Blob from the browser, bypassing the Server Action body size limit.
+// Issue client upload tokens so browser uploads go straight to Vercel Blob and bypass the Server Action body limit.
 export async function POST(request: Request) {
   if (!(await getAdmin())) {
     return NextResponse.json({ error: "Not signed in" }, { status: 401 });

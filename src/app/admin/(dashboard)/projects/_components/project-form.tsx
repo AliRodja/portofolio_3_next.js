@@ -27,8 +27,7 @@ export function ProjectForm({
 
   return (
     <form
-      // Submitting through onSubmit instead of the action prop keeps React
-      // from resetting the fields when validation fails.
+      // Submit via onSubmit so React does not reset uncontrolled fields when validation fails.
       onSubmit={(event) => {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
@@ -116,7 +115,7 @@ export function ProjectForm({
             {projectCategoryKeys.map((category) => (
               <label
                 key={category}
-                className="flex cursor-pointer items-center gap-2 rounded-lg border border-gray-300 px-3 py-2 text-sm transition has-checked:border-gray-900 has-checked:bg-gray-900 has-checked:text-white"
+                className="flex cursor-pointer items-center gap-2 rounded-lg border border-gray-300 px-3 py-2 text-sm transition focus-within:ring-2 focus-within:ring-gray-900 focus-within:ring-offset-1 has-checked:border-gray-900 has-checked:bg-gray-900 has-checked:text-white"
               >
                 <input
                   type="checkbox"

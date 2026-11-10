@@ -90,7 +90,6 @@ export async function saveProfile(
   const data = result.data;
   const values: ProfileData = {
     ...data,
-    // Blank lines separate paragraphs.
     about: data.about.split(/\n\s*\n/).map((paragraph) => paragraph.trim()),
     cvUrl: data.cvUrl || null,
     heroPhoto: data.heroPhoto || null,

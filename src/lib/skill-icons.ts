@@ -13,7 +13,6 @@ import {
   type IconDefinition,
 } from "@fortawesome/free-solid-svg-icons";
 
-// The icons a skill category can show, with a label for the dashboard picker.
 export const skillIcons = {
   web: { label: "Web", icon: faCode },
   backend: { label: "Backend", icon: faServer },
@@ -35,5 +34,4 @@ export const skillIconKeys = Object.keys(skillIcons) as [
   ...SkillIcon[],
 ];
 
-// A technology in a category. Highlighted ones stand out with a star.
 export type SkillItem = { name: string; highlight: boolean };

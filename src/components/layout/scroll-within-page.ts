@@ -1,8 +1,6 @@
 import type { MouseEvent } from "react";
 
-// Links to the page you are already on do nothing by default, and a hash that
-// is already in the URL does not scroll again. Scroll there by hand instead.
-// The home page scrolls inside its own container, marked data-scroll-root.
+// Smooth-scroll same-page and repeated hash links manually, using [data-scroll-root] on the home page.
 export function scrollWithinPage(event: MouseEvent<HTMLAnchorElement>, href: string) {
   const url = new URL(href, window.location.href);
   if (url.pathname !== window.location.pathname) return;

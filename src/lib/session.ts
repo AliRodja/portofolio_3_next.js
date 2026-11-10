@@ -10,11 +10,8 @@ export type Admin = {
   image: string | null;
 };
 
-// Reads the session once per request, so the caller must render inside a
-// <Suspense> boundary.
 export const getAdmin = cache(async (): Promise<Admin | null> => {
-  // Better Auth checks the session expiry against the current time, which
-  // Cache Components only allows after opting into request-time rendering.
+  // Opt into request-time rendering before Better Auth reads the current time for session expiry.
   await connection();
   const session = await auth.api.getSession({ headers: await headers() });
   // Re-check the allowlist so removing an email revokes access right away.
@@ -26,7 +23,6 @@ export const getAdmin = cache(async (): Promise<Admin | null> => {
   };
 });
 
-// Call at the top of every admin page and Server Action.
 export async function requireAdmin() {
   const admin = await getAdmin();
   if (!admin) redirect("/admin/login");

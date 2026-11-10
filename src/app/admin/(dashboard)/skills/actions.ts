@@ -70,7 +70,6 @@ async function submitSkillCategory(
       .returning({ id: skillCategories.id });
     if (!saved) return { message: "This category no longer exists." };
   } else {
-    // New categories go to the end.
     const [{ last }] = await db
       .select({ last: max(skillCategories.position) })
       .from(skillCategories);
@@ -104,7 +103,6 @@ export async function deleteSkillCategory(id: number) {
   updateTag(SKILLS_TAG);
 }
 
-// Swaps a category with its neighbor above or below.
 export async function moveSkillCategory(id: number, direction: "up" | "down") {
   await requireAdmin();
 

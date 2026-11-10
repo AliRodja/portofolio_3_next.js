@@ -4,13 +4,9 @@ import Link from "next/link";
 import { scrollWithinPage } from "./scroll-within-page";
 import { ThemeToggle } from "./theme-toggle";
 
-// The name on the left and the theme toggle on the right. Navigation lives
-// in the Dynamic Island and page island at the top center on wide screens,
-// and in the tab bar at the bottom on phones.
 export function Navbar({ name }: { name: string }) {
   return (
-    // The bar itself is transparent and lets clicks through, so the page
-    // shows between the two glass pills (and the islands can sit between).
+    // Let pointer events pass through the bar so the center Dynamic Island remains clickable.
     <nav className="pointer-events-none fixed inset-x-0 top-0 z-50 flex h-16 items-center justify-between px-4 md:px-24">
       <Link
         href="/"

@@ -7,8 +7,7 @@ import { siteUrl } from "@/lib/site-config";
 import { themeScript } from "@/lib/theme";
 import "./globals.css";
 
-// The Font Awesome stylesheet is imported above, so it does not need to be
-// injected again at runtime.
+// Prevent Font Awesome from injecting duplicate runtime CSS since styles.css is imported above.
 config.autoAddCss = false;
 
 const poppins = Poppins({
@@ -47,12 +46,16 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    // The theme script below may add data-theme before React hydrates.
-    <html lang="en" className={`${poppins.variable} ${jost.variable}`} suppressHydrationWarning>
+    <html
+      lang="en"
+      data-theme="light"
+      className={`${poppins.variable} ${jost.variable}`}
+      suppressHydrationWarning
+    >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
-      <body className="font-sans antialiased">
+      <body className="bg-canvas text-ink font-sans antialiased">
         {children}
       </body>
     </html>

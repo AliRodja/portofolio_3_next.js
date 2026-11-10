@@ -16,8 +16,6 @@ export type FormState = {
   errors?: Partial<Record<string, string[]>>;
 };
 
-// A settings-style section: the heading and explanation sit in a column on
-// the left on wide screens, with the fields in a card on the right.
 export function FormSection({
   title,
   description,
@@ -68,8 +66,6 @@ export function FieldError({ error }: { error?: string[] }) {
   return <span className="mt-1.5 block text-sm text-red-600">{error[0]}</span>;
 }
 
-// Floats at the bottom of the content column so saving is always one click
-// away, without covering the sidebar.
 export function SaveBar({
   state,
   isPending,

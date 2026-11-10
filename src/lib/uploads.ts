@@ -9,9 +9,7 @@ export const UPLOAD_TYPES = [
   "application/pdf",
 ];
 
-// "blob" uploads to Vercel Blob. "local" writes into public/uploads, which
-// only works in development: a production server serves just the files that
-// existed at build time, and Vercel's filesystem is read-only.
+// Local disk uploads only work in development because Vercel's production filesystem is read-only.
 export type UploadMode = "blob" | "local" | "disabled";
 
 export function getUploadMode(): UploadMode {

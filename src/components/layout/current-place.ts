@@ -2,9 +2,7 @@
 
 import { useEffect, useSyncExternalStore } from "react";
 
-// The home page section on screen. The phone tab bar lives in the layout
-// while the sections live in the page, so the page reports it here instead
-// of passing props up.
+// Shared store so FullPage can report the active home section to TabBar in the parent layout.
 let currentSection: string | null = null;
 const listeners = new Set<() => void>();
 
@@ -26,8 +24,6 @@ export function useCurrentSection() {
   );
 }
 
-// Reports the section on screen, and clears it when the page is left or
-// hidden.
 export function useReportSection(id: string | undefined) {
   useEffect(() => {
     setCurrentSection(id ?? null);

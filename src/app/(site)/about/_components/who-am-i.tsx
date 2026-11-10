@@ -4,7 +4,6 @@ import { monoPhotoClass, Photo } from "@/components/ui/photo";
 import { RichText } from "@/components/ui/rich-text";
 import { getProfile } from "@/db/queries/profile";
 
-// Three overlapping photos, positioned like a collage.
 const collage = [
   { position: "top-28 left-10 w-[50%]", from: "right", delay: 0 },
   { position: "top-16 right-28 w-[30%]", from: "left", delay: 0.3 },
@@ -24,7 +23,6 @@ export async function WhoAmI() {
               key={item.position}
               from={item.from}
               delay={item.delay}
-              // The hovered photo comes to the front of the stack.
               className={`group absolute aspect-square transition-[scale] duration-300 hover:z-20 hover:scale-105 ${item.position}`}
             >
               <div className="relative h-full w-full overflow-hidden shadow-lg">

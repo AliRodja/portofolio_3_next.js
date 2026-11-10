@@ -4,8 +4,6 @@ import { upload } from "@vercel/blob/client";
 import { createContext, useContext, type ReactNode } from "react";
 import { UPLOAD_MAX_SIZE, UPLOAD_TYPES, type UploadMode } from "@/lib/uploads";
 
-// The server decides where uploads go (see getUploadMode) and passes it down
-// once from the dashboard layout.
 const UploadModeContext = createContext<UploadMode>("disabled");
 
 export function UploadModeProvider({
@@ -22,8 +20,6 @@ export function useUploadMode() {
   return useContext(UploadModeContext);
 }
 
-// Uploads one file and returns its URL, or throws an Error with a message
-// that can be shown as is.
 export async function uploadFile(
   mode: UploadMode,
   file: File,

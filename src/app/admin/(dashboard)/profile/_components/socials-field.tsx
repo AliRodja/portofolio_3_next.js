@@ -11,7 +11,6 @@ import {
 } from "@/lib/social-icons";
 import { FieldError, inputClass } from "../../_components/form";
 
-// Edits the list in local state and submits it as one JSON field.
 export function SocialsField({
   defaultValue,
   error,
@@ -30,7 +29,6 @@ export function SocialsField({
     );
 
   const addRow = () => {
-    // Suggest a platform that is not on the list yet.
     const used = new Set(rows.map((row) => row.icon));
     const icon = socialIconKeys.find((key) => !used.has(key)) ?? "github";
     setRows((current) => [

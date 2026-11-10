@@ -1,8 +1,6 @@
 import type { ProfileData } from "@/db/schema";
 
-// Shown until the profile is saved from the dashboard, and used by the seed
-// script for a fresh database. Photos and the CV are uploads, so they are
-// added from the dashboard.
+// Fallback profile before the first dashboard save, also used by the seed script.
 export const defaultProfile: ProfileData = {
   name: "Ali",
   fullName: "Ali Imran Rodja",

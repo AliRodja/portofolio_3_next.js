@@ -5,8 +5,6 @@ import { experiences } from "@/db/schema";
 
 export const EXPERIENCE_TAG = "experience";
 
-// Newest first: current positions on top, then by when each one started.
-// Cached until a dashboard change calls updateTag(EXPERIENCE_TAG).
 export async function getExperiences() {
   "use cache";
   cacheTag(EXPERIENCE_TAG);

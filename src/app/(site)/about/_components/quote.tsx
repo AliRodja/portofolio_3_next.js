@@ -1,12 +1,12 @@
 "use client";
 
-import { motion, useInView } from "motion/react";
+import { motion, useInView, useReducedMotion } from "motion/react";
 import { useRef } from "react";
 
-// Each word un-blurs one after another when the quote scrolls into view.
 export function Quote({ lines }: { lines: [string, string] }) {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { amount: 0.1 });
+  const reduceMotion = useReducedMotion();
   const [first, second] = lines.map((line) => line.split(" ").filter(Boolean));
   if (first.length + second.length === 0) return null;
 
@@ -14,13 +14,15 @@ export function Quote({ lines }: { lines: [string, string] }) {
     <motion.span
       key={order}
       className="inline-block"
-      initial={{ opacity: 0, filter: "blur(4px)", scale: 0.92 }}
+      initial={
+        reduceMotion ? false : { opacity: 0, filter: "blur(4px)", scale: 0.92 }
+      }
       animate={
-        isInView
+        reduceMotion || isInView
           ? { opacity: 1, filter: "blur(0px)", scale: 1 }
           : { opacity: 0, filter: "blur(4px)", scale: 0.92 }
       }
-      transition={{ delay: isInView ? order * 0.1 : 0, duration: 0.5 }}
+      transition={{ delay: isInView && !reduceMotion ? order * 0.1 : 0, duration: 0.5 }}
     >
       {text}&nbsp;
     </motion.span>
@@ -31,7 +33,7 @@ export function Quote({ lines }: { lines: [string, string] }) {
       <motion.div
         ref={ref}
         className="text-center"
-        initial={{ opacity: 0, scale: 0.9 }}
+        initial={reduceMotion ? false : { opacity: 0, scale: 0.9 }}
         whileInView={{ opacity: 1, scale: 1 }}
         transition={{ delay: 0.6, duration: 2, ease: [0.22, 1, 0.36, 1] }}
       >

@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 import type { ReactNode } from "react";
 
 type From = "left" | "right" | "up" | "none";
@@ -18,7 +18,6 @@ function initialOffset(from: From, distance: number) {
   }
 }
 
-// Slides and fades its children in every time they scroll into view.
 export function Reveal({
   children,
   from = "left",
@@ -32,6 +31,12 @@ export function Reveal({
   delay?: number;
   className?: string;
 }) {
+  const reduceMotion = useReducedMotion();
+
+  if (reduceMotion) {
+    return <div className={className}>{children}</div>;
+  }
+
   return (
     <motion.div
       className={className}

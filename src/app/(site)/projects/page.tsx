@@ -15,7 +15,6 @@ export const metadata: Metadata = {
   description: "Projects I have built and am currently working on.",
 };
 
-// Three overlapping screenshots of the highlighted project.
 const collage = [
   { position: "top-28 left-10 h-[40%] z-10", from: "right", delay: 0 },
   { position: "top-10 right-28 h-[30%]", from: "left", delay: 0.3 },
@@ -50,7 +49,6 @@ export default async function ProjectsPage() {
                       key={item.position}
                       from={item.from}
                       delay={item.delay}
-                      // The hovered screenshot comes to the front of the stack.
                       className={`group absolute aspect-video transition-[scale] duration-300 hover:z-20 hover:scale-110 ${item.position}`}
                     >
                       <div className="relative h-full w-full overflow-hidden shadow-lg">
@@ -80,12 +78,12 @@ export default async function ProjectsPage() {
                   <p className="text-justify font-display text-lg text-ink/70">
                     {highlight.description[0]}
                   </p>
-                  <div className="mt-3 flex flex-wrap gap-3">
+                  <div className="mt-4 flex flex-wrap gap-3">
                     <ButtonLink
                       href={`/projects/${highlight.slug}`}
                       variant="glassSolid"
                     >
-                      More
+                      View Project Details
                     </ButtonLink>
                     {highlight.previewUrl && (
                       <ButtonLink
@@ -94,7 +92,7 @@ export default async function ProjectsPage() {
                         target="_blank"
                         rel="noopener noreferrer"
                       >
-                        Preview
+                        Open Live Preview
                       </ButtonLink>
                     )}
                   </div>

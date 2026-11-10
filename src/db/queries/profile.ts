@@ -6,8 +6,6 @@ import { defaultProfile } from "@/lib/default-profile";
 
 export const PROFILE_TAG = "profile";
 
-// Cached until the dashboard saves the profile. Falls back to the defaults on
-// a fresh database so the site always renders.
 export async function getProfile() {
   "use cache";
   cacheTag(PROFILE_TAG);

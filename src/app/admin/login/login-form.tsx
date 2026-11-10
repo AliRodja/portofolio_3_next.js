@@ -9,8 +9,7 @@ import { authClient } from "@/lib/auth-client";
 export function LoginForm() {
   const searchParams = useSearchParams();
   const [isPending, setIsPending] = useState(false);
-  // Better Auth redirects back here with ?error=... when sign-in fails,
-  // including when the GitHub email is not on the allowlist.
+  // Better Auth appends ?error=... when OAuth fails or the GitHub email is not allowlisted.
   const error = searchParams.get("error");
 
   const signIn = async () => {

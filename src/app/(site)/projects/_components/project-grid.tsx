@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -14,8 +14,8 @@ type Filter = ProjectCategory | "all";
 
 export function ProjectGrid({ projects }: { projects: Project[] }) {
   const [filter, setFilter] = useState<Filter>("all");
+  const reduceMotion = useReducedMotion();
 
-  // Only show category buttons that have at least one project.
   const usedCategories = (
     Object.keys(projectCategories) as ProjectCategory[]
   ).filter((category) =>
@@ -37,7 +37,7 @@ export function ProjectGrid({ projects }: { projects: Project[] }) {
   return (
     <>
       <motion.div
-        initial={{ opacity: 0, x: 200 }}
+        initial={reduceMotion ? false : { opacity: 0, x: 200 }}
         whileInView={{ opacity: 1, x: 0 }}
         transition={{ type: "spring" }}
         className="my-5 flex flex-wrap justify-center gap-3 md:gap-5"
@@ -48,10 +48,10 @@ export function ProjectGrid({ projects }: { projects: Project[] }) {
             type="button"
             onClick={() => setFilter(value)}
             aria-pressed={filter === value}
-            className={`rounded-full px-4 py-2 text-sm font-medium transition duration-300 md:px-5 ${
+            className={`min-h-11 rounded-full px-5 py-2.5 text-sm font-medium transition duration-300 ${
               filter === value
-                ? "bg-ink text-canvas shadow-md"
-                : "glass glass-hover text-ink"
+                ? "bg-ink text-canvas shadow-sm"
+                : "surface-card surface-card-hover text-ink"
             }`}
           >
             {label}
@@ -59,24 +59,55 @@ export function ProjectGrid({ projects }: { projects: Project[] }) {
         ))}
       </motion.div>
 
-      <div className="container mx-auto mb-10 grid grid-cols-1 gap-4 px-10 md:grid-cols-2">
-        {visible.map((project) => (
-          <ProjectCard key={project.slug} project={project} />
-        ))}
-      </div>
+      {visible.length === 0 ? (
+        <div className="container mx-auto mb-10 px-10">
+          <div className="surface-card rounded-2xl p-12 text-center">
+            <p className="font-display text-xl font-semibold text-ink">
+              {projects.length === 0
+                ? "No projects published yet"
+                : "No projects match this category"}
+            </p>
+            <p className="mt-2 text-sm text-ink/70">
+              {projects.length === 0
+                ? "Projects added from the dashboard will appear here."
+                : "Select “All” above to view every project."}
+            </p>
+            {filter !== "all" && (
+              <button
+                type="button"
+                onClick={() => setFilter("all")}
+                className="mt-4 min-h-11 rounded-full bg-ink px-6 py-2 text-sm font-medium text-canvas"
+              >
+                Show All Projects
+              </button>
+            )}
+          </div>
+        </div>
+      ) : (
+        <div className="container mx-auto mb-10 grid grid-cols-1 gap-4 px-10 md:grid-cols-2">
+          {visible.map((project) => (
+            <ProjectCard key={project.slug} project={project} reduceMotion={Boolean(reduceMotion)} />
+          ))}
+        </div>
+      )}
     </>
   );
 }
 
-// The thumbnail is dimmed behind the text and fades in fully on hover.
-function ProjectCard({ project }: { project: Project }) {
+function ProjectCard({
+  project,
+  reduceMotion,
+}: {
+  project: Project;
+  reduceMotion: boolean;
+}) {
   return (
-    <Link href={`/projects/${project.slug}`}>
+    <Link href={`/projects/${project.slug}`} className="block rounded-2xl">
       <motion.div
-        initial={{ opacity: 0, x: -200 }}
+        initial={reduceMotion ? false : { opacity: 0, x: -200 }}
         whileInView={{ opacity: 1, x: 0 }}
         transition={{ type: "spring" }}
-        className="glass glass-hover group mb-5 flex aspect-video w-full flex-col items-center justify-center overflow-hidden rounded-2xl px-5 py-20 md:px-10 md:py-2"
+        className="surface-card surface-card-hover group relative mb-5 flex aspect-video w-full flex-col items-center justify-center overflow-hidden rounded-2xl px-5 py-20 md:px-10 md:py-2"
       >
         {project.thumbnail && (
           <Image
@@ -87,7 +118,7 @@ function ProjectCard({ project }: { project: Project }) {
             className="object-cover opacity-10 transition duration-500 group-hover:opacity-100"
           />
         )}
-        <span className="absolute top-0 left-0 rounded-br-2xl bg-canvas/30 px-4 py-2 font-display text-ink backdrop-blur-sm">
+        <span className="absolute top-0 left-0 rounded-br-2xl border-r border-b border-ink/15 bg-canvas/85 px-4 py-2 font-mono text-sm font-medium text-ink">
           {project.year}
         </span>
         <div
@@ -95,17 +126,17 @@ function ProjectCard({ project }: { project: Project }) {
             project.thumbnail ? "group-hover:opacity-0" : ""
           }`}
         >
-          <h3 className="mb-3 text-3xl font-bold">{project.title}</h3>
+          <h3 className="mb-3 text-3xl font-bold text-ink">{project.title}</h3>
           <p className="text-ink/75">
             {project.summary.length > 125
               ? `${project.summary.slice(0, 125)}...`
               : project.summary}
           </p>
-          <div className="mt-5 flex flex-wrap justify-center">
+          <div className="mt-5 flex flex-wrap justify-center gap-1.5">
             {project.tech.map((tech) => (
               <span
                 key={tech}
-                className="m-1 rounded-full border border-ink/20 bg-ink/10 px-3 py-1 text-sm text-ink"
+                className="rounded-md border border-ink/20 bg-ink/8 px-3 py-1 text-xs font-medium text-ink"
               >
                 {tech}
               </span>
